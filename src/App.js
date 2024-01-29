@@ -5,7 +5,7 @@ import Login from './Screen/Login';
 function App() {
   return (
     <div>
-      {eiei eiei}
+      //eiei
       <Login/>
     </div>
   );
