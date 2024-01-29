@@ -1,0 +1,105 @@
+.import-container{
+    min-height: 100vh;
+}
+.header-bar{
+    background-color: #57CC99;
+    min-height: 10vh;
+    align-items: center;
+    display: flex;
+}
+#header-font{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+.search-box{
+    margin-left: 10px;
+    margin-top: 2%;
+    width: 300px;
+    height: 45px;
+    padding-left: 20px;
+    font-size: 18px;
+}
+#search-icon{
+    margin-left: 50px;
+    margin-right: 10px ;
+}
+
+.scrollv{
+    -ms-overflow-style: none;
+    overflow-y:scroll;
+    height:50vh;
+    scrollbar-width: none;
+    margin-right: 10%;
+    margin-top: 5%;
+}
+
+#subject{
+    display: flex;
+    margin-top: 1%;
+    border: 2px;
+    border-color: black;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.input{
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3%;
+}
+#import-icon{
+    margin-left: 10px;
+    background-color: #57CC99;
+    cursor: pointer;
+    justify-content: center;
+    align-self: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top: 15px;
+}
+#bin-icon{
+    margin-left: 15px; 
+    background-color: #D51B1B;
+    cursor: pointer;
+    justify-content: center;
+    align-self: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+.submit{
+    margin-top: 2%;
+    margin-left: 80%;
+}
+.submit-btn{
+    background-color: #57CC99;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px;
+    cursor: pointer;
+}
+#code{
+    margin-left: 25%;
+}
+#title{
+    justify-content: flex-start;
+    flex-direction: row;
+}
+#credit{
+    margin-right: 25%;
+}
+#user{
+    margin-left: 1%;
+}
+#username{
+    margin-left: 75%;
+}

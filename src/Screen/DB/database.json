@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "code": "01417167",
+        "title":"Engineering Mathematics I",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 2,
+        "code": "01417168",
+        "title":"Engineering Mathematics II",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 3,
+        "code": "01417267",
+        "title":"Engineering Mathematics III",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 4,
+        "code": "01420111",
+        "title":"General Physics I",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 5,
+        "code": "01420112",
+        "title":"General Physics II",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 6,
+        "code": "01420113",
+        "title":" Laboratory in Physic I",
+        "credit": "1(0-3-2)"
+    },
+    {
+        "id": 7,
+        "code": "01420114",
+        "title":"Laboratory in Physic II",
+        "credit": "1(0-3-2)"
+    },
+    {
+        "id": 8,
+        "code": "03601204",
+        "title":"Electric Circuit Analysis for Computer Engineers",
+        "credit": "3(3-0-6)"
+    },
+    {
+        "id": 9,
+        "code": "03601205",
+        "title":"Electric Circuit Laboratory for Computer Engineers",
+        "credit": "1(0-3-2)"
+    },
+    {
+        "id": 10,
+        "code": "03603111",
+        "title":"Programming Fundamentals I",
+        "credit": "3(2-3-6)"
+    },
+    {
+        "id": 11,
+        "code": "03603112",
+        "title":"Programming Fundamentals II",
+        "credit": "3(2-3-6)"
+    }
+]
