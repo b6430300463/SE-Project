@@ -1,0 +1,85 @@
+.login-container{
+    min-height: 100vh;
+
+}
+.screen1{
+    background-color: #57CC99;
+    min-height: 100vh;
+    align-items: center;
+    display: flex;
+}
+#header-font{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 7%;
+    color: white;
+}
+.screen2{
+    background-color: #D0F4DE;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90vh; 
+    height: 90vh;
+    /*text-align: center; /* จัดข้อความให้อยู่ตรงกลาง 
+    line-height: normal;*/
+    margin: 0 auto;
+    overflow: hidden;
+    box-sizing: border-box;
+ 
+}
+.screen3{
+   /* padding: 10px;
+    align-items: center;
+    display: flex;*/
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+}
+.email-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 50vh;
+    height: 50vh;
+}
+.google-login-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 130vh;
+    height: 100vh;
+}
+.google-logout-button {
+    display: flex;
+    position: absolute;
+    top: 70%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 5vh;
+    width: 12vh;
+}
+
+
+.logo-image {
+    display: flex;
+    position: absolute;
+    top: 30%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 20vh;
+    min-width: 20vh;
+}
+.user-image {
+    display: flex;
+    position: absolute;
+    top: 10%; 
+    left: 70%;
+    transform: translate(-50%, -50%);
+    height: 8vh;
+    width: 8vh;
+}
