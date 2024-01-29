@@ -6,6 +6,7 @@ import DataDB from './DB/database.json';
 import { FaRegUserCircle } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
+// npm  i sweetalert2 react-icon ด้วย
 const Import = () => {
     const submitAlert = () => {
         Swal.fire({
