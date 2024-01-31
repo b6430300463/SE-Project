@@ -1,3 +1,4 @@
 พิมพ์ตามนี้เพื่อติดตั้ง package ทั้งหมดของโปรเจกต์
 NOTE: หากมีการติดตั้ง package เพิ่มเติมให้มา update ในหน้านี้ด้วย
-npm  i sweetalert2 react-icon react-google-login gapi-script --force
+#npm  i sweetalert2 react-icon react-google-login gapi-script --force
+#npm i react-router-dom
