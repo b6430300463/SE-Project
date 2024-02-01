@@ -22,12 +22,23 @@
     margin-left: 62%;
     transform: translateX(-62%);
 }
+.select-box{
+    height: 25px;
+    width: 100px;
+    background-color: #f6f6f6;
+}
+.subject-box{
+    margin-top: 1%;
+}
 .function-box{
     border: solid 1px black;
     padding-left: 1%;
 }
 .lec{
     display:flex;
+}
+.lab{
+    display: flex;
 }
 #span{
     cursor: pointer;
@@ -39,6 +50,23 @@
     padding-left: 20%;
     padding-right: 20%;
     padding-bottom: 10%;
+}
+#select1{
+    height: 25px;
+    background-color: #f6f6f6;
+}
+#year-label{
+    margin-left: 1%;
+}
+#select-term{
+    margin-left: 1%;
+    height: 25px;
+    background-color: #f6f6f6;
+}
+#sec-select{
+    margin-left: 1%;
+    height: 25px;
+    background-color: #f6f6f6;
 }
 /*CUSTOM RADIOBOX ZONE*/
 .radiobox-container {
@@ -115,7 +143,7 @@
     padding-right: 45px;
     margin-bottom: 12px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 15px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -184,7 +212,7 @@
     padding-right: 55px;
     margin-bottom: 12px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 15px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
