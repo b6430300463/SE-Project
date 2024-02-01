@@ -14,7 +14,7 @@ const Input = () => {
         setIsDrawerOpen(false);
     };
     return(
-        <div className='input-container'>
+        <div className='input-container'>                         
             <div className='header-bar'>
                 <div id="main">
                     <span id='span' onClick={openNav}>&#9776;</span>
@@ -22,13 +22,16 @@ const Input = () => {
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/login'>เข้าสู่ระบบ</Link>
+                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
+                    <Link to='/login'>เข้าสู่ระบบ</Link>                    
                 </div>
 
                 <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
                 <FaRegUserCircle id="user" size={30}/>
             </div>
+            {/* โค้ดheaderbar */}
 
             <div className="function-box">
                 <br/>
@@ -39,7 +42,8 @@ const Input = () => {
                 <select name='term' id='select-term'>
                     <option value='term1'>ภาคต้น</option>
                     <option value='term2'>ภาคปลาย</option>
-                </select>
+                </select> 
+                {/* โค้ดdropdown */}
                 <br/><br/>
 
                 <div className='lec'>
