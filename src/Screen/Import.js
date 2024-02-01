@@ -36,7 +36,6 @@ const Import = () => {
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
-                    <Link to='/login'>เข้าสู่ระบบ</Link>
                 </div>
                 <label id="header-font">เพิ่มรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
