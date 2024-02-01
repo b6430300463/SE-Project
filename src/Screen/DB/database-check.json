@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "code": "01417167",
+        "title":"Engineering Mathematics I",
+        "major": "T12(3)",
+        "people":"100",
+        "day" : "MON,WED",
+        "time": "09.00-12.00",
+        "request": "room17309"
+    }
+]

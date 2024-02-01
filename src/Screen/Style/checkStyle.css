@@ -1,0 +1,80 @@
+.check-container{
+    min-height: 100vh;
+}
+#under1-font{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+#under2-font{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+#under3-font{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+#under4-font{
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+.under1-bar{
+
+    min-height: 10vh;
+    align-items: center;
+    display: flex;
+}
+#under2-bar{
+
+    margin-left: 75%;
+}
+.under3-bar{
+
+    min-height: 1vh;
+    align-items: center;
+    display: flex;
+}
+.under4-bar{
+
+    min-height: 1vh;
+    align-items: center;
+    display: flex;
+}
+
+.header-bar{
+    background-color: #57CC99;
+    min-height: 10vh;
+    align-items: center;
+    display: flex;
+}
+#header-font{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 7%;
+}
+
+#user{
+    margin-left: 1%;
+}
+#username{
+    margin-left: 75%;
+}
+
+.under-bar{
+
+    min-height: 10vh;
+    align-items: center;
+    display: flex;
+}
+
+.scrollv{
+    -ms-overflow-style: none;
+    overflow-y:scroll;
+    height:50vh;
+    scrollbar-width: none;
+    margin-right: 10%;
+    margin-top: 5%;
+}
