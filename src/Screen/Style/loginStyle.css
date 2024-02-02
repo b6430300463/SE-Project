@@ -48,11 +48,13 @@
     height: 50vh;
 }
 .google-login-button {
+    background-color:#ff0000;
+    color: red; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 130vh;
-    height: 100vh;
+    margin-top: 20vh;
+    
 }
 .google-logout-button {
     display: flex;
@@ -68,11 +70,11 @@
 .logo-image {
     display: flex;
     position: absolute;
-    top: 30%; 
-    left: 50%;
+    top: 35%; 
+    left: 51%;
     transform: translate(-50%, -50%);
-    min-height: 20vh;
-    min-width: 20vh;
+    height: 40vh;
+    width: 30vh;
 }
 .user-image {
     display: flex;
