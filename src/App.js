@@ -5,12 +5,12 @@ import Login from './Screen/Login';
 import Input from './Screen/Input';
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import CheckSubject from './Screen/checksubject';
-
+import requestsubject from './Screen/requestsubject';
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Input/>}/>
+        <Route index element={<Login/>}/>
         <Route path="import" element={<Import/>} />
         <Route path="checksubject" element={<CheckSubject/>}/>
         <Route path="login" element={<Login/>}/>

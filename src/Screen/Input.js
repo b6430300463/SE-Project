@@ -22,9 +22,10 @@ const Input = () => {
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
+                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>                   
                     <Link to='/login'>เข้าสู่ระบบ</Link>
                 </div>
-
                 <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
                 <FaRegUserCircle id="user" size={30}/>
