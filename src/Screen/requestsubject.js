@@ -3,7 +3,7 @@ import './Style/DrawerStyle.css'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
-const requestsubject = () => {
+const Requestsubject = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const openNav = () => {
@@ -36,4 +36,4 @@ const requestsubject = () => {
         </div>
     );
 }
-export default requestsubject
+export default Requestsubject

@@ -8,12 +8,7 @@
     align-items: center;
     display: flex;
 }
-#header-font{
-    font-size: 20px;
-    font-weight: bold;
-    margin-left: 7%;
-    color: white;
-}
+
 .screen2{
     background-color: #D0F4DE;
     flex-direction: column;

@@ -112,6 +112,60 @@ const Input = () => {
                     </select>
                     <label for='yr1' id='year-label'>เซคที่</label>
                 </div>
+                <div className='subject-code'>
+                    <label className='lec-code2'><strong>รหัสวิชา</strong></label>
+                    <label className='lec-name2'><strong>ชื่อวิชา</strong></label>
+                    <label className='year-code2'><strong>รหัสสาขา</strong></label>
+                    <label className='people2'><strong>จำนวน</strong></label>
+                    <label className='day2'><strong>วัน</strong></label>
+                    <label className='time2'><strong>เวลา</strong></label>
+                    <label className='room2'><strong>ห้อง</strong></label>
+                    <label className='rq2'><strong>Teacher request</strong></label>
+                   
+                    {/* <label for='lec-code'><strong>รหัสวิชา</strong></label>
+                    <label className='input-codename'><strong>ชื่อวิชา</strong></label><br/>
+                    <label className='input-codeyear'><strong>รหัสสาขา</strong></label><br/>
+                    <select name='lec-code' id='select-code'>
+                        <option value='none'>None</option>
+                        <option value='math I'>math I </option>
+                        <option value='math II'>math II </option>
+                        <option value='math III'>math III </option>
+                    </select> 
+                    
+                    <input type= "text" id= "lec-name" name="lec-name"></input>
+
+                    <input type= "text" id= "code-year" name="code-year"></input> */}
+
+                </div>
+                <div className='subject-layer'>
+                    <select name='lec-code2' id='select-code'>
+                            <option value='none'>None</option>
+                            <option value='math I'>math I </option>
+                            <option value='math II'>math II </option>
+                            <option value='math III'>math III </option>
+                    </select> 
+                    <input type= "text" id= "lec-name2" name="lec-name"></input>
+                    <input type= "text" id= "year-code2" name="year-code2"></input>
+                    <input type= "text" id= "people2" name="people2"></input>
+                    <input type= "text" id= "day2" name="day2"></input>
+                    <select name='time2-1' id='time2-1'>
+                            <option value='None'>None</option>
+                            <option value='08.00'>08.00 </option>
+                            <option value='08.30'>08.30 </option>
+                            <option value='09.00'>09.00 </option>
+                    </select> 
+                    <label className='ke2'>  - </label>
+                    <select name='time2-2' id='time2-2'>
+                            <option value='none'>None</option>
+                            <option value='08.00'>08.00 </option>
+                            <option value='08.30'>08.30 </option>
+                            <option value='09.00'>09.00 </option>
+                    </select> 
+                    <input type= "text" id= "room2" name="room2"></input>
+                    <input type= "text" id= "rq2" name="rq2"></input>
+                </div>
+
+                
             </div>
         </div>
     );

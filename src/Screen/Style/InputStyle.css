@@ -274,3 +274,69 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+.subject-code{
+  /* display: inline-block; */
+  /* border: solid 1px black; */
+  margin-top:1%;
+  
+}
+.lec-code2{
+  margin-left: 1px;
+}
+.lec-name2{
+  margin-left: 70px;
+}
+.year-code2{
+  margin-left: 200px;
+}
+.people2{
+  margin-left: 180px;
+}
+.day2{
+  margin-left: 200px;
+}
+.time2{
+  margin-left: 260px;
+}
+.room2{
+  margin-left: 130px;
+}
+.rq2{
+  color: #D51B1B;
+  margin-left: 230px;
+}
+
+.subject-layer{
+  /* display: inline-block; */
+  /* border: solid 1px black; */
+}
+#select-code{
+  margin-left: 1px;
+}
+#lec-name2{
+  margin-left: 65px;
+}
+#year-code2{
+  margin-left: 70px;
+}
+#people2{
+  margin-left: 70px;
+}
+#day2{
+  margin-left: 70px;
+}
+.ke2{
+  margin-left: 10px;
+}
+#time2-1{
+  margin-left: 50px;
+}
+#time2-2{
+  margin-left: 10px;
+}
+#room2{
+  margin-left: 70px;
+}
+#rq2{
+  margin-left: 70px;
+}
