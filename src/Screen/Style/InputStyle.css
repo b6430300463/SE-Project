@@ -31,14 +31,19 @@
     margin-top: 1%;
 }
 .function-box{
-    border: solid 1px black;
     padding-left: 1%;
+    padding-right: 1%;
+    /* border: solid 1px black; */
 }
 .lec{
     display:flex;
 }
 .lab{
-    display: flex;
+  display: flex;
+  margin-top: 1%;
+}
+.lab-check{
+  
 }
 #span{
     cursor: pointer;
@@ -67,6 +72,34 @@
     margin-left: 1%;
     height: 25px;
     background-color: #f6f6f6;
+}
+.add-lab{
+  margin-top: 1%;
+}
+.sub-box{
+  /* border: black 1px solid; */
+}
+#submit-input{
+  margin-left: 1%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+.scrollview{
+  -ms-overflow-style: none;
+  overflow-y:scroll;
+  height:77vh;
+  scrollbar-width: none;
+}
+#bin{
+  margin-left: 30px; 
+  background-color: #dd3838;
+  cursor: pointer;
+  justify-content: center;
+  align-self: center;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 /*CUSTOM RADIOBOX ZONE*/
 .radiobox-container {
@@ -284,7 +317,7 @@
   margin-left: 1px;
 }
 .lec-name2{
-  margin-left: 70px;
+  margin-left: 105px;
 }
 .year-code2{
   margin-left: 200px;
@@ -303,7 +336,7 @@
 }
 .rq2{
   color: #D51B1B;
-  margin-left: 230px;
+  margin-left: 240px;
 }
 
 .subject-layer{
@@ -315,28 +348,39 @@
 }
 #lec-name2{
   margin-left: 65px;
+  height: 20px;
 }
 #year-code2{
   margin-left: 70px;
+  height: 20px;
 }
 #people2{
   margin-left: 70px;
+  height: 20px;
 }
 #day2{
   margin-left: 70px;
+  height: 20px;
 }
 .ke2{
   margin-left: 10px;
+  height: 20px;
 }
 #time2-1{
   margin-left: 50px;
+  height: 25px;
+  background-color: #f6f6f6;
 }
 #time2-2{
   margin-left: 10px;
+  height: 25px;
+  background-color: #f6f6f6;
 }
 #room2{
   margin-left: 70px;
+  height: 20px;
 }
 #rq2{
   margin-left: 70px;
+  height: 20px;
 }
