@@ -98,13 +98,137 @@ const Input = () => {
                     </select>
                     <label for='yr1' id='year-label'>เซคที่</label>
                 </div>
-                <div className='subject-box'>
-                    <label for='lec-code'><strong>รหัสวิชา</strong></label>
-                    <br/>
-                    <select name='lec-code' className='select-box'>
+
+
+                <div className="subject-box">
+                    <div className="box">
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="lec-code">
+                        <strong>รหัสวิชา</strong>
+                        </label>
+                        <select name="subject-id" className="select-box">
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+
+                    <div  className="box" style={{ fontWeight: "bold" }}>
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="sub-name">ชื่อวิชา</label>
+                        <input type="text" id="sub-name" name="sub-name" />
+                        <br />
+                    </div>
+
+                    <div  className="box">
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="lec-code">
+                        <strong>รหัสสาขา</strong>
+                        </label>
+                        <select name="major-id" className="select-box">
                         <option>None</option>
-                    </select>
+                        </select>
+                    </div>
+
+                    <div  className="box" style={{ fontWeight: "bold" }} >
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="number">จำนวน:</label>
+                        <input type="text" id="number" name="number" />
+                    </div>
+
+                    <div  className="box">
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="lec-code">
+                        <strong>วัน</strong>
+                        </label>
+                        
+                        <select name="day" className="select-box">
+                            <option value='none'>None</option>
+                            <option value='day1'>MON</option>
+                            <option value='day2'>TUE</option>
+                            <option value='day3'>WED</option>
+                            <option value='day3'>THU</option>
+                            <option value='day3'>FRI</option>
+                            <option value='day3'>SAT</option>
+                            <option value='day3'>SUN</option>
+                        </select>
+                    </div>
+
+                    <div  className="box" >
+                        <label style={{ display: "flex" , justifyContent:'center' }} for="lec-code" >
+                        <strong>เวลา</strong>
+                        </label>
+                        
+                        <select name="Time-in" className="select-box" >
+                            <option value='none'>None</option>
+                        <option value='t1'>7:00</option>
+                        <option value='t2'>7:30</option>
+                        <option value='t3'>8:00</option>
+                        <option value='t4'>8:30</option>
+                        <option value='t5'>9:00</option>
+                        <option value='t6'>9:30</option>
+                        <option value='t7'>10:00</option>
+                        <option value='t8'>10:30</option>
+                        <option value='t9'>11:00</option>
+                        <option value='t10'>11:30</option>
+                        <option value='t11'>12:00</option>
+                        <option value='t12'>12:30</option>
+                        <option value='t13'>13:00</option>
+                        <option value='t14'>13:30</option>
+                        <option value='t15'>14:00</option>
+                        <option value='t16'>14:30</option>
+                        <option value='t17'>15:00</option>
+                        <option value='t18'>15:30</option>
+                        <option value='t19'>16:00</option>
+                        <option value='t20'>16:30</option>
+                        <option value='t21'>17:00</option>
+                        <option value='t22'>17:30</option>
+                        <option value='t23'>18:00</option>
+                        <option value='t24'>18:30</option>
+                        <option value='t25'>19:00</option>
+                        <option value='t26'>19:30</option>
+                        <option value='t27'>20:00</option>
+                        <option value='t28'>20:30</option>
+                        <option value='t29'>21:00</option>
+                        <option value='t30'>21:30</option>
+                        </select>
+                        <strong> - </strong>
+                        <select name="Time-out" className="select-box">
+                        <option value='none'>None</option>
+                        <option value='t2'>7:30</option>
+                        <option value='t3'>8:00</option>
+                        <option value='t4'>8:30</option>
+                        <option value='t5'>9:00</option>
+                        <option value='t6'>9:30</option>
+                        <option value='t7'>10:00</option>
+                        <option value='t8'>10:30</option>
+                        <option value='t9'>11:00</option>
+                        <option value='t10'>11:30</option>
+                        <option value='t11'>12:00</option>
+                        <option value='t12'>12:30</option>
+                        <option value='t13'>13:00</option>
+                        <option value='t14'>13:30</option>
+                        <option value='t15'>14:00</option>
+                        <option value='t16'>14:30</option>
+                        <option value='t17'>15:00</option>
+                        <option value='t18'>15:30</option>
+                        <option value='t19'>16:00</option>
+                        <option value='t20'>16:30</option>
+                        <option value='t21'>17:00</option>
+                        <option value='t22'>17:30</option>
+                        <option value='t23'>18:00</option>
+                        <option value='t24'>18:30</option>
+                        <option value='t25'>19:00</option>
+                        <option value='t26'>19:30</option>
+                        <option value='t27'>20:00</option>
+                        <option value='t28'>20:30</option>
+                        <option value='t29'>21:00</option>
+                        <option value='t30'>21:30</option>
+                        <option value='t31'>22:00</option>
+                        </select>
+                    </div>
+
+                    <div  className="box" style={{ fontWeight: "bold" }} >
+                        <label style={{color : 'red', display: "flex" , justifyContent:'center'}} for="lname">TEACHER REQUEST:</label>
+                        <input type="text" id="T-request" name="T-request" />
+                    </div>
                 </div>
+
+
+
                 <br/><hr style={{background:'#344e41',height:'5px'}}/>
                 <div className='lab'>
                     <label className='checkbox-container2'>ปฏิบัติ

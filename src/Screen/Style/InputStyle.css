@@ -28,8 +28,14 @@
     background-color: #f6f6f6;
 }
 .subject-box{
+    display: flex;
     margin-top: 1%;
 }
+
+.box{
+  margin: 1%;
+}
+
 .function-box{
     padding-left: 1%;
     padding-right: 1%;
