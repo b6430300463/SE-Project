@@ -43,6 +43,7 @@
 }
 .lec{
     display:flex;
+    margin-top: 1%;
 }
 .lab{
   display: flex;
