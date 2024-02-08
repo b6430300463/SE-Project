@@ -115,130 +115,13 @@ const Input = () => {
                     </select>
                     <label for='yr1' id='year-label'>เซคที่</label>
                 </div>
-                <div className='subject-code'>
-                    <label className='lec-code1'><strong>รหัสวิชา</strong></label>
-                    <label className='lec-name1'><strong>ชื่อวิชา</strong></label>
-                    <label className='year-code1'><strong>รหัสสาขา</strong></label>
-                    <label className='people1'><strong>จำนวน</strong></label>
-                    <label className='day1'><strong>วัน</strong></label>
-                    <label className='time1'><strong>เวลา</strong></label>
-                    <label className='rq1'><strong>Teacher request</strong></label>
+                <div className='subject-box'>
+                    <label for='lec-code'><strong>รหัสวิชา</strong></label>
+                    <br/>
+                    <select name='lec-code' className='select-box'>
+                        <option>None</option>
+                    </select>
                 </div>
-
-                <div className='subject-layer'>
-                    <select name='lec-code1' className='select-box'>
-                        <option value='none'>None</option>
-                        <option value='math I'>math I </option>
-                        <option value='math II'>math II </option>
-                        <option value='math III'>math III </option>
-                    </select>
-                    <input type="text" id="lec-name1" name="lec-name"></input>
-                    <select name='branch-code1' className='select-boxbranchcode'>
-                        <option value='none'>None</option>
-                        <option value='T12 I'>T12-1 </option>
-                        <option value='T12 II'>T12-2 </option>
-                        <option value='T12 III'>T12-3 </option>
-                    </select>
-                    <input type="text" id="people1" name="people2"></input>
-                    <input type="text" id="day2" name="day2"></input>
-                    <select name='time2-1' id='time2-1'>
-                        <option value='None'>None</option>
-                        <option value='08.00'>08.00 </option>
-                        <option value='08.30'>08.30 </option>
-                        <option value='09.00'>09.00 </option>
-                    </select>
-                    <label className='ke2'>  - </label>
-                    <select name='time1-2' id='time1-2'>
-                        <option value='none'>None</option>
-                        <option value='08.00'>08.00 </option>
-                        <option value='08.30'>08.30 </option>
-                        <option value='09.00'>09.00 </option>
-                    </select>
-                    <input type="text" id="rq1" name="rq1"></input>
-                </div>
-                {LectureInput.map((data, index) => {
-                    return(
-                        <>
-                            <div key={index} className='lab'>
-                                <label className='checkbox-container2'>บรรยาย
-                                    <input type='checkbox' onChange={e => HandleInput2(e,index)} />
-                                    <span className='checkbox-checkmark'></span>
-                                </label>
-                                <label className='radiobox-container'>บังคับ
-                                    <input type='radio' name={"radio"[index]} onChange={e => HandleInput2(e,index)}/>
-                                    <span className='radiobox-checkmark'></span>
-                                </label>
-                                <label className='radiobox-container'>เสรี
-                                    <input type='radio' name={"radio"[index]} onChange={e => HandleInput2(e,index)}/>
-                                    <span className='radiobox-checkmark'></span>
-                                </label>
-                                <select name='yr1' id='select1' onChange={e => HandleInput2(e,index)}>
-                                    <option value='none'>None</option>
-                                    <option value='year1'>T12(1)</option>
-                                    <option value='year2'>T12(2)</option>
-                                    <option value='year3'>T12(3)</option>
-                                    <option value='year4'>T12(4)</option>
-                                </select>
-                                <label for='yr1' id='year-label'>ชั้นปี</label>
-                                <select name='sec' id='sec-select' onChange={e => HandleInput2(e,index)}>
-                                    <option value='none'>None</option>
-                                    <option value='sec1'>1</option>
-                                    <option value='sec2'>2</option>
-                                    <option value='sec3'>3</option>
-                                </select>
-                                <label for='yr1' id='year-label'>เซคที่</label>
-                                <button id='bin' onClick={() => HandleDelete2(index)}><RiDeleteBin6Fill size={20}/></button>
-                            </div>
-
-                            <div className='subject-code'>
-                                <label className='lec-code1'><strong>รหัสวิชา</strong></label>
-                                <label className='lec-name1'><strong>ชื่อวิชา</strong></label>
-                                <label className='year-code1'><strong>รหัสสาขา</strong></label>
-                                <label className='people1'><strong>จำนวน</strong></label>
-                                <label className='day1'><strong>วัน</strong></label>
-                                <label className='time1'><strong>เวลา</strong></label>
-                                <label className='rq1'><strong>Teacher request</strong></label>
-                            </div>
-
-                            <div className='subject-layer'>
-                                <select name='lec-code1' className='select-box'>
-                                    <option value='none'>None</option>
-                                    <option value='math I'>math I </option>
-                                    <option value='math II'>math II </option>
-                                    <option value='math III'>math III </option>
-                                </select>
-                                <input type="text" id="lec-name1" name="lec-name"></input>
-                                <select name='branch-code1' className='select-boxbranchcode'>
-                                    <option value='none'>None</option>
-                                    <option value='T12 I'>T12-1 </option>
-                                    <option value='T12 II'>T12-2 </option>
-                                    <option value='T12 III'>T12-3 </option>
-                                </select>
-                                <input type="text" id="people1" name="people2"></input>
-                                <input type="text" id="day2" name="day2"></input>
-                                <select name='time2-1' id='time2-1'>
-                                    <option value='None'>None</option>
-                                    <option value='08.00'>08.00 </option>
-                                    <option value='08.30'>08.30 </option>
-                                    <option value='09.00'>09.00 </option>
-                                </select>
-                                <label className='ke2'>  - </label>
-                                <select name='time1-2' id='time1-2'>
-                                    <option value='none'>None</option>
-                                    <option value='08.00'>08.00 </option>
-                                    <option value='08.30'>08.30 </option>
-                                    <option value='09.00'>09.00 </option>
-                                </select>
-                                <input type="text" id="rq1" name="rq1"></input>
-                            </div>
-                            <br/><hr/>
-                        </>
-                    );
-                })}
-                <div className='add-lecture'>
-                    <button type='button' onClick={() => addlecture()}>+</button>
-                </div>
-
                 <br/><hr style={{background:'#344e41',height:'5px'}}/>
                 <div className='lab'>
                     <label className='checkbox-container2'>ปฏิบัติ
