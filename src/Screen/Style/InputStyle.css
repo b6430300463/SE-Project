@@ -27,6 +27,12 @@
     width: 100px;
     background-color: #f6f6f6;
 }
+.select-boxbranchcode{
+  height: 25px;
+  margin-left: 70px;
+  width: 100px;
+  background-color: #f6f6f6;
+}
 .subject-box{
     margin-top: 1%;
 }
@@ -74,6 +80,9 @@
     background-color: #f6f6f6;
 }
 .add-lab{
+  margin-top: 1%;
+}
+.add-lecture{
   margin-top: 1%;
 }
 .sub-box{
@@ -313,6 +322,32 @@
   margin-top:1%;
   
 }
+.lec-code1{
+  margin-left: 1px;
+}
+.lec-name1{
+  margin-left: 105px;
+}
+.year-code1{
+  margin-left: 200px;
+}
+.people1{
+  margin-left: 105px;
+}
+.day1{
+  margin-left: 200px;
+}
+.time1{
+  margin-left: 260px;
+}
+.room1{
+  margin-left: 130px;
+}
+.rq1{
+  color: #D51B1B;
+  margin-left: 150px;
+}
+
 .lec-code2{
   margin-left: 1px;
 }
@@ -346,6 +381,45 @@
 #select-code{
   margin-left: 1px;
 }
+#lec-name1{
+  margin-left: 65px;
+  height: 20px;
+}
+#year-code1{
+  margin-left: 70px;
+  height: 20px;
+}
+#people1{
+  margin-left: 70px;
+  height: 20px;
+}
+#day1{
+  margin-left: 70px;
+  height: 20px;
+}
+.ke1{
+  margin-left: 10px;
+  height: 20px;
+}
+#time1-1{
+  margin-left: 50px;
+  height: 25px;
+  background-color: #f6f6f6;
+}
+#time1-2{
+  margin-left: 10px;
+  height: 25px;
+  background-color: #f6f6f6;
+}
+#room1{
+  margin-left: 70px;
+  height: 20px;
+}
+#rq1{
+  margin-left: 70px;
+  height: 20px;
+}
+
 #lec-name2{
   margin-left: 65px;
   height: 20px;
