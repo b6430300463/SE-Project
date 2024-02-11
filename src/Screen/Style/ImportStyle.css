@@ -10,7 +10,7 @@
 #header-font{
     font-size: 20px;
     font-weight: bold;
-    margin-left: 7%;
+    margin-left: 3%;
 }
 .search-box{
     margin-left: 10px;
@@ -40,7 +40,9 @@
     border: 2px;
     border-color: black;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 27%;
 }
 .input{
     justify-content: center;
@@ -89,12 +91,27 @@
     box-shadow: 10px;
     cursor: pointer;
 }
+#order{
+    border: black 1px solid;
+}
 #code{
-    margin-left: 25%;
+    margin-left: 2%;
+    width: 100px;
 }
 #title{
-    justify-content: flex-start;
-    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: start;
+    margin-left: 5%;
+    height: 20px;
+    width: 550px;
+}
+#no-user{
+    display: flex;
+    text-align: center;
+    margin-left: 5%;
+    align-items: center;
+    justify-content: center;
 }
 #credit{
     margin-right: 25%;
@@ -103,7 +120,7 @@
     margin-left: 1%;
 }
 #username{
-    margin-left: 75%;
+    margin-left: 65%;
 }
 .file-input{
     background-color: #457b9d;

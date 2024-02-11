@@ -55,9 +55,6 @@
   display: flex;
   margin-top: 1%;
 }
-.lab-check{
-  
-}
 #span{
     cursor: pointer;
     font-size: 30px;
@@ -91,9 +88,6 @@
 }
 .add-lecture{
   margin-top: 1%;
-}
-.sub-box{
-  /* border: black 1px solid; */
 }
 #submit-input{
   margin-left: 1%;
@@ -381,10 +375,6 @@
   margin-left: 240px;
 }
 
-.subject-layer{
-  /* display: inline-block; */
-  /* border: solid 1px black; */
-}
 #select-code{
   margin-left: 1px;
 }
