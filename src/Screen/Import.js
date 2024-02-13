@@ -5,7 +5,7 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaRegUserCircle } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteLoaderData } from 'react-router-dom';
 import { read, utils, writeFile } from "xlsx"
 
 
@@ -13,7 +13,16 @@ import { read, utils, writeFile } from "xlsx"
 const Import = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [users, setUsers] = useState([]);
+    const [search,setSearch] = useState("");
 
+    const shuffleArray = (array)  => {
+        const shuffledArray = [...array];
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    }
     const submitAlert = () => {
         Swal.fire({
             title: "Added successfully!!",
@@ -99,10 +108,8 @@ const Import = () => {
                             <div id='code'>{user.subjectId}-{user.year}</div>
                             <div id='title'>{user.subject}</div>
                             <div id='credit'>{user.credit}</div>
-
                         </div>
                     ))
-
                 ) : (
                     <div id='no-user'>
                         No Users Found.
