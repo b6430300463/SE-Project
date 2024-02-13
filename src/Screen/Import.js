@@ -105,7 +105,7 @@ const Import = () => {
                     users.map((user, index) => (
                         <div id='subject' key={index}>
                             {/* <th scope = "row">{index}</th> */}
-                            <div id='code'>{user.subjectId}-{user.year}</div>
+                            <div id='code'>{user.subject_id}</div>
                             <div id='title'>{user.subject}</div>
                             <div id='credit'>{user.credit}</div>
                         </div>
