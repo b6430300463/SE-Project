@@ -37,12 +37,12 @@
 #subject{
     display: flex;
     margin-top: 1%;
-    border: 2px;
+    border: 2px ;
     border-color: black;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    margin-left: 27%;
+    margin-left: 20%;
 }
 .input{
     justify-content: center;
@@ -62,8 +62,8 @@
     margin-top: 15px;
     border:none;
 }
-#bin-icon{
-    margin-left: 15px; 
+
+#bin-icon{ 
     background-color: #D51B1B;
     cursor: pointer;
     justify-content: center;
@@ -73,6 +73,7 @@
     padding-top: 3px;
     padding-bottom: 3px;
     border:none;
+    margin-left:10%;
 }
 .submit{
     margin-top: 2%;
@@ -114,7 +115,13 @@
     justify-content: center;
 }
 #credit{
+    display: flex;
+    flex-direction: row;
     margin-right: 25%;
+
+}
+#credit-box{
+    width:80px;
 }
 #user{
     margin-left: 1%;

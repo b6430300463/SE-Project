@@ -13,16 +13,7 @@ import { read, utils, writeFile } from "xlsx"
 const Import = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [users, setUsers] = useState([]);
-    const [search,setSearch] = useState("");
 
-    const shuffleArray = (array)  => {
-        const shuffledArray = [...array];
-        for (let i = shuffledArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-        }
-        return shuffledArray;
-    }
     const submitAlert = () => {
         Swal.fire({
             title: "Added successfully!!",
@@ -56,6 +47,20 @@ const Import = () => {
             reader.readAsArrayBuffer(file);
         }
     };
+    // const removeArrayByID = (arr, id, column) => {
+    //     arr.forEach((value, index) => {
+    //         if(value[column] == id) {
+    //             arr.splice(index, 1);
+    //             return arr;
+    //         }
+    //     });
+    //     return arr;
+    // };
+    const removeArrayByID = (arr, id, column) => {
+        const filteredArray = arr.filter(value => value[column] !== id);
+        return filteredArray;
+    };
+    
     return (
         <div className="import-container">
             <div className="header-bar">
@@ -77,11 +82,6 @@ const Import = () => {
             {/* เริ่มตั้งแต่ตรงนี้ */}
             <form onSubmit={handleImport}>
                 <div className='input row mb-2 mt-5' >
-                    <FaSearch id='search-icon' />
-                    <input className="search-box" placeholder="Search..." ></input>
-                    {/* <button type='submit' id='import-icon'><CiImport  size={30}/></button> */}
-                    <button id='bin-icon'><RiDeleteBin6Fill size={30} /></button>
-
 
                     <div className="custom-file">
                         <input
@@ -93,9 +93,6 @@ const Import = () => {
                             onChange={handleImport}
                             accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheet"
                         />
-                        <label className="custom-file-label" htmlFor="inputGroupFile">
-                            Choose file
-                        </label>
                     </div>
 
                 </div>
@@ -107,7 +104,13 @@ const Import = () => {
                             {/* <th scope = "row">{index}</th> */}
                             <div id='code'>{user.subject_id}</div>
                             <div id='title'>{user.subject}</div>
-                            <div id='credit'>{user.credit}</div>
+                            <div id='credit'>
+                                <div id='credit-box'>
+                                    {user.credit}
+                                </div>
+                                <button id='bin-icon'  onClick={() => setUsers(removeArrayByID(users, user.subject_id, "subject_id"))}><RiDeleteBin6Fill size={15} /></button> 
+                            </div>
+
                         </div>
                     ))
                 ) : (
@@ -115,26 +118,8 @@ const Import = () => {
                         No Users Found.
                     </div>
                 )}
-
-
             </div>
-            {/* {
-                DataDB.map( database => {
-                    return(
-                        <div id="subject" key={database.id}>
-                            <div id='code'>
-                                {database.code}
-                            </div>
-                            <div id='title'>
-                                {database.title}
-                            </div>
-                            <div id='credit'>
-                                {database.credit}
-                            </div>                   
-                        </div>
-                    )
-                })
-            } */}
+
             {/* ถึงตรงนี้ */}
 
 

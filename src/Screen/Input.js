@@ -155,10 +155,10 @@ const Input = () => {
                             <option value='day1'>MON</option>
                             <option value='day2'>TUE</option>
                             <option value='day3'>WED</option>
-                            <option value='day3'>THU</option>
-                            <option value='day3'>FRI</option>
-                            <option value='day3'>SAT</option>
-                            <option value='day3'>SUN</option>
+                            <option value='day4'>THU</option>
+                            <option value='day5'>FRI</option>
+                            <option value='day6'>SAT</option>
+                            <option value='day7'>SUN</option>
                         </select>
                     </div>
 
@@ -258,10 +258,10 @@ const Input = () => {
                                         <option value='day1'>MON</option>
                                         <option value='day2'>TUE</option>
                                         <option value='day3'>WED</option>
-                                        <option value='day3'>THU</option>
-                                        <option value='day3'>FRI</option>
-                                        <option value='day3'>SAT</option>
-                                        <option value='day3'>SUN</option>
+                                        <option value='day4'>THU</option>
+                                        <option value='day5'>FRI</option>
+                                        <option value='day6'>SAT</option>
+                                        <option value='day7'>SUN</option>
                                     </select>
                                 </div>
 
@@ -367,10 +367,10 @@ const Input = () => {
                             <option value='day1'>MON</option>
                             <option value='day2'>TUE</option>
                             <option value='day3'>WED</option>
-                            <option value='day3'>THU</option>
-                            <option value='day3'>FRI</option>
-                            <option value='day3'>SAT</option>
-                            <option value='day3'>SUN</option>
+                            <option value='day4'>THU</option>
+                            <option value='day5'>FRI</option>
+                            <option value='day6'>SAT</option>
+                            <option value='day7'>SUN</option>
                         </select>
                     </div>
 
@@ -468,10 +468,10 @@ const Input = () => {
                                         <option value='day1'>MON</option>
                                         <option value='day2'>TUE</option>
                                         <option value='day3'>WED</option>
-                                        <option value='day3'>THU</option>
-                                        <option value='day3'>FRI</option>
-                                        <option value='day3'>SAT</option>
-                                        <option value='day3'>SUN</option>
+                                        <option value='day4'>THU</option>
+                                        <option value='day5'>FRI</option>
+                                        <option value='day6'>SAT</option>
+                                        <option value='day7'>SUN</option>
                                     </select>
                                 </div>
 
