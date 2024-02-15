@@ -1,14 +1,33 @@
 import './Style/InputStyle.css'
 import './Style/DrawerStyle.css'
 import { FaRegUserCircle } from "react-icons/fa";
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import axios from 'axios';
+
+const url = 'http://localhost:3306';
 const Input = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [LabInput, setLabInput] = useState([]);
     const [LectureInput, setlectureInput] = useState([]);
+    const [lectureOptions, setLectureOptions] = useState([]);
+    const [labOptions, setlabOptions] = useState([]);
+    const [selectedSubjectName, setSelectedSubjectName] = useState('');
+    const [selectedlabSubjectName, setSelectedlabSubjectName] = useState('');
+
+    useEffect(() => {
+        axios.get(`${url}/api/lecture`).then((response) => {
+            
+            setLectureOptions(response.data);
+            console.log(response.data);
+        });
+        axios.get(`${url}/api/lab`).then((response) => {
+            setlabOptions(response.data);
+            console.log(response.data);
+        });
+    }, []);
 
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -52,6 +71,14 @@ const Input = () => {
         inputData[index] = onChangeValue.target.value;
         setlectureInput(inputData)
     }
+    const getSubjectNameById = (subjectId) => {
+        const selectedSubject = lectureOptions.find((lecture) => lecture.subject_id === subjectId);
+        return selectedSubject ? selectedSubject.subject : '';
+    };
+    const getSubjectlabNameById = (subjectId) => {
+        const selectedlabSubject = labOptions.find((lab) => lab.subject_id === subjectId);
+        return selectedlabSubject ? selectedlabSubject.subject : '';
+    };
     return (
         <div className='input-container'>
             <div className='header-bar'>
@@ -120,16 +147,32 @@ const Input = () => {
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
                             <strong>รหัสวิชา</strong>
                         </label>
-                        <select name="subject-id" className="select-box">
-                            <option value="none">None</option>
+                        <select
+                        name="subject-id"
+                        className="select-box"
+                        onChange={(e) => {
+                            const selectedSubjectId = e.target.value;
+                            setSelectedSubjectName(getSubjectNameById(selectedSubjectId));
+                        }}
+                        >
+                        <option value="none">None</option>
+                        {lectureOptions.map((lecture) => (
+                            <option key={lecture.order} value={lecture.subject_id}>
+                            {`${lecture.subject_id}`}
+                            </option>
+                        ))}
                         </select>
+                        
                     </div>
 
                     <div className="box" style={{ fontWeight: "bold" }}>
-                        <label style={{ display: "flex", justifyContent: 'center' }} for="sub-name">ชื่อวิชา</label>
-                        <input type="text" id="sub-name" name="sub-name" />
-                        <br />
-                    </div>
+                    <label style={{ display: "flex", justifyContent: 'center' }} htmlFor="sub-name">
+                        <strong>ชื่อวิชา</strong>
+                    </label>
+                    <input type="text" id="sub-name" name="sub-name" value={selectedSubjectName} readOnly />
+                    <br />
+                </div>
+
 
                     <div className="box">
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
@@ -332,16 +375,29 @@ const Input = () => {
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
                             <strong>รหัสวิชา</strong>
                         </label>
-                        <select name="subject-id" className="select-box">
-                            <option value="none">None</option>
+                        <select
+                        name="subject-id"
+                        className="select-box"
+                        onChange={(e) => {
+                            const selectedlabSubjectId = e.target.value;
+                            setSelectedlabSubjectName(getSubjectlabNameById(selectedlabSubjectId));
+                        }}
+                        >
+                        <option value="none">None</option>
+                        {labOptions.map((lab) => (
+                            <option key={lab.order} value={lab.subject_id}>
+                                {`${lab.subject_id}`}
+                            </option>
+                        ))}
                         </select>
                     </div>
 
                     <div className="box" style={{ fontWeight: "bold" }}>
-                        <label style={{ display: "flex", justifyContent: 'center' }} for="sub-name">ชื่อวิชา</label>
-                        <input type="text" id="sub-name" name="sub-name" />
-                        <br />
-                    </div>
+                    <label style={{ display: "flex", justifyContent: 'center' }} for="sub-name">ชื่อวิชา</label>
+                    <input type="text" id="sub-name" name="sub-name" value={selectedlabSubjectName} readOnly />
+                    <br />
+                </div>
+
 
                     <div className="box">
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
