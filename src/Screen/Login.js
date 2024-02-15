@@ -2,7 +2,7 @@ import './Style/loginStyle.css'
 import {GoogleLogin ,GoogleLogout} from 'react-google-login'
 import { gapi } from 'gapi-script'
 import { useState , useEffect } from 'react'
-
+import axios from 'axios'
 const Login = () =>{
     const clientId = "627023661930-9mt9l2l94ki17cenpkv27947ggm24iif.apps.googleusercontent.com"
     
@@ -19,7 +19,10 @@ const Login = () =>{
 
     const onSuccess = (res) => {
         setProfile(res.profileObj)
-        console.log('success',res)
+        const payload = res.profileObj;
+        axios.post('http://localhost:3307/api/login', payload);
+
+        console.log('success', res)
     }
     const onFailure = (res) => {
         console.log('failed',res)
