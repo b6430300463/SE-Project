@@ -4,15 +4,26 @@ import { FaSearch } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { FaRegUserCircle } from "react-icons/fa";
 import Swal from 'sweetalert2';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link, useRouteLoaderData } from 'react-router-dom';
 import { read, utils, writeFile } from "xlsx"
 
-
-// npm  i sweetalert2 react-icon ด้วย
+const url = 'http://localhost:3306';
 const Import = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [users, setUsers] = useState([]);
+    const [Post, setPost] = useState([]);
+    const [subject_id, setSubjectid] = useState([]);
+    const [year, setYear] = useState([]);
+    const [subject, setSubject] = useState([]);
+    const [credit, setCredit] = useState([]);
+    const [department, setDepartment] = useState([]);
+    const [subject_priority, setSubject_priority] = useState([]);
+    const [subject_type, setSubject_type] = useState([]);
+    const [process, setProcess] = useState([]);
+
+
 
     const submitAlert = () => {
         Swal.fire({
@@ -22,9 +33,56 @@ const Import = () => {
         })
         console.log("checkError", users)
     }
+    const getcourse = () => {
+        axios.get(`${url}/api/course`).then((response) => {
+            setPost(response.data);
+        });
+    }
+
+    useEffect(() => {
+        axios.get(`${url}/api/course`).then((response) => {
+            setPost(response.data);
+            console.log(response.data);
+        });
+    }, []);
+
     const openNav = () => {
         setIsDrawerOpen(true);
     };
+
+    const submitData = async () => {
+        try {
+          // Extract relevant data properties from each user
+          const postData = users.map(user => ({
+            subject_id: user.subject_id,
+            year: user.year,
+            subject: user.subject,
+            credit: user.credit,
+            department: user.department,
+            subject_priority: user.subject_priority,
+            subject_type: user.subject_type,
+            process: user.process,
+          }));
+      
+          console.log('postData:', postData); // Log postData for debugging
+      
+          // ทำ HTTP POST request ไปยัง API endpoint
+          const response = await axios.post(`${url}/api/imtoDB`, { data: postData });
+      
+          // หลังจากที่ request สำเร็จ
+          console.log(response.data); // แสดงข้อมูลที่ได้จาก response
+          submitAlert(); // เรียกฟังก์ชันแจ้งเตือนความสำเร็จ
+        } catch (error) {
+          // จัดการข้อผิดพลาดที่เกิดขึ้นในกรณีที่ไม่สำเร็จ
+          console.error(error);
+        }
+      };
+      
+      
+
+    
+
+
 
     const closeNav = () => {
         setIsDrawerOpen(false);
@@ -36,15 +94,25 @@ const Import = () => {
             const reader = new FileReader();
             reader.onload = event => {
                 const wb = read(event.target.result);
+                console.log('Workbook:', wb); // Log the workbook object
                 const sheets = wb.SheetNames;
-
+    
                 if (sheets.length) {
                     const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
+                    console.log('Rows:', rows); // Log the rows array
                     setUsers(rows);
-
                 }
             };
             reader.readAsArrayBuffer(file);
+        }
+    };
+    const handleSubmit = () => {
+        // ตรวจสอบว่ามีข้อมูล users หรือไม่ก่อนที่จะทำการเรียก submitData
+        if (users.length > 0) {
+            submitData(); // เรียก submitData ในกรณีที่มีข้อมูล
+        } else {
+            // แสดงการแจ้งเตือนหรือดำเนินการเพิ่มเติมตามความเหมาะสม
+            console.warn('No data to submit.');
         }
     };
     // const removeArrayByID = (arr, id, column) => {
@@ -60,7 +128,7 @@ const Import = () => {
         const filteredArray = arr.filter(value => value[column] !== id);
         return filteredArray;
     };
-    
+
     return (
         <div className="import-container">
             <div className="header-bar">
@@ -108,7 +176,7 @@ const Import = () => {
                                 <div id='credit-box'>
                                     {user.credit}
                                 </div>
-                                <button id='bin-icon'  onClick={() => setUsers(removeArrayByID(users, user.subject_id, "subject_id"))}><RiDeleteBin6Fill size={15} /></button> 
+                                <button id='bin-icon' onClick={() => setUsers(removeArrayByID(users, user.subject_id, "subject_id"))}><RiDeleteBin6Fill size={15} /></button>
                             </div>
 
                         </div>
@@ -124,7 +192,7 @@ const Import = () => {
 
 
             <div className='submit'>
-                <button type='submit' className="submit-btn" onClick={submitAlert}><strong>Submit</strong></button>
+                <button type='submit' className="submit-btn" onClick={handleSubmit}><strong>Submit</strong></button>
             </div>
 
         </div>
