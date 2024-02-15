@@ -139,3 +139,38 @@
     border: none;
     border-radius: 5px;
 }
+.choosefile{
+    margin-left:20px;
+    margin-top: 20px;
+    
+}
+.custom-file-input {
+    font-size: 16px;
+    background-color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    width:350px;
+    outline:none
+}
+::-webkit-file-upload-button{
+    color:white;
+    background: #206a5d;
+    padding: 20px;
+    border:none;
+    border-radius: 50px;
+    box-shadow:1px 0 1px #6b4559;
+    outline:none;
+}
+::-webkit-file-upload-button:hover{
+    background: #438a5d;
+}
+
+.custom-file-input:hover {
+    background-color: #f5f5f5;
+}
+
+.custom-file-input input {
+    display: none;
+}

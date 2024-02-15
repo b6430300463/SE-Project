@@ -81,9 +81,7 @@ const Import = () => {
 
             {/* เริ่มตั้งแต่ตรงนี้ */}
             <form onSubmit={handleImport}>
-                <div className='input row mb-2 mt-5' >
-
-                    <div className="custom-file">
+                    <div className="choosefile">
                         <input
                             type="file"
                             name="file"
@@ -94,8 +92,7 @@ const Import = () => {
                             accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheet"
                         />
                     </div>
-
-                </div>
+    
             </form>
             <div className="scrollv">
                 {users.length ? (
