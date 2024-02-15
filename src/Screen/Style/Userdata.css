@@ -1,0 +1,63 @@
+/* .scrollv-users{
+    -ms-overflow-style: none;
+    overflow-y:scroll;
+    height:2px;
+    scrollbar-width: none;
+    margin-right: 10%;
+    margin-top: 5%;
+}
+#subject-users{
+    display: flex;
+    margin-top: 1%;
+    border: 2px;
+    border-color: black;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 27%;
+} */
+.email-table-container {
+    overflow-x: auto; /*Add horizontal scroll when needed */
+    margin-left: 25%;
+    margin-top: 3%;
+  }
+  
+  .email-table {
+    width: 80%;
+    border-collapse: collapse;
+    height: 10%;
+    
+  }
+  
+  .email-table th, .email-table td {
+    border: 1px solid #ddd;
+    padding: 20px;
+    text-align: left;
+  }
+  
+  
+  .email-table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Add borders around the table */
+  .email-table {
+    border: 3px solid #ddd;
+  }
+  
+  /* CSS for numbering cells */
+  .email-table td:first-child::before {
+    content: attr(data-row-number);
+    counter-increment: rowNumber;
+    
+  }
+  .email-table th:nth-child(3),.email-table td:nth-child(3) {
+  width: 400px; /* Adjust the width as needed */
+}
+
+.scrolle{
+    -ms-overflow-style: none;
+    overflow-y:scroll;
+    height:50vh;
+    scrollbar-width: none;
+  }

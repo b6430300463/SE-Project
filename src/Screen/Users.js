@@ -1,13 +1,27 @@
 import './Style/InputStyle.css'
 import './Style/DrawerStyle.css'
+import './Style/Userdata.css'
+
 import { FaRegUserCircle } from "react-icons/fa";
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import axios  from 'axios';
+
 const Users = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [LabInput,setLabInput] = useState([]);
+    const [email,setEmail] = useState([]);
+    const url = 'http://localhost:3308';
+
+    useEffect(() => {
+        axios.get( `${url}/api/getuser `) .then((response) => {
+
+            setEmail(response.data);
+            console.log(email);
+        });
+    }, []);
 
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -37,6 +51,8 @@ const Users = () => {
         inputData[index] = onChangeValue.target.value;
         setLabInput(inputData)
     }
+
+    
     return(
         <div className='input-container'>                         
             <div className='header-bar'>
@@ -77,10 +93,50 @@ const Users = () => {
                         <option>เปิดระบบ</option>
                         <option>ปิดระบบ</option>
                         </select>
-                    </div>               
+                    </div>  
+                    <div className="email-table-container scrolle" >
+                        <table className="email-table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Email</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {email.map((item, index) => (
+                                    <tr key={index} >
+                                        <td data-row-number={index + 1}></td>
+                                        <td>{item.email}</td>
+                                        <td>{item.priority}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>             
                 </div>
+                
             </div>
-
+            {/* <div className="email-table-container">
+                <table className="email-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Email</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {email.map((item, index) => (
+                            <tr key={index} >
+                                <td data-row-number={index + 1}></td>
+                                <td>{item.email}</td>
+                                <td>{item.priority}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div> */}
             <div className='sub-box' >
                 <label style={{paddingLeft:20,fontWeight:'bold'}}>Email : </label>
                 <input type="text" id="sub-name" name="sub-name" />

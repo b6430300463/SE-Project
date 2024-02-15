@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = 3306;
+const port = 3308;
 
 
 app.use(cors());
@@ -194,9 +194,41 @@ app.post('/api/upload', upload.single('csv_file'), function (req, res) {
   res.send(req.file)
 });
 
+app.get('/api/getuser', (req, res) => {
+  const query = 'SELECT email FROM user';
 
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
+app.post('/api/imtoDB',(req,res) => {
+  const subject_id = req.body.subject_id;
+  const year = req.body.year;
+  const subject = req.body.subject;
+  const credit = req.body.credit;
+  const department = req.body.department;
+  const subject_priority = req.body.subject_priority;
+  const subject_type = req.body.subject_type;
+  const process = req.body.process;
+
+  connection.query("INSET INTO course (subject_id,year,subject,credit,department,subject_priority,subject_type,process) VALUES(?,?,?,?,?,?,?,?)",
+    [subject_id,year,subject,credit,department,subject_priority,subject_type,process],
+    (err,result) => {
+      if(err){
+        console.log(err);
+      }
+      res.send("Import complete")
+    }
+  );
+});
 // ให้ server ทำงานที่ port ที่กำหนด
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
