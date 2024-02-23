@@ -28,13 +28,15 @@
     height: 10%;
     
   }
-  
+  .priority{
+    display: flex;
+    flex-direction: row;
+  }
   .email-table th, .email-table td {
     border: 1px solid #ddd;
     padding: 20px;
     text-align: left;
   }
-  
   
   .email-table th {
     background-color: #f2f2f2;
@@ -58,6 +60,18 @@
 .scrolle{
     -ms-overflow-style: none;
     overflow-y:scroll;
-    height:50vh;
+    height:65vh;
     scrollbar-width: none;
   }
+#confirm-input{
+  margin-left: 1%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  margin-left: 60%;
+}
+.c-priority{
+  border: black 1px solid;
+  width: 80px;
+  text-align: center;
+  margin-right: 4%;
+}

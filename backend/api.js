@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = 3308;
+const port = 3307;
 
 
 app.use(cors());
@@ -153,12 +153,8 @@ app.post('/api/updatePriority', (req, res) => {
   });
 });
 
-app.post('/api/upload', upload.single('csv_file'), function (req, res) {
-  res.send(req.file)
-});
-
 app.get('/api/getuser', (req, res) => {
-  const query = 'SELECT email FROM user';
+  const query = 'SELECT email,priority FROM user';
 
   db.query(query, (err, results) => {
     if (err) {
@@ -170,26 +166,100 @@ app.get('/api/getuser', (req, res) => {
   });
 });
 
-app.post('/api/imtoDB',(req,res) => {
-  const subject_id = req.body.subject_id;
-  const year = req.body.year;
-  const subject = req.body.subject;
-  const credit = req.body.credit;
-  const department = req.body.department;
-  const subject_priority = req.body.subject_priority;
-  const subject_type = req.body.subject_type;
-  const process = req.body.process;
-
-  connection.query("INSET INTO course (subject_id,year,subject,credit,department,subject_priority,subject_type,process) VALUES(?,?,?,?,?,?,?,?)",
-    [subject_id,year,subject,credit,department,subject_priority,subject_type,process],
-    (err,result) => {
-      if(err){
-        console.log(err);
-      }
-      res.send("Import complete")
-    }
-  );
+app.post('/api/upload', upload.single('csv_file'), function (req, res) {
+  res.send(req.file)
 });
+
+app.post('/api/manual_insertUser', (req, res) => {
+  const receivedData = req.body.data;
+
+  console.log('Received Data:', receivedData);
+
+  // Check if receivedData is an object
+  if (typeof receivedData !== 'object' || receivedData === null) {
+    console.error('Received data is not an object');
+    return res.status(400).json({ error: 'Received data is not an object' });
+  }
+
+  // Convert receivedData to an array with a single object if it's not already an array
+  const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+
+  // Fix the data for firstname, lastname, googleid, and imageURL
+  const fixedData = dataArray.map(user => {
+    const firstname = user.firstname !== undefined ? user.firstname : "WaitForUpdate";
+    const lastname = user.lastname !== undefined ? user.lastname : "WaitForUpdate";
+    const googleid = user.googleid !== undefined ? user.googleid : 0;
+    const imageURL = user.imageURL !== undefined ? user.imageURL : "None";
+    
+    return [
+      user.id,
+      firstname,
+      lastname,
+      googleid,
+      imageURL,
+      user.email,
+      user.priority
+    ];
+  });
+
+  // Sample insertion code (you might need to adjust it based on your database schema)
+  const sql = 'INSERT INTO user (id, firstname, lastname, googleid, imageURL, email, priority) VALUES ?';
+
+  db.query(sql, [fixedData], (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
+// app.get('/api/getuser', (req, res) => {
+//   const query = 'SELECT email FROM user';
+
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error('Error querying MySQL:', err);
+//       res.status(500).json({ error: 'Internal Server Error' });
+//     } else {
+//       res.json(results);
+//     }
+//   });
+// });
+
+app.post('/api/imtoDB', (req, res) => {
+  const receivedData = req.body.data; // Assuming data is sent as an array
+
+  console.log('Received Data:', receivedData);
+
+  // Now, you can use receivedData to insert into the database
+
+  // Sample insertion code (you might need to adjust it based on your database schema)
+  const sql = 'INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?';
+  const values = receivedData.map(user => [
+    user.subject_id,
+    user.year,
+    user.subject,
+    user.credit,
+    user.department,
+    user.subject_priority,
+    user.subject_type,
+    user.process
+  ]);
+
+  db.query(sql, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
 // ให้ server ทำงานที่ port ที่กำหนด
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
