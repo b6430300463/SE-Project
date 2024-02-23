@@ -26,6 +26,9 @@ const db = mysql.createConnection({
   database: process.env.DB_DATABASE
 });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // เชื่อมต่อกับ MySQL
 db.connect((err) => {
   if (err) {
@@ -62,6 +65,7 @@ app.get('/api/lecture', (req, res) => {
   });
 });
 
+
 app.get('/api/lab', (req, res) => {
   const query = 'SELECT * FROM course WHERE subject_type = 1';
 
@@ -74,6 +78,39 @@ app.get('/api/lab', (req, res) => {
     }
   });
 });
+
+app.post('/api/imtoDB', (req, res) => {
+  const receivedData = req.body.data; // Assuming data is sent as an array
+
+  console.log('Received Data:', receivedData);
+
+  // Now, you can use receivedData to insert into the database
+
+  // Sample insertion code (you might need to adjust it based on your database schema)
+  const sql = 'INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?';
+  const values = receivedData.map(user => [
+    user.subject_id,
+    user.year,
+    user.subject,
+    user.credit,
+    user.department,
+    user.subject_priority,
+    user.subject_type,
+    user.process
+  ]);
+
+  db.query(sql, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
+
 
 
 // หลังจากเข้าสู่ระบบ ให้เช็คว่าเจอเมลในฐานข้อมูลไหม ถ้าไม่เจอให้สร้างใหม่ ถ้าเจอให้อัพเดท
