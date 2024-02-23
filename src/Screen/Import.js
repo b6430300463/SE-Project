@@ -10,7 +10,6 @@ import { Link, useRouteLoaderData } from 'react-router-dom';
 import { read, utils, writeFile } from "xlsx"
 
 
-// npm  i sweetalert2 react-icon ด้วย
 const Import = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [users, setUsers] = useState([]);
@@ -23,7 +22,7 @@ const Import = () => {
     const [subject_priority, setSubject_priority] = useState([]);
     const [subject_type, setSubject_type] = useState([]);
     const [process, setProcess] = useState([]);
-
+    const url = 'http://localhost:3307';
 
 
     const submitAlert = () => {
@@ -34,9 +33,56 @@ const Import = () => {
         })
         console.log("checkError", users)
     }
+    const getcourse = () => {
+        axios.get(`${url}/api/course`).then((response) => {
+            setPost(response.data);
+        });
+    }
+
+    useEffect(() => {
+        axios.get(`${url}/api/course`).then((response) => {
+            setPost(response.data);
+            console.log(response.data);
+        });
+    }, []);
+
     const openNav = () => {
         setIsDrawerOpen(true);
     };
+
+    const submitData = async () => {
+        try {
+          // Extract relevant data properties from each user
+          const postData = users.map(user => ({
+            subject_id: user.subject_id,
+            year: user.year,
+            subject: user.subject,
+            credit: user.credit,
+            department: user.department,
+            subject_priority: user.subject_priority,
+            subject_type: user.subject_type,
+            process: user.process,
+          }));
+      
+          console.log('postData:', postData); // Log postData for debugging
+      
+          // ทำ HTTP POST request ไปยัง API endpoint
+          const response = await axios.post(`${url}/api/imtoDB`, { data: postData });
+      
+          // หลังจากที่ request สำเร็จ
+          console.log(response.data); // แสดงข้อมูลที่ได้จาก response
+          submitAlert(); // เรียกฟังก์ชันแจ้งเตือนความสำเร็จ
+        } catch (error) {
+          // จัดการข้อผิดพลาดที่เกิดขึ้นในกรณีที่ไม่สำเร็จ
+          console.error(error);
+        }
+      };
+      
+      
+
+    
+
+
 
     const closeNav = () => {
         setIsDrawerOpen(false);
@@ -58,6 +104,15 @@ const Import = () => {
                 }
             };
             reader.readAsArrayBuffer(file);
+        }
+    };
+    const handleSubmit = () => {
+        // ตรวจสอบว่ามีข้อมูล users หรือไม่ก่อนที่จะทำการเรียก submitData
+        if (users.length > 0) {
+            submitData(); // เรียก submitData ในกรณีที่มีข้อมูล
+        } else {
+            // แสดงการแจ้งเตือนหรือดำเนินการเพิ่มเติมตามความเหมาะสม
+            console.warn('No data to submit.');
         }
     };
     // const removeArrayByID = (arr, id, column) => {
@@ -82,9 +137,10 @@ const Import = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <Link to='/mainpage'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
-                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
+                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>                   
                     <Link to='/login'>เข้าสู่ระบบ</Link>
                 </div>
                 <label id="header-font">เพิ่มรายวิชา</label>
@@ -94,9 +150,7 @@ const Import = () => {
 
             {/* เริ่มตั้งแต่ตรงนี้ */}
             <form onSubmit={handleImport}>
-                <div className='input row mb-2 mt-5' >
-
-                    <div className="custom-file">
+                    <div className="choosefile">
                         <input
                             type="file"
                             name="file"
@@ -107,8 +161,7 @@ const Import = () => {
                             accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheet"
                         />
                     </div>
-
-                </div>
+    
             </form>
             <div className="scrollv">
                 {users.length ? (
