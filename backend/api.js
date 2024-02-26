@@ -203,6 +203,32 @@ app.get('/api/getuser', (req, res) => {
   });
 });
 
+app.get('/api/teacherassignment', (req, res) => {
+  const query = 'SELECT * FROM teacherassignment';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/teacherassignment/:teacher_id', (req, res) => {
+  const query = 'SELECT * FROM teacherassignment WHERE teacher_id = ' + req.params.teacher_id;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.post('/api/upload', upload.single('csv_file'), function (req, res) {
   res.send(req.file)
 });
