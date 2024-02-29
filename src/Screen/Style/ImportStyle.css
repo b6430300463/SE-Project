@@ -92,6 +92,39 @@
     box-shadow: 10px;
     cursor: pointer;
 }
+.btn-red {
+    background-color: #9B1003;
+    color: white;
+    font-weight: bold; /* ให้ตัวอักษรเป็นตัวหนา */
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px;
+    cursor: pointer;
+    margin-right: 10px; /* เพิ่มระยะห่างขวา */
+}
+
+.btn-blue {
+    background-color: #D3D3D3;
+    color: black;
+    font-weight: bold; /* ให้ตัวอักษรเป็นตัวหนา */
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px;
+    cursor: pointer;
+}
+
 #order{
     border: black 1px solid;
 }
@@ -106,7 +139,18 @@
     margin-left: 5%;
     height: 20px;
     width: 550px;
+
 }
+
+/* ปรับขนาดข้อความ Alert */
+.swal2-title {
+    font-size: 16px; /* ปรับขนาดข้อความตามต้องการ */
+}
+
+
+
+
+
 #no-user{
     display: flex;
     text-align: center;

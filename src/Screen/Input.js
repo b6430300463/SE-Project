@@ -1,6 +1,8 @@
 import './Style/InputStyle.css'
 import './Style/DrawerStyle.css'
 import { FaRegUserCircle } from "react-icons/fa";
+import { FaExclamationTriangle } from 'react-icons/fa';
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -725,6 +727,7 @@ const Input = () => {
                         </>
                     )
                 })}
+                
                 <div className='add-lecture'>
                     <button type='button' onClick={() => addlecture()}>+</button>
                 </div>
@@ -932,7 +935,7 @@ const Input = () => {
             </div>
 
             <div className='sub-box'>
-                <button type='submit' className='submit-btn' id='submit-input' onClick={submitAlert}><strong>Submit</strong></button>
+                <button type='submit' className='submit-btn' id='submit-input' onClick={HandleButtonClick}><strong>Submit</strong></button>
             </div>
         </div>
     );

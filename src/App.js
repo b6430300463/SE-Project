@@ -12,7 +12,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<CheckSubject/>}/>
+        <Route index element={<Users/>}/>
+        <Route path="input" element={<Input/>}/>
         <Route path="import" element={<Import/>} />
         <Route path="checksubject" element={<CheckSubject/>}/>
         <Route path="users" element={<Users/>}/>
