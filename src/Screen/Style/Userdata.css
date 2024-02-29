@@ -75,3 +75,26 @@
   text-align: center;
   margin-right: 4%;
 }
+
+.buttondelete {
+  margin-left: 20px;
+  padding: 15px 25px; /* ปรับขนาดของปุ่ม */
+  background-color: palevioletred; /* สีพื้นหลัง */
+  color: #fff; /* สีตัวอักษร */
+  border: 2px solid palevioletred; /* ขอบ */
+  border-radius: 8px; /* มุมโค้งขอบ */
+  cursor: pointer;
+  font-size: 10px; /* ขนาดตัวอักษร */
+  font-weight: bold; /* ตัวหนา */
+  text-transform: uppercase; /* แปลงตัวอักษรเป็นตัวใหญ่ทั้งหมด */
+  letter-spacing: 2px; /* ระยะห่างระหว่างตัวอักษร */
+  outline: none; /* ไม่แสดงเส้นโค้งขอบเมื่อโฮเวอร์ */
+  transition: background-color 0.3s, border 0.3s, color 0.3s; /* เพื่อให้มีการเปลี่ยนแปลงอย่างนุ่มนวล */
+}
+
+.buttondelete:hover {
+  background-color: plum; /* เปลี่ยนสีพื้นหลังเมื่อโฮเวอร์ */
+  border: 2px solid plum; /* เปลี่ยนสีขอบเมื่อโฮเวอร์ */
+  color: #fff; /* เปลี่ยนสีตัวอักษรเมื่อโฮเวอร์ */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเอฟเฟ็กต์เงา */
+}

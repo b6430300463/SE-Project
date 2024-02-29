@@ -20,7 +20,7 @@ const Login = () =>{
     const onSuccess = (res) => {
         setProfile(res.profileObj)
         const payload = res.profileObj;
-        axios.post('http://localhost:3308/api/login', payload);
+        axios.post('http://localhost:3307/api/login', payload);
 
         console.log('success', res)
     }

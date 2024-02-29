@@ -328,3 +328,22 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+app.delete('/api/deleteusers', (req, res) => {
+  const email = req.body.email;
+  const query = 'DELETE FROM user WHERE email = ?';
+  console.log(req.body.email);
+
+  db.query(query, email, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      if (results.affectedRows > 0) {
+        const deletedEmail = req.body.email;
+        res.json({ message: `User with email ${deletedEmail} deleted successfully` });
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+    }
+  });
+});

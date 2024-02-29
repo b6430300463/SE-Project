@@ -122,6 +122,48 @@ const Users = () => {
                 });
             });
     };
+    const deleteUser = (email) => {
+        Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: 'คุณจะไม่สามารถกู้คืนผู้ใช้นี้ได้!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ใช่, ลบ!',
+            cancelButtonText: 'ไม่, ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${url}/api/deleteusers`, { data: { email } })
+                    .then(response => {
+                        if (response.data.message) {
+                            Swal.fire({
+                                title: 'ลบแล้ว!',
+                                text: 'ผู้ใช้ถูกลบแล้ว',
+                                icon: 'success',
+                                confirmButtonText: 'ตกลง'
+                            });
+                            // อัปเดตสถานะผู้ใช้หลังจากการลบสำเร็จ
+                            setUser(user.filter(u => u.email !== email));
+                        } else {
+                            Swal.fire({
+                                title: 'ข้อผิดพลาด',
+                                text: 'ลบผู้ใช้ไม่สำเร็จ',
+                                icon: 'error',
+                                confirmButtonText: 'ตกลง'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('ข้อผิดพลาดในการลบผู้ใช้:', error);
+                        Swal.fire({
+                            title: 'ข้อผิดพลาด',
+                            text: 'ลบผู้ใช้ไม่สำเร็จ กรุณาลองใหม่ในภายหลัง',
+                            icon: 'error',
+                            confirmButtonText: 'ตกลง'
+                        });
+                    });
+            }
+        });
+    };
     
     return (
         <div className='input-container'>
@@ -197,6 +239,9 @@ const Users = () => {
                                                 <option value="2">Table manager</option>
                                                 <option value="3">Teacher</option>
                                             </select>
+                                                <button 
+                                                className='buttondelete'
+                                                onClick={() => deleteUser(item.email)}>Delete</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -218,6 +263,9 @@ const Users = () => {
                 <button type='submit' className='submit-btn' id='submit-input' onClick={() => {updateEmailAndPriority(newEmail,newPriority)}}><strong>ADD</strong></button>
                 <button type='submit' className='submit-btn' id='confirm-input' onClick={updatePriority}><strong>Confirm</strong></button>
             </div>
+            <div>
+            
+        </div>
         </div>
     );
 }

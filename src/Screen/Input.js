@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import axios from 'axios';
 
-const url = 'http://localhost:3308';
+const url = 'http://localhost:3307';
 const Input = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [LabInput, setLabInput] = useState([]);
