@@ -140,8 +140,9 @@ const Import = () => {
                     <Link to='/mainpage'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
                     <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
-                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>                   
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
                     <Link to='/login'>เข้าสู่ระบบ</Link>
+                    <Link to='/users'>จัดการการเข้าถึง</Link>
                 </div>
                 <label id="header-font">เพิ่มรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
