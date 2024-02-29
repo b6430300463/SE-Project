@@ -1,11 +1,17 @@
 import './Style/InputStyle.css'
 import './Style/DrawerStyle.css'
-import { useState } from 'react';
+import './Style/ImportStyle.css'
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
-import DataDB from './DB/database.json';
+import axios from 'axios';
+
+
+const url = 'http://localhost:3307';
+
 const CheckSubject = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [post, setPost] = useState(null);
 
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -14,6 +20,17 @@ const CheckSubject = () => {
     const closeNav = () => {
         setIsDrawerOpen(false);
     };
+
+    useEffect(() => {
+        axios.get(`${url}/api/course`).then((response) => {
+        setPost(response.data);
+        console.log(response.data);
+            });
+        }, []);
+
+        if(!post) return null;
+
+
     return(
         <div className='input-container'>                         
             <div className='header-bar'>
@@ -49,26 +66,24 @@ const CheckSubject = () => {
                         <input type='checkbox'/>
                         <span className='checkbox-checkmark'></span>
                     </label>
-                    </div>
-                    <br></br>
-                    <br></br>
-                    {
-                DataDB.map( database => {
-                    return(
-                        <div id="subject" key={database.id}>
-                            <div id='code'>
-                                {database.code}
-                            </div>
-                            <div id='title'>
-                                {database.title}
-                            </div>
+                </div>
+            <div className="scrollv">
+                {
+                    post.map((data, index) => (
+                        <div id='subject' key={index}>
+                            {/* <th scope = "row">{index}</th> */}
+                            <div id='code'>{data.subject_id}</div>
+                            <div id='title'>{data.subject}</div>
                             <div id='credit'>
-                                {database.credit}
-                            </div>                   
+                                <div id='credit-box'>
+                                    {data.credit}
+                                </div>
+                            </div>
+
                         </div>
-                    )
-                })
-            }
+                    ))
+                }
+            </div>
         </div>
     );
 }

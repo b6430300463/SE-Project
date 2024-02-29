@@ -1,91 +1,91 @@
-import './Style/checkStyle.css'
-import { FaSearch } from "react-icons/fa";
-import DataDB from './DB/database-check.json';
+import './Style/InputStyle.css'
+import './Style/DrawerStyle.css'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
-import Swal from 'sweetalert2';
-import { IoArrowBackCircle } from "react-icons/io5";
+import axios from 'axios';
 
-// npm  i sweetalert2 react-icon ด้วย
-const CheckPage = () => {
-    const submitAlert = () => {
-        Swal.fire({
-            title:"Added successfully!!",
-            icon:"success",
-            confirmButtonText:'Okay'
-        })
-    }
-    const backAlert = () => {
-        Swal.fire({
-            title:"back!!",
-            icon:"cancel",
-            confirmButtonText:'Okay'
-        })
-    }
+
+const url = 'http://localhost:3307';
+
+const CheckSubject = () => {
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [post, setPost] = useState(null);
+
+    const openNav = () => {
+        setIsDrawerOpen(true);
+    };
+
+    const closeNav = () => {
+        setIsDrawerOpen(false);
+    };
+
+    useEffect(() => {
+        axios.get(`${url}/api/course`).then((response) => {
+        setPost(response.data);
+        console.log(response.data);
+            });
+        }, []);
+
+        if(!post) return null;
+
 
     return(
-        <div className="check-container">
-            <div className="header-bar">
-                <label id="header-font">ตรวจสอบคำร้องขอจัดตาราง</label>
+        <div className='input-container'>                         
+            <div className='header-bar'>
+                <div id="main">
+                    <span id='span' onClick={openNav}>&#9776;</span>
+                </div>
+                <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
+                    <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <Link to='/import'>เพิ่มรายวิชา</Link>
+                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>                   
+                    <Link to='/login'>เข้าสู่ระบบ</Link>
+                </div>
+
+                <label id="header-font">ตรวจสอบรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
                 <FaRegUserCircle id="user" size={30}/>
-
             </div>
-            <div className="under1-bar">
-                <label id="under1-font">ตรวจสอบคำร้องขอจัดตาราง</label>
-                <label id="under2-font">ภาค ต้น/ปลาย</label>
-            </div>
-            <div className="under3-bar">
-                <label id="under3-font">ชื่อ - สกุล </label>
-                <label id="under3-font">เบอร์ติดต่อ. 0xx-xxx-xxxx</label>
-            </div>
-            <div className="under4-bar">
-                <label id="under4-font">วิชา บังคับ/เสรี</label>
-            </div> 
-            
-            <div className='scrollv'>
-            {
-                DataDB.map( database => {
+            {/* โค้ดheaderbar */}
+            <br></br>
+                <div className='lec'>
+                    <select name='term' id='select-term'>
+                        <option value='term1'>หลักสูตรประจำปี</option>
+                        <option value='term2'>2565</option>
+                        <option value='term2'>2566</option>
+                    </select> 
+                    
+                    <label className='checkbox-container'>ขอเปิดรายวิชาแล้ว
+                        <input  type='checkbox'/>
+                        <span className='checkbox-checkmark'></span>
+                    </label>
+                    <label className='checkbox-container'>ยังไม่ได้ขอเปิดรายวิชาแล้ว
+                        <input type='checkbox'/>
+                        <span className='checkbox-checkmark'></span>
+                    </label>
+                    </div>
+                    <br></br>
+                    <br></br>
+                    {
+                post.map( database => {
                     return(
-                        <div id="subject" key={database.id}>
-                            <div id='code'>
-                                {database.code}
+                        <div id="subject_box" key={database.order}>
+                            <div id='Subject_id'>
+                                {database.Subject_id}-{database.year}
                             </div>
-                            <div id='title'>
-                                {database.title}
+                            <div id='subject'>
+                                {database.subject}
                             </div>
-                            <div id='major'>
-                                {database.major}
-                            </div>
-                            <div id='people'>
-                                {database.people}
-                            </div>   
-                            <div id='day'>
-                                {database.day}
-                            </div>   
-                            <div id='time'>
-                                {database.time}
-                            </div>   
-                            <div id='request'>
-                                {database.request}
-                            </div>                      
+                            <div id='credit'>
+                                {database.credit}
+                            </div>                   
                         </div>
                     )
                 })
             }
-            </div>
-            <div className='Submit'>
-                <button type='submit' className="submit-btn" onClick={submitAlert}><strong>Submit</strong></button>
-            </div>
-            <div className='Back'>
-                <button 
-                    type='submit' className="submit-btn" onClick={backAlert}><strong>Back</strong>
-                    
-                </button> 
-                
-                
-            </div>
-            
         </div>
     );
 }
-export default CheckPage
+export default CheckSubject

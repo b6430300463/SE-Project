@@ -203,10 +203,108 @@ app.get('/api/getuser', (req, res) => {
   });
 });
 
-app.get('/api/teacherassignment', (req, res) => {
-  const query = 'SELECT * FROM teacherassignment';
+app.post('/api/assign_lab', (req, res) => {
+  const receivedData = req.body;
 
-  db.query(query, (err, results) => {
+  console.log('Received Data:', receivedData);
+
+  // Check if receivedData is an array or a single object
+  const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+
+  // Verify that dataArray contains objects
+  if (!dataArray.every(item => typeof item === 'object')) {
+    console.error('Received data is not in the expected format');
+    return res.status(400).json({ error: 'Received data is not in the expected format' });
+  }
+
+  const sql = 'INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES ?';
+  
+  const values = dataArray.map(data => [
+    data.subject_id,
+    data.year,
+    data.subject_name,
+    data.credit,
+    data.department,
+    data.section,
+    data.total_students,
+    data.date,
+    data.start_time,
+    data.finish_time,
+    data.room,
+    data.teacher_request,
+    data.teacher_id
+  ]);
+
+  console.log(values);
+
+  db.query(sql, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
+
+
+app.post('/api/assign_lecture', (req, res) => {
+  const receivedData = req.body;
+
+  console.log('Received Data:', receivedData);
+
+  // Check if receivedData is an object
+  // if (typeof receivedData !== 'object' || receivedData === null) {
+  //   console.error('Received data is not an object');
+  //   return res.status(400).json({ error: 'Received data is not an object' });
+  // }
+
+  // //  Convert receivedData to an array with a single object if it's not already an array
+  // const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+
+    const room = receivedData.room !== undefined ? receivedData.room : "None";
+    const sql = 'INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+    
+    
+    values = [
+      receivedData.subject_id,
+      receivedData.year,
+      receivedData.subject_name,
+      receivedData.credit,
+      receivedData.department,
+      receivedData.section,
+      receivedData.total_students,
+      receivedData.date,
+      receivedData.start_time,
+      receivedData.finish_time,
+      room,
+      receivedData.teacher_request,
+      receivedData.teacher_id
+      
+    ];
+    console.log(values)
+ 
+
+  
+
+  db.query(sql, values, (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
+app.get('/api/teacherassignmentlab', (req, res) => {
+  const lab_assign = 'SELECT * FROM lab_assign';
+  
+
+  db.query(lab_assign, (err, results) => {
     if (err) {
       console.error('Error querying MySQL:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -215,11 +313,10 @@ app.get('/api/teacherassignment', (req, res) => {
     }
   });
 });
+app.get('/api/teacherassignmentlec', (req, res) => {
+  const lecture_assign = 'SELECT * FROM lecture_assign';
 
-app.get('/api/teacherassignment/:teacher_id', (req, res) => {
-  const query = 'SELECT * FROM teacherassignment WHERE teacher_id = ' + req.params.teacher_id;
-
-  db.query(query, (err, results) => {
+  db.query(lecture_assign, (err, results) => {
     if (err) {
       console.error('Error querying MySQL:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -228,7 +325,6 @@ app.get('/api/teacherassignment/:teacher_id', (req, res) => {
     }
   });
 });
-
 app.post('/api/upload', upload.single('csv_file'), function (req, res) {
   res.send(req.file)
 });
@@ -322,6 +418,8 @@ app.post('/api/imtoDB', (req, res) => {
     res.status(200).json({ message: 'Data inserted successfully' });
   });
 });
+
+
 
 // ให้ server ทำงานที่ port ที่กำหนด
 app.listen(port, () => {
