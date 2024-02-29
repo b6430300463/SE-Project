@@ -418,8 +418,48 @@ app.post('/api/imtoDB', (req, res) => {
     res.status(200).json({ message: 'Data inserted successfully' });
   });
 });
+app.get('/api/year60', (req, res) => {
+  const query = 'SELECT * FROM course WHERE year = 60';
 
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
 
+app.get('/api/year65', (req, res) => {
+  const query = 'SELECT * FROM course WHERE year = 65';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+app.delete('/api/deleteusers', (req, res) => {
+  const email = req.body.email;
+  const query = 'DELETE FROM user WHERE email = ?';
+
+  db.query(query, [email], (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      if (results.affectedRows > 0) {
+        res.json({ message: 'User deleted successfully' });
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+    }
+  });
+})
 
 // ให้ server ทำงานที่ port ที่กำหนด
 app.listen(port, () => {

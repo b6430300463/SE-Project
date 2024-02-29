@@ -29,11 +29,12 @@ const MainPage = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
-                    <Link to='/login'>หน้าหลัก</Link>
+                    <Link to='/mainpage'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
-                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>                   
+                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
                     <Link to='/login'>เข้าสู่ระบบ</Link>
+                    <Link to='/users'>จัดการการเข้าถึง</Link>
                 </div>
                 <label id="header-font">หน้าหลัก</label>
                 <label id="username"><strong>Username</strong></label>

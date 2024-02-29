@@ -132,11 +132,11 @@ const Users = () => {
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/mainpage'>หน้าหลัก</Link>
-                    <Link to='/users'>จัดการการเข้าถึง</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
                     <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
                     <Link to='/login'>เข้าสู่ระบบ</Link>
+                    <Link to='/users'>จัดการการเข้าถึง</Link>
                 </div>
                 <label id="header-font">จัดการการเข้าถึง</label>
                 <label id="username"><strong>Username</strong></label>

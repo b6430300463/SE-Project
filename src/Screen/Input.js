@@ -1,8 +1,6 @@
 import './Style/InputStyle.css'
 import './Style/DrawerStyle.css'
 import { FaRegUserCircle } from "react-icons/fa";
-import { FaExclamationTriangle } from 'react-icons/fa';
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -68,6 +66,58 @@ const Input = () => {
     const closeNav = () => {
         setIsDrawerOpen(false);
     };
+    const submitAlertMyself = () => {
+        Swal.fire({
+            title: "วัน.. เวลา ... <br> คุณได้ทำการลงทะเบียนไปแล้ว <br> ในรายวิชา.... <br> กรุณาเลือกวันหรือเวลาอื่น",
+            icon: "error",
+            confirmButtonText: 'Okay',
+            showCancelButton: false,
+            // cancelButtonText: 'Cancel',
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn-red'
+                // cancelButton: 'btn-blue'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // กระทำเมื่อคลิกปุ่ม "Submit"
+                // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+            }
+        });
+    }
+    const submitAlertFriend = () => {
+        Swal.fire({
+            title: "มีอาจารย์ท่านอื่นได้ทำการลงทะเบียนวันเวลาดังกล่าวแล้ว <br> คุณยังต้องการลงทะเบียนใน วัน เวลา ดังกล่าวหรือไม่",
+            icon: "warning",
+            confirmButtonText: 'Submit',
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn-red',
+                cancelButton: 'btn-blue'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // กระทำเมื่อคลิกปุ่ม "Submit"
+                // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // กระทำเมื่อคลิกปุ่ม "Cancel"
+                // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Cancel" หรือไม่
+            }
+        });
+    }
+
+    //เงื่อไขการ Alert
+    // const HandleButtonClick = () => {
+    //     if (selectedSubjectName === '') {
+    //         submitAlert(); // แสดงแจ้งบอก ว่าทำการลงรายวิชาแล้ว
+    //     } else if (selectedSubjectName === '') {
+    //         submitAlertMyself(); // แสดง alert สำหรับกรณีที่รายวิชาถูลงซำ้(โดยตนเอง)
+    //     } else {
+    //         submitAlertFriend(); // แสดง alert สำหรับกรณีที่รายวิชาถูกลงเวลาซำ้กับอาจารย์ท่านอื่น
+    //     }
+    // }
     // ==========================Lecture=======================
     const addlecture = () => {
         const add = [...LectureInput, []]
@@ -508,10 +558,12 @@ const Input = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <Link to='/mainpage'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
                     <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
                     <Link to='/login'>เข้าสู่ระบบ</Link>
+                    <Link to='/users'>จัดการการเข้าถึง</Link>
                 </div>
                 <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>
@@ -935,7 +987,7 @@ const Input = () => {
             </div>
 
             <div className='sub-box'>
-                <button type='submit' className='submit-btn' id='submit-input' onClick={HandleButtonClick}><strong>Submit</strong></button>
+                <button type='submit' className='submit-btn' id='submit-input' onClick={submitAlert}><strong>Submit</strong></button>
             </div>
         </div>
     );
