@@ -51,6 +51,7 @@ const Import = () => {
     };
 
     const submitData = async () => {
+        console.log(users);
         try {
           // Extract relevant data properties from each user
           const postData = users.map(user => ({
@@ -182,7 +183,7 @@ const Import = () => {
                     ))
                 ) : (
                     <div id='no-user'>
-                        No Users Found.
+                        No Data Found.
                     </div>
                 )}
             </div>

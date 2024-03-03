@@ -153,7 +153,7 @@ const Input = () => {
             finish_time: lecData.selectedStop,
             room: "None", // Room for lecture might be "None"
             teacher_request: lecData.selectedteacherreq,
-            teacher_id: 4
+            teacher_id: 7
         })
             .then((response) => {
                 console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
@@ -195,7 +195,7 @@ const Input = () => {
             finish_time: labData.selectedStopLab,
             room: "None",
             teacher_request: labData.selectedTeacherReqLab,
-            teacher_id: 4
+            teacher_id: 7
         })
         .then((response) => {
             console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
@@ -575,7 +575,6 @@ const Input = () => {
                 <br />
                 <label><strong>อาจารย์กรอกคำร้องขอเปิดรายวิชา</strong></label>
                 <br /><br />
-                <label>วัน/วันที่/เดือน/ปี</label>
                 <label style={{ paddingLeft: 20, color: 'red', fontWeight: 'bold' }}>ภาคการศึกษา :</label>
                 <select name='term' id='select-term'>
                     <option value='term1'>ภาคต้น</option>
@@ -786,6 +785,7 @@ const Input = () => {
 
                 <br /><hr style={{ background: '#344e41', height: '5px' }} />
                 {/* =====================================Lab======================================= */}
+                <label>ปฏิบัติ</label>
                 {LabInput.map((data, index) => {
                     return (
                         <>

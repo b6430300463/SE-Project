@@ -25,7 +25,13 @@ const Users = () => {
             console.log(user);
         });
     }, []);
+    const getUsers = () => {
+        axios.get(`${url}/api/getUser`).then((response) => {
 
+            setUser(response.data);
+            console.log(user);
+        });
+    }
     const openNav = () => {
         setIsDrawerOpen(true);
     };
@@ -33,10 +39,6 @@ const Users = () => {
     const closeNav = () => {
         setIsDrawerOpen(false);
     };
-    const addLab = () => {
-        const add = [...LabInput, []]
-        setLabInput(add)
-    }
     const submitAlert = () => {
         Swal.fire({
             title: "Added successfully!!",
@@ -52,76 +54,81 @@ const Users = () => {
         }));
     };
 
-    const updatePriority = () => {
+    const updatePriority = async () => {
         for (const email in priority) {
             if (priority.hasOwnProperty(email)) {
                 const newPriorityValue = priority[email];
-                axios.post(`${url}/api/updatePriority`, { email, priority: newPriorityValue })
-                    .then(response => {
-                        if (response.data.success) {
-                            Swal.fire({
-                                title: 'Update Success',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            });
-                            // อัพเดทข้อมูลให้แสดงผลทันทีหรือดำเนินการอื่นตามต้องการ
-                        } else {
-                            Swal.fire({
-                                title: 'Update Failed',
-                                text: 'Failed to update priority',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error updating priority:', error);
+                try {
+                    const response = await axios.post(`${url}/api/updatePriority`, { email, priority: newPriorityValue });
+                    if (response.data.success) {
                         Swal.fire({
-                            title: 'Error',
-                            text: 'Failed to update priority. Please try again later.',
+                            title: 'Update Success',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        // ดึงข้อมูลผู้ใช้ทั้งหมดใหม่หลังจากอัพเดท
+                        const updatedUsers = await getUsers(); // สมมติว่ามีฟังก์ชัน getUsers ที่ดึงข้อมูลผู้ใช้ทั้งหมด
+                        setUser(updatedUsers);
+                    } else {
+                        Swal.fire({
+                            title: 'Update Failed',
+                            text: 'Failed to update priority',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
-                    });
-            }
-        }
-    };
-    
-    const updateEmailAndPriority = (email, priority) => {
-        // สร้างข้อมูลที่ต้องส่งไปยังเซิร์ฟเวอร์ของคุณ
-        const userData = { email, priority };
-        console.log(userData)
-        
-        axios.post(`${url}/api/manual_insertUser`, { data: userData })
-            .then(response => {
-                // ส่วนการปรับปรุงสถานะหรือการแจ้งเตือนต่าง ๆ ตามความเหมาะสม
-                if (response.data.message) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    // อัพเดทข้อมูลที่แสดงบนหน้าเว็บหรือทำอย่างอื่นตามที่ต้องการ
-                } else {
+                    }
+                } catch (error) {
+                    console.error('Error updating priority:', error);
                     Swal.fire({
                         title: 'Error',
-                        text: 'Failed to insert user',
+                        text: 'Failed to update priority. Please try again later.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
-            })
-            .catch(error => {
-                console.error('Error inserting user:', error);
+            }
+        }
+    };
+    
+    
+    const addEmailAndPriority = async (email, priority) => {
+        // สร้างข้อมูลที่ต้องส่งไปยังเซิร์ฟเวอร์
+        const userData = { email, priority };
+        console.log(userData)
+    
+        try {
+            const response = await axios.post(`${url}/api/manual_insertUser`, { data: userData });
+            // ส่วนการปรับปรุงสถานะหรือการแจ้งเตือนต่างๆ
+            if (response.data.message) {
+                Swal.fire({
+                    title: 'Success',
+                    text: response.data.message,
+                    icon: 'success',
+                    // confirmButtonText: 'OK'
+                });
+                // อัพเดทข้อมูลที่แสดงบนหน้าเว็บหรือทำอย่างอื่นตามที่ต้องการ
+                // setUser(prevUser => [...prevUser, { email, priority }]);
+                const updatedUsers = await getUsers(); // สมมติว่ามีฟังก์ชัน getUsers ที่ดึงข้อมูลผู้ใช้ทั้งหมด
+                setUser(updatedUsers);
+            } else {    
                 Swal.fire({
                     title: 'Error',
-                    text: 'Failed to insert user. Please try again later.',
+                    text: 'Failed to insert user',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+            }
+        } catch (error) {
+            console.error('Error inserting user:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to insert user. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
+        }
     };
+    
     const deleteUser = (email) => {
         Swal.fire({
             title: 'คุณแน่ใจหรือไม่?',
@@ -216,7 +223,7 @@ const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {user.map((item, index) => (
+                                {user && user.map((item, index) => (
                                     <tr key={index} >
                                         <td data-row-number={index + 1}></td>
                                         <td>{item.email}</td>
@@ -241,7 +248,8 @@ const Users = () => {
                                             </select>
                                                 <button 
                                                 className='buttondelete'
-                                                onClick={() => deleteUser(item.email)}>Delete</button>
+                                                onClick={() => deleteUser(item.email)}>
+                                                Delete</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -260,7 +268,7 @@ const Users = () => {
                     <option value="2">Table manager</option>
                     <option value="3">Teacher</option>
                 </select>
-                <button type='submit' className='submit-btn' id='submit-input' onClick={() => {updateEmailAndPriority(newEmail,newPriority)}}><strong>ADD</strong></button>
+                <button type='submit' className='submit-btn' id='submit-input' onClick={() => {addEmailAndPriority(newEmail,newPriority)}}><strong>ADD</strong></button>
                 <button type='submit' className='submit-btn' id='confirm-input' onClick={updatePriority}><strong>Confirm</strong></button>
             </div>
             <div>

@@ -206,38 +206,38 @@ app.get('/api/getuser', (req, res) => {
 app.post('/api/assign_lab', (req, res) => {
   const receivedData = req.body;
 
-  console.log('Received Data:', receivedData);
+  // console.log('Received Data:', receivedData);
 
-  // Check if receivedData is an array or a single object
-  const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+  // if (typeof receivedData !== 'object' || receivedData === null) {
+  //   console.error('Received data is not an object');
+  //   return res.status(400).json({ error: 'Received data is not an object' });
+  // }
 
-  // Verify that dataArray contains objects
-  if (!dataArray.every(item => typeof item === 'object')) {
-    console.error('Received data is not in the expected format');
-    return res.status(400).json({ error: 'Received data is not in the expected format' });
-  }
 
-  const sql = 'INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES ?';
-  
-  const values = dataArray.map(data => [
-    data.subject_id,
-    data.year,
-    data.subject_name,
-    data.credit,
-    data.department,
-    data.section,
-    data.total_students,
-    data.date,
-    data.start_time,
-    data.finish_time,
-    data.room,
-    data.teacher_request,
-    data.teacher_id
-  ]);
+//   const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+
+  const sql = 'INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+  const values =[
+    receivedData.subject_id,
+    receivedData.year,
+    receivedData.subject_name,
+    receivedData.credit,
+    receivedData.department,
+    receivedData.section,
+    receivedData.total_students,
+    receivedData.date,
+    receivedData.start_time,
+    receivedData.finish_time,
+    receivedData.room,
+    receivedData.teacher_request,
+    receivedData.teacher_id
+];
 
   console.log(values);
 
-  db.query(sql, [values], (error, results) => {
+ 
+
+  db.query(sql, values, (error, results) => {
     if (error) {
       console.error('Error inserting into database:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
@@ -253,15 +253,15 @@ app.post('/api/assign_lab', (req, res) => {
 app.post('/api/assign_lecture', (req, res) => {
   const receivedData = req.body;
 
-  console.log('Received Data:', receivedData);
+  // console.log('Received Data:', receivedData);
 
-  // Check if receivedData is an object
+  // // Check if receivedData is an object
   // if (typeof receivedData !== 'object' || receivedData === null) {
   //   console.error('Received data is not an object');
   //   return res.status(400).json({ error: 'Received data is not an object' });
   // }
 
-  // //  Convert receivedData to an array with a single object if it's not already an array
+   // Convert receivedData to an array with a single object if it's not already an array
   // const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
 
     const room = receivedData.room !== undefined ? receivedData.room : "None";
@@ -418,6 +418,38 @@ app.post('/api/imtoDB', (req, res) => {
     res.status(200).json({ message: 'Data inserted successfully' });
   });
 });
+
+app.post('/api/imtoDB', (req, res) => {
+  const receivedData = req.body.data; // Assuming data is sent as an array
+
+  console.log('Received Data:', receivedData);
+
+  // Now, you can use receivedData to insert into the database
+
+  // Sample insertion code (you might need to adjust it based on your database schema)
+  const sql = 'INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?';
+  const values = receivedData.map(user => [
+    user.subject_id,
+    user.year,
+    user.subject,
+    user.credit,
+    user.department,
+    user.subject_priority,
+    user.subject_type,
+    user.process
+  ]);
+
+  db.query(sql, [values], (error, results) => {
+    if (error) {
+      console.error('Error inserting into database:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Inserted into database:', results);
+    res.status(200).json({ message: 'Data inserted successfully' });
+  });
+});
+
 app.get('/api/year60', (req, res) => {
   const query = 'SELECT * FROM course WHERE year = 60';
 

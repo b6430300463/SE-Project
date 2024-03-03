@@ -3,11 +3,18 @@ import {GoogleLogin ,GoogleLogout} from 'react-google-login'
 import { gapi } from 'gapi-script'
 import { useState , useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 const Login = () =>{
     const clientId = "627023661930-9mt9l2l94ki17cenpkv27947ggm24iif.apps.googleusercontent.com"
     
     const [profile, setProfile] = useState(null)
+    const [user,setUser] = useState([])
+    const navigate = useNavigate();
     useEffect(() => {
+        axios.get('http://localhost:3307/api/getuser').then((response) => {
+            setUser(response.data)
+        });
+
         const initClient =() => {
             gapi.client.init({
                 clientId : clientId,
@@ -18,12 +25,30 @@ const Login = () =>{
     },[])
 
     const onSuccess = (res) => {
-        setProfile(res.profileObj)
+        setProfile(res.profileObj);
         const payload = res.profileObj;
         axios.post('http://localhost:3307/api/login', payload);
-
-        console.log('success', res)
-    }
+    
+        console.log('success', payload);
+        console.log('user', user);
+    
+        user.forEach((item) => {
+            if (payload.email === item.email) {
+                console.log('check');
+                if (item.priority === 1) {
+                    navigate('/users');
+                }
+                if (item.priority === 2) {
+                    navigate('/import');
+                    console.log('table manager');
+                }
+                if (item.priority === 3) {
+                    navigate('/input');
+                }
+            }
+        });
+    };
+    
     const onFailure = (res) => {
         console.log('failed',res)
     }
@@ -39,21 +64,11 @@ const Login = () =>{
                         <br /><br />
                         {profile ? (
                             <div >
-                                <div className ="user-image">
-                                <img src ={profile.imageUrl} alt="user image"/>
-                                </div>
-                                <div className = "email-container">
-
-                                    <p>Name : {profile.name}</p>
-                                    <p>Email : {profile.email}</p>
-                                </div>     
-                                <br/><br/>
                                 <div className='google-logout-button'>
                                     <GoogleLogout 
                                         clientId = {clientId}
                                         buttonText="Log out" 
                                         onLogoutSuccess={logOut}
-                                        
                                     />
                                 </div>
                                 
