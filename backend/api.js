@@ -203,6 +203,63 @@ app.get('/api/getuser', (req, res) => {
   });
 });
 
+app.get('/api/getcourse/:year', (req, res) => {
+  const year = req.params.year
+  let query = "";
+  if (year != "all") {
+    query = 'SELECT * FROM course WHERE year = "' + year + '"';
+  } else {
+    query = 'SELECT * FROM course';
+  }
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/getopencourse/:year', (req, res) => {
+  const year = req.params.year
+  let query = "";
+  if (year != "all") {
+    query = 'SELECT * FROM course WHERE process = 1 AND year = "' + year + '"';
+  } else {
+    query = 'SELECT * FROM course WHERE process = 1';
+  }
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/api/getclosecourse/:year', (req, res) => {
+  const year = req.params.year
+  let query = "";
+  if (year != "all") {
+    query = 'SELECT * FROM course WHERE process = 0 AND year = "' + year + '"';
+  } else {
+    query = 'SELECT * FROM course WHERE process = 0';
+  }
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.post('/api/assign_lab', (req, res) => {
   const receivedData = req.body;
 
@@ -218,7 +275,7 @@ app.post('/api/assign_lab', (req, res) => {
   }
 
   const sql = 'INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES ?';
-  
+
   const values = dataArray.map(data => [
     data.subject_id,
     data.year,
@@ -264,30 +321,30 @@ app.post('/api/assign_lecture', (req, res) => {
   // //  Convert receivedData to an array with a single object if it's not already an array
   // const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
 
-    const room = receivedData.room !== undefined ? receivedData.room : "None";
-    const sql = 'INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
-    
-    
-    values = [
-      receivedData.subject_id,
-      receivedData.year,
-      receivedData.subject_name,
-      receivedData.credit,
-      receivedData.department,
-      receivedData.section,
-      receivedData.total_students,
-      receivedData.date,
-      receivedData.start_time,
-      receivedData.finish_time,
-      room,
-      receivedData.teacher_request,
-      receivedData.teacher_id
-      
-    ];
-    console.log(values)
- 
+  const room = receivedData.room !== undefined ? receivedData.room : "None";
+  const sql = 'INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
-  
+
+  values = [
+    receivedData.subject_id,
+    receivedData.year,
+    receivedData.subject_name,
+    receivedData.credit,
+    receivedData.department,
+    receivedData.section,
+    receivedData.total_students,
+    receivedData.date,
+    receivedData.start_time,
+    receivedData.finish_time,
+    room,
+    receivedData.teacher_request,
+    receivedData.teacher_id
+
+  ];
+  console.log(values)
+
+
+
 
   db.query(sql, values, (error, results) => {
     if (error) {
@@ -302,7 +359,7 @@ app.post('/api/assign_lecture', (req, res) => {
 
 app.get('/api/teacherassignmentlab', (req, res) => {
   const lab_assign = 'SELECT * FROM lab_assign';
-  
+
 
   db.query(lab_assign, (err, results) => {
     if (err) {
@@ -349,7 +406,7 @@ app.post('/api/manual_insertUser', (req, res) => {
     const lastname = user.lastname !== undefined ? user.lastname : "WaitForUpdate";
     const googleid = user.googleid !== undefined ? user.googleid : 0;
     const imageURL = user.imageURL !== undefined ? user.imageURL : "None";
-    
+
     return [
       user.id,
       firstname,
@@ -418,31 +475,7 @@ app.post('/api/imtoDB', (req, res) => {
     res.status(200).json({ message: 'Data inserted successfully' });
   });
 });
-app.get('/api/year60', (req, res) => {
-  const query = 'SELECT * FROM course WHERE year = 60';
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error querying MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      res.json(results);
-    }
-  });
-});
-
-app.get('/api/year65', (req, res) => {
-  const query = 'SELECT * FROM course WHERE year = 65';
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error querying MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      res.json(results);
-    }
-  });
-});
 app.delete('/api/deleteusers', (req, res) => {
   const email = req.body.email;
   const query = 'DELETE FROM user WHERE email = ?';
@@ -461,27 +494,28 @@ app.delete('/api/deleteusers', (req, res) => {
   });
 })
 
+// app.delete('/api/deleteusers', (req, res) => {
+//   const email = req.body.email;
+//   const query = 'DELETE FROM user WHERE email = ?';
+//   console.log(req.body.email);
+
+//   db.query(query, email, (err, results) => {
+//     if (err) {
+//       console.error('Error querying MySQL:', err);
+//       res.status(500).json({ error: 'Internal Server Error' });
+//     } else {
+//       if (results.affectedRows > 0) {
+//         const deletedEmail = req.body.email;
+//         res.json({ message: `User with email ${deletedEmail} deleted successfully` });
+//       } else {
+//         res.status(404).json({ error: 'User not found' });
+//       }
+//     }
+//   });
+// });
+
 // ให้ server ทำงานที่ port ที่กำหนด
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-app.delete('/api/deleteusers', (req, res) => {
-  const email = req.body.email;
-  const query = 'DELETE FROM user WHERE email = ?';
-  console.log(req.body.email);
-
-  db.query(query, email, (err, results) => {
-    if (err) {
-      console.error('Error querying MySQL:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      if (results.affectedRows > 0) {
-        const deletedEmail = req.body.email;
-        res.json({ message: `User with email ${deletedEmail} deleted successfully` });
-      } else {
-        res.status(404).json({ error: 'User not found' });
-      }
-    }
-  });
-});
