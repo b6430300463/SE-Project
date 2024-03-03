@@ -12,6 +12,7 @@ const CheckSubject = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [post, setPost] = useState(null);
     const [selectedYear, setSelectedYear] = useState('');
+    const [selectedProcess, setSelectedProcess] = useState(false);
     const [selectedData, setSelectedData] = useState([]);
 
     const openNav = () => {
@@ -30,23 +31,29 @@ const CheckSubject = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedYear === 'ALL') {
-            axios.get(`${url}/api/course`).then((response) => {
-                setSelectedData(response.data);
-                console.log(response.data);
-            });
-        } else if (selectedYear === '2560') {
-            axios.get(`${url}/api/year60`).then((response) => {
-                setSelectedData(response.data);
-                console.log(response.data);
-            });
-        } else if (selectedYear === '2565') {
-            axios.get(`${url}/api/year65`).then((response) => {
-                setSelectedData(response.data);
-                console.log(response.data);
-            });
+        if (selectedYear != "" && selectedProcess != false) {
+            switch (selectedProcess) {
+                case "open":
+                    axios.get(`${url}/api/getopencourse/` + selectedYear).then((response) => {
+                        setSelectedData(response.data);
+                        console.log(response.data);
+                    });
+                    break;
+                case "close":
+                    axios.get(`${url}/api/getclosecourse/` + selectedYear).then((response) => {
+                        setSelectedData(response.data);
+                        console.log(response.data);
+                    });
+                    break;
+                default:
+                    axios.get(`${url}/api/getcourse/` + selectedYear).then((response) => {
+                        setSelectedData(response.data);
+                        console.log(response.data);
+                    });
+
+            }
         }
-    }, [selectedYear]);
+    }, [selectedYear, selectedProcess]);
 
     if (!post) return null;
 
@@ -74,19 +81,22 @@ const CheckSubject = () => {
             <br></br>
             <div className='lec'>
                 <select name='term' id='select-term' onChange={(e) => setSelectedYear(e.target.value)}>
-                    <option value='term1'>None</option>
-                    <option value='ALL'>ทุกหลักสูตร</option>
-                    <option value='2560'>2560</option>
-                    <option value='2565'>2565</option>
+                    <option disabled selected>กรุณาเลือกปี</option>
+                    <option value='all'>ทุกหลักสูตร</option>
+                    <option value='60'>2560</option>
+                    <option value='65'>2565</option>
                 </select>
 
-
+                <label className='checkbox-container'>แสดงหลักสูตร
+                    <input type='radio' name='processCheck' value="all" onChange={(e) => setSelectedProcess(e.target.value)} />
+                    <span className='checkbox-checkmark'></span>
+                </label>
                 <label className='checkbox-container'>ขอเปิดรายวิชาแล้ว
-                    <input type='checkbox' />
+                    <input type='radio' name='processCheck' value="open" onChange={(e) => setSelectedProcess(e.target.value)} />
                     <span className='checkbox-checkmark'></span>
                 </label>
                 <label className='checkbox-container'>ยังไม่ได้ขอเปิดรายวิชาแล้ว
-                    <input type='checkbox' />
+                    <input type='radio' name='processCheck' value="close" onChange={(e) => setSelectedProcess(e.target.value)} />
                     <span className='checkbox-checkmark'></span>
                 </label>
             </div>
