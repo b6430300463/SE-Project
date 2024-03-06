@@ -6,13 +6,10 @@ import './Style/DrawerStyle.css'
 import { Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
 
-
-
-// ระบุพาธของไฟล์รูปที่อยู่ในโฟลเดอร์ 
 import exampleImage from './images/promote.png';
 
 
-const MainPage = () => {
+const MainpageTable = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -35,13 +32,11 @@ const MainPage = () => {
                     <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
                     <Link to='/login'>เข้าสู่ระบบ</Link>
                     <Link to='/users'>จัดการการเข้าถึง</Link>
-                    <Link to='/mainpagetable'>จัดการตาราง</Link>
                 </div>
                 <label id="header-font">หน้าหลัก</label>
                 <label id="username"><strong>Username</strong></label>
                 <FaRegUserCircle id="user" size={30}/>
             </div>
-
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <img
                 src={exampleImage}
@@ -52,4 +47,4 @@ const MainPage = () => {
         </div>
     );
 }
-export default MainPage
+export default MainpageTable

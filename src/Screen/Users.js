@@ -17,6 +17,7 @@ const Users = () => {
     const [newEmail,setNewEmail] = useState({});
     const [newPriority,setNewPriority] = useState({});
     const url = 'http://localhost:3307';
+    const [selectedPriority, setSelectedPriority] = useState('All');
 
     useEffect(() => {
         axios.get(`${url}/api/getUser`).then((response) => {
@@ -171,6 +172,14 @@ const Users = () => {
             }
         });
     };
+
+    const getUsersByPriority = () => { 
+        if (selectedPriority === 'All') {
+          return user;
+        } else {
+          return user.filter(u => u.priority === parseInt(selectedPriority));
+        }
+      };
     
     return (
         <div className='input-container'>
@@ -199,12 +208,13 @@ const Users = () => {
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
                             <strong>Sort by Priority</strong>
                         </label>
-                        <select name="major-id" className="select-box">
-                            <option>All</option>
-                            <option>Admin</option>
-                            <option>Teacher</option>
+                        <select name="major-id" className="select-box" value={selectedPriority}onChange={(e) => setSelectedPriority(e.target.value)}> 
+                            <option value="All">All</option>
+                            <option value="1">Admin</option>
+                            <option value="2">Table manager</option>
+                            <option value="3">Teacher</option>
                         </select>
-                        <br />
+                        <br />                        
                         <label style={{ display: "flex", justifyContent: 'center' }} for="lec-code">
                             <strong>เปิด-ปิด ระบบ</strong>
                         </label>
@@ -223,7 +233,7 @@ const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {user && user.map((item, index) => (
+                                {getUsersByPriority().map((item, index) => (
                                     <tr key={index} >
                                         <td data-row-number={index + 1}></td>
                                         <td>{item.email}</td>

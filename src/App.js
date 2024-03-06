@@ -8,6 +8,7 @@ import CheckSubject from './Screen/checksubject';
 import Requestsubject from './Screen/requestsubject';
 import Users from './Screen/Users';
 import MainPage from './Screen/Mainpage';
+import MainpageTable from './Screen/mainpagetable';
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ function App() {
         <Route path="input" element={<Input/>}/>
         <Route path="request" element={<Requestsubject/>}/>
         <Route path="checkpage" element={<CheckPage/>}/>
+        <Route path="MainpageTable" element={<MainpageTable/>}/>
       </Routes>
     </BrowserRouter>
   );

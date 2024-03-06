@@ -39,7 +39,7 @@ const Login = () =>{
                     navigate('/users');
                 }
                 if (item.priority === 2) {
-                    navigate('/import');
+                    navigate('/mainpagetable');
                     console.log('table manager');
                 }
                 if (item.priority === 3) {
