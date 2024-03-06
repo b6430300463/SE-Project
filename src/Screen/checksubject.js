@@ -65,7 +65,7 @@ const CheckSubject = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
-                    <Link to='/mainpage'>หน้าหลัก</Link>
+                    <Link to='/mainpagetable'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
                     <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
                     <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>

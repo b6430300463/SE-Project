@@ -124,36 +124,28 @@ const Input = () => {
         setlectureInput(add)
     }
     const submitAlert = () => {
-        const lecData = {selectedSubject: LectureInput.map((_, index) => selectedSubject[index]),
-                selectedYear: LectureInput.map((_, index) => selectedYear[index]),
-                selectedSubjectName: LectureInput.map((_, index) => selectedSubjectName[index]),
-                selectedCode: LectureInput.map((_, index) => selectedCode[index]),
-                selectedSec: LectureInput.map((_, index) => selectedSec[index]),
-                selectedDay: LectureInput.map((_, index) => selectedDay[index]),
-                selectedStart: LectureInput.map((_, index) => selectedStart[index]),
-                selectedStop: LectureInput.map((_, index) => selectedStop[index]),
-                selectedlecture: LectureInput.map((_, index) => selectedlecture[index]),
-                selectedgroup: LectureInput.map((_, index) => selectedgroup[index]),
-                selectednumber: LectureInput.map((_, index) => selectednumber[index]),
-                selectedteacherreq: LectureInput.map((_, index) => selectedteacherreq[index]),
-            getCredit: selectedSubject.map(subjectId => {
-                const credit = lectureOptions.find(lecture => lecture.subject_id === subjectId)?.credit || 0;
-                return credit;})
-        }
+        const lecData = [];
+
+        LectureInput.forEach((_, index) => {
+            lecData[index] = {
+                selectedSubject: selectedSubject[index],
+                selectedYear: selectedYear[index],
+                selectedSubjectName: selectedSubjectName[index],
+                selectedCode: selectedCode[index],
+                selectedSec: selectedSec[index],
+                selectedDay: selectedDay[index],
+                selectedStart: selectedStart[index],
+                selectedStop: selectedStop[index],
+                selectedlecture: selectedlecture[index],
+                selectedgroup: selectedgroup[index],
+                selectednumber: selectednumber[index],
+                selectedteacherreq: selectedteacherreq[index],
+                getCredit: lectureOptions.find(lecture => lecture.subject_id === selectedSubject[index])?.credit || 0,
+                teacher_id: 7
+            };
+        });
         axios.post(`${url}/api/assign_lecture`, {
-            subject_id: lecData.selectedSubject,
-            year: lecData.selectedYear,
-            subject_name: lecData.selectedSubjectName,
-            credit: lecData.getCredit,
-            department: lecData.selectedCode, // You may need to adjust this value based on your system
-            section: lecData.selectedSec,
-            total_students: lecData.selectednumber,
-            date: lecData.selectedDay,
-            start_time: lecData.selectedStart,
-            finish_time: lecData.selectedStop,
-            room: "None", // Room for lecture might be "None"
-            teacher_request: lecData.selectedteacherreq,
-            teacher_id: 7
+            lecData: lecData
         })
             .then((response) => {
                 console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
@@ -166,22 +158,25 @@ const Input = () => {
             .catch((error) => {
                 console.error('Lec:', error);
             });
-        const labData = {selectedSubjectLab: LabInput.map((_, index) => selectedSubjectLab[index]),
-            selectedYearLab: LabInput.map((_, index) => selectedYearLab[index]),
-            selectedSubjectNameLab: LabInput.map((_, index) => selectedSubjectNameLab[index]),
-            selectedCodeLab: LabInput.map((_, index) => selectedCodeLab[index]),
-            selectedSecLab: LabInput.map((_, index) => selectedSecLab[index]),
-            selectedDayLab: LabInput.map((_, index) => selectedDayLab[index]),
-            selectedStartLab: LabInput.map((_, index) => selectedStartLab[index]),
-            selectedStopLab: LabInput.map((_, index) => selectedStopLab[index]),
-            selectedLab: LabInput.map((_, index) => selectedLab[index]),
-            selectedgroupLab: LabInput.map((_, index) => selectedgroupLab[index]),
-            selectednumberLab: LabInput.map((_, index) => selectednumberLab[index]),
-            selectedTeacherReqLab: LabInput.map((_, index) => selectedTeacherReqLab[index]),
-                getCreditLab: selectedSubjectLab.map(subjectId => {
-                    const credit = labOptions.find(lab => lab.subject_id === subjectId)?.credit || 0;
-                    return credit;})
-        }
+        const labData = [];
+        LabInput.forEach((_, index) => {
+            labData[index] = {
+                selectedSubjectLab: selectedSubjectLab[index],
+                selectedYearLab: selectedYearLab[index],
+                selectedSubjectNameLab: selectedSubjectNameLab[index],
+                selectedCodeLab: selectedCodeLab[index],
+                selectedSecLab: selectedSecLab[index],
+                selectedDayLab: selectedDayLab[index],
+                selectedStartLab: selectedStartLab[index],
+                selectedStopLab: selectedStopLab[index],
+                selectedLab: selectedLab[index],
+                selectedgroupLab: selectedgroupLab[index],
+                selectednumberLab: selectednumberLab[index],
+                selectedTeacherReqLab: selectedTeacherReqLab[index],
+                getCreditLab: labOptions.find(lab => lab.subject_id === selectedSubjectLab[index])?.credit || 0,
+                teacher_id: 7  
+            };
+        });
         axios.post(`${url}/api/assign_lab`, {
             subject_id: labData.selectedSubjectLab,
             year: labData.selectedYearLab,
@@ -558,12 +553,10 @@ const Input = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
-                    <Link to='/mainpage'>หน้าหลัก</Link>
-                    <Link to='/import'>เพิ่มรายวิชา</Link>
+                    <Link to='/mainpageteacher'>หน้าหลัก</Link>
                     <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
-                    <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
-                    <Link to='/login'>เข้าสู่ระบบ</Link>
-                    <Link to='/users'>จัดการการเข้าถึง</Link>
+                    <Link to='/check'>ตรวจสอบคำร้องขอจัดตาราง</Link>
+                    <Link to='/login'>ออกจากระบบ</Link>
                 </div>
                 <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
                 <label id="username"><strong>Username</strong></label>

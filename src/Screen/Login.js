@@ -36,14 +36,13 @@ const Login = () =>{
             if (payload.email === item.email) {
                 console.log('check');
                 if (item.priority === 1) {
-                    navigate('/users');
+                    navigate('/mainpageadmin');
                 }
                 if (item.priority === 2) {
                     navigate('/mainpagetable');
-                    console.log('table manager');
                 }
                 if (item.priority === 3) {
-                    navigate('/input');
+                    navigate('/mainpageteacher');
                 }
             }
         });

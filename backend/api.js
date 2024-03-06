@@ -260,15 +260,15 @@ app.get('/api/getclosecourse/:year', (req, res) => {
 app.post('/api/assign_lab', (req, res) => {
   const receivedData = req.body;
 
-  // console.log('Received Data:', receivedData);
+  console.log('Received Data:', receivedData);
 
-  // if (typeof receivedData !== 'object' || receivedData === null) {
-  //   console.error('Received data is not an object');
-  //   return res.status(400).json({ error: 'Received data is not an object' });
-  // }
+  if (typeof receivedData !== 'object' || receivedData === null) {
+    console.error('Received data is not an object');
+    return res.status(400).json({ error: 'Received data is not an object' });
+  }
 
 
-//   const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
+  const dataArray = Array.isArray(receivedData) ? receivedData : [receivedData];
 
   const sql = 'INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES ?';
   
