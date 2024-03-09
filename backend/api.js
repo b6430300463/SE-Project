@@ -188,11 +188,9 @@ app.post("/api/updatePriority", (req, res) => {
       // ไม่เจอให้สร้างใหม่
       if (!results.length) {
         console.log("Email : " + request.email + " not found in database");
-        res
-          .status(500)
-          .json({
-            error: "Email : " + request.email + " not found in database",
-          });
+        res.status(500).json({
+          error: "Email : " + request.email + " not found in database",
+        });
       } else {
         // ถ้าเจอให้อัพเดทข้อมูล
         console.log("Email : " + request.email + " found in database");
@@ -527,4 +525,103 @@ app.post("/api/imtoDB", (req, res) => {
 });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+//all_data ของตารางสอนทั้งหมด
+app.get("/api/exportall_to_excel", async (req, res) => {
+  try {
+    const [lecrows, lecfields] = await db.query("SELECT * FROM lecture_assign");
+    const [labrows, labfields] = await db.query("SELECT * FROM lab_assign");
+
+    objects;
+    const mergedRows = [...lecrows, ...labrows];
+
+    const heading = [
+      [
+        "subject_id",
+        "year",
+        "subject_name",
+        "credit",
+        "department",
+        "section",
+        "total_students",
+        "date",
+        "start_time",
+        "finish_time",
+        "room",
+        "subject_type",
+        "subject_priority",
+      ],
+    ];
+    const workbook = XLSX.utils.book_new();
+
+    // Create worksheet with merged data
+    const mergedWorksheet = XLSX.utils.json_to_sheet(mergedRows);
+
+    XLSX.utils.sheet_add_aoa(mergedWorksheet, heading);
+
+    XLSX.utils.book_append_sheet(workbook, mergedWorksheet, "merged_assign");
+
+    const buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+
+    res.attachment("course.xlsx");
+    return res.send(buffer);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while exporting to Excel" });
+  }
+});
+app.get("/api/export_to_excel_eachteacher", async (req, res) => {
+  try {
+    const [lecrows, lecfields] = await db.query(
+      "SELECT subject_id,year,subject_name,credit,department,section,total_students,date,start_time,finish_time,room,subject_type,subject_priority FROM lecture_assign WHERE teacher_id = ?",
+      [req.query.teacher_id]
+    );
+    const [labrows, labfields] = await db.query(
+      "SELECT subject_id,year,subject_name,credit,department,section,total_students,date,start_time,finish_time,room,subject_type,subject_priority FROM lab_assign WHERE teacher_id = ?",
+      [req.query.teacher_id]
+    );
+
+    const lecData = Array.isArray(lecrows) ? lecrows : [];
+    const labData = Array.isArray(labrows) ? labrows : [];
+
+    const mergedRows = [...lecData, ...labData];
+
+    const heading = [
+      [
+        "subject_id",
+        "year",
+        "subject_name",
+        "credit",
+        "department",
+        "section",
+        "total_students",
+        "date",
+        "start_time",
+        "finish_time",
+        "room",
+        "subject_type",
+        "subject_priority",
+      ],
+    ];
+    const workbook = XLSX.utils.book_new();
+
+    const mergedWorksheet = XLSX.utils.json_to_sheet(mergedRows);
+
+    XLSX.utils.sheet_add_aoa(mergedWorksheet, heading);
+
+    XLSX.utils.book_append_sheet(workbook, mergedWorksheet, "merged_assign");
+
+    const buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+
+    res.attachment("course.xlsx");
+    return res.send(buffer);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while exporting to Excel" });
+  }
 });

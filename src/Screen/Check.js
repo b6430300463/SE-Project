@@ -39,6 +39,8 @@ const CheckPage = () => {
   }, []);
   const goBack = () => {
     navigate(-1);
+    setLecData([]);
+    setLabData([]);
   };
   const submitAlert = () => {
     axios

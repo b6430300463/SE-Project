@@ -10,6 +10,8 @@ import axios from "axios";
 const url = "http://localhost:3307";
 const Input = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [getLab, setGetLab] = useState([]);
+  const [getLec, setGetLec] = useState([]);
   //=====================Lecture========================
   const [LectureInput, setlectureInput] = useState([]);
   const [lectureOptions, setLectureOptions] = useState([]);
@@ -56,6 +58,14 @@ const Input = () => {
       setgetCreditLab(credits);
       // console.log(response.data);
     });
+    axios.get(`${url}/api/teacherassignmentlab`).then((response) => {
+      setGetLab(response.data);
+      //   console.log("get", response.data[0].date);
+    });
+    axios.get(`${url}/api/teacherassignmentlec`).then((response) => {
+      setGetLec(response.data);
+      console.log(getLec);
+    });
   }, []);
 
   const openNav = () => {
@@ -68,10 +78,18 @@ const Input = () => {
 
   const navigate = useNavigate();
 
-  const submitAlertMyself = () => {
+  const submitAlertMyself = (day, start, stop, name) => {
     Swal.fire({
       title:
-        "วัน.. เวลา ... <br> คุณได้ทำการลงทะเบียนไปแล้ว <br> ในรายวิชา.... <br> กรุณาเลือกวันหรือเวลาอื่น",
+        "วัน " +
+        day +
+        " เวลา " +
+        start +
+        "-" +
+        stop +
+        "<br> คุณได้ทำการลงทะเบียนไปแล้ว <br> ในรายวิชา " +
+        name +
+        " <br> กรุณาเลือกวันหรือเวลาอื่น",
       icon: "error",
       confirmButtonText: "Okay",
       showCancelButton: false,
@@ -103,6 +121,7 @@ const Input = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
+        navigate("/check");
         // กระทำเมื่อคลิกปุ่ม "Submit"
         // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -112,16 +131,6 @@ const Input = () => {
     });
   };
 
-  //เงื่อไขการ Alert
-  // const HandleButtonClick = () => {
-  //     if (selectedSubjectName === '') {
-  //         submitAlert(); // แสดงแจ้งบอก ว่าทำการลงรายวิชาแล้ว
-  //     } else if (selectedSubjectName === '') {
-  //         submitAlertMyself(); // แสดง alert สำหรับกรณีที่รายวิชาถูลงซำ้(โดยตนเอง)
-  //     } else {
-  //         submitAlertFriend(); // แสดง alert สำหรับกรณีที่รายวิชาถูกลงเวลาซำ้กับอาจารย์ท่านอื่น
-  //     }
-  // }
   // ==========================Lecture=======================
   const addlecture = () => {
     const add = [...LectureInput, []];
@@ -132,95 +141,140 @@ const Input = () => {
 
     LectureInput.forEach((_, index) => {
       lecData[index] = {
-        "selectedSubject": selectedSubject[index],
-        "selectedYear": selectedYear[index],
-        "selectedSubjectName": selectedSubjectName[index],
-        "selectedCode": selectedCode[index],
-        "selectedSec": selectedSec[index],
-        "selectedDay": selectedDay[index],
-        "selectedStart": selectedStart[index],
-        "selectedStop": selectedStop[index],
+        selectedSubject: selectedSubject[index],
+        selectedYear: selectedYear[index],
+        selectedSubjectName: selectedSubjectName[index],
+        selectedCode: selectedCode[index],
+        selectedSec: selectedSec[index],
+        selectedDay: selectedDay[index],
+        selectedStart: selectedStart[index],
+        selectedStop: selectedStop[index],
         // selectedlecture: selectedlecture[index],
         // selectedgroup: selectedgroup[index],
-        "selectednumber": selectednumber[index],
-        "selectedteacherreq": selectedteacherreq[index],
-        "getCredit":
+        selectednumber: selectednumber[index],
+        selectedteacherreq: selectedteacherreq[index],
+        getCredit:
           lectureOptions.find(
             (lecture) => lecture.subject_id === selectedSubject[index]
           )?.credit || 0,
-        "teacher_id": 7,
+        teacher_id: 8,
       };
     });
     localStorage.setItem("lecData", JSON.stringify(lecData));
-    // axios
-    //   .post(`${url}/api/assign_lecture`, {
-    //     lecData: lecData,
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
-    //     Swal.fire({
-    //       title: "Added successfully!!",
-    //       icon: "success",
-    //       confirmButtonText: "Okay",
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Lec:", error);
-    //   });
+
+    for (let i = 0; i < lecData.length; i++) {
+      // Change here: labData.length instead of labData[index]
+      for (let j = i + 1; j < lecData.length; j++)
+        if (
+          selectedDay[i] === selectedDay[j] &&
+          selectedStart[i] === selectedStart[j] &&
+          selectedStop[i] === selectedStop[j]
+        ) {
+          submitAlertMyself(
+            selectedDay[i],
+            selectedStart[i],
+            selectedStop[i],
+            selectedSubjectName[i]
+          );
+        } else {
+          Swal.fire({
+            title: "Added successfully!!",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+          navigate("/check");
+        }
+    }
+
     const labData = [];
     LabInput.forEach((_, index) => {
       labData[index] = {
-        "selectedSubjectLab": selectedSubjectLab[index],
-        "selectedYearLab": selectedYearLab[index],
-        "selectedSubjectNameLab": selectedSubjectNameLab[index],
-        "selectedCodeLab": selectedCodeLab[index],
-        "selectedSecLab": selectedSecLab[index],
-        "selectedDayLab": selectedDayLab[index],
-        "selectedStartLab": selectedStartLab[index],
-        "selectedStopLab": selectedStopLab[index],
+        selectedSubjectLab: selectedSubjectLab[index],
+        selectedYearLab: selectedYearLab[index],
+        selectedSubjectNameLab: selectedSubjectNameLab[index],
+        selectedCodeLab: selectedCodeLab[index],
+        selectedSecLab: selectedSecLab[index],
+        selectedDayLab: selectedDayLab[index],
+        selectedStartLab: selectedStartLab[index],
+        selectedStopLab: selectedStopLab[index],
         // selectedLab: selectedLab[index],
         // selectedgroupLab: selectedgroupLab[index],
-        "room": 2333,
-        "selectednumberLab": selectednumberLab[index],
-        "selectedTeacherReqLab": selectedTeacherReqLab[index],
-        "getCreditLab":
+        room: 2333,
+        selectednumberLab: selectednumberLab[index],
+        selectedTeacherReqLab: selectedTeacherReqLab[index],
+        getCreditLab:
           labOptions.find((lab) => lab.subject_id === selectedSubjectLab[index])
             ?.credit || 0,
-        "teacher_id": 7,
+        teacher_id: 8,
       };
     });
     localStorage.setItem("labData", JSON.stringify(labData));
-    // axios
-    //   .post(`${url}/api/assign_lab`, {
-    //     subject_id: labData.selectedSubjectLab,
-    //     year: labData.selectedYearLab,
-    //     subject_name: labData.selectedSubjectNameLab,
-    //     credit: labData.getCreditLab,
-    //     department: labData.selectedCodeLab, // You may need to adjust this value based on your system
-    //     section: labData.selectedSecLab,
-    //     total_students: labData.selectednumberLab,
-    //     date: labData.selectedDayLab,
-    //     start_time: labData.selectedStartLab,
-    //     finish_time: labData.selectedStopLab,
-    //     room: "None",
-    //     teacher_request: labData.selectedTeacherReqLab,
-    //     teacher_id: 7,
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
-    //   })
-    //   .catch((error) => {
-    //     console.error("Lab:", error);
-    //   });
-    // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
+
     console.log(localStorage.getItem("lecData"));
     console.log(localStorage.getItem("labData"));
-    Swal.fire({
-      title: "Added successfully!!",
-      icon: "success",
-      confirmButtonText: "Okay",
-    });
-    navigate("/check");
+    // for (let i = 0; i < labData.length; i++) {
+    //   // Change here: labData.length instead of labData[index]
+    //   for (let j = i + 1; j < labData.length; j++)
+    //     if (
+    //       selectedDayLab[i] === selectedDayLab[j] &&
+    //       selectedStartLab[i] === selectedStartLab[j] &&
+    //       selectedStopLab[i] === selectedStopLab[j]
+    //     ) {
+    //       submitAlertMyself(
+    //         selectedDayLab[i],
+    //         selectedStartLab[i],
+    //         selectedStopLab[i],
+    //         selectedSubjectNameLab[i]
+    //       );
+    //     } else {
+    //       Swal.fire({
+    //         title: "Added successfully!!",
+    //         icon: "success",
+    //         confirmButtonText: "Okay",
+    //       }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             navigate("/check")
+    //           // กระทำเมื่อคลิกปุ่ม "Submit"
+    //           // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+    //         }
+    //       });
+    //     }
+    // }
+    // console.log("check1", getLab[0].date);
+
+    for (let i = 0; i < labData.length; i++) {
+      for (let j = 0; j < getLab.length; j++) {
+        if (
+          selectedYearLab[i] === getLab[j].year &&
+          selectedDayLab[i] === getLab[j].date &&
+          selectedStartLab[i] === getLab[j].start_time &&
+          selectedStopLab[i] === getLab[j].finish_time
+        ) {
+            console.log("kkk")
+          submitAlertFriend();
+        }
+        console.log(
+          "yr",
+          selectedYearLab[i],
+          "day",
+          selectedDayLab[i],
+          "str",
+          selectedStartLab[i],
+          "stp",
+          selectedStopLab[i]
+        );
+        console.log(
+          "year",
+          getLab[j].year,
+          "date",
+          getLab[j].date,
+          "start",
+          getLab[j].start_time,
+          "stop",
+          getLab[j].finish_time
+        );
+      }
+    }
   };
 
   const HandleDeleteLec = (index) => {
@@ -753,7 +807,6 @@ const Input = () => {
                     name="number"
                     value={selectednumber[index]}
                     onChange={(e) => handleNumberChange(e, index)}
-                    required
                   />
                 </div>
 
