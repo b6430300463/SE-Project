@@ -11,11 +11,12 @@ import MainPage from './Screen/Mainpage';
 import MainPageAdmin from './Screen/MainpageAdmin';
 import MainpageTable from './Screen/mainpagetable';
 import ManageSchedule from './Screen/ManageSchedule';
+import Request from './Screen/Request';
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<ManageSchedule/>}/>
+        <Route index element={<Request/>}/>
         <Route path="import" element={<Import/>} />
         <Route path="check" element={<CheckPage/>}/>
         <Route path="checksubject" element={<CheckSubject/>}/>
