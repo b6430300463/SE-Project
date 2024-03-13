@@ -70,11 +70,52 @@
     display: flex;
 }
 
-.scrollv{
-    -ms-overflow-style: none;
-    overflow-y:scroll;
-    height:50vh;
-    scrollbar-width: none;
-    margin-right: 10%;
-    margin-top: 5%;
-}
+/* checkStyle.css */
+
+/* checkStyle.css */
+
+.table-container {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Increase padding */
+    text-align: left;
+    font-size: 16px; /* Increase font size */
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .scrollv {
+    overflow-y: auto;
+    max-height: 500px; /* Increase max height for scrolling */
+  }
+  
+  .button-sb {
+    margin-top: 20px;
+  }
+  
+  .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px; /* Increase padding */
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #45a049;
+  }
+  
+  
