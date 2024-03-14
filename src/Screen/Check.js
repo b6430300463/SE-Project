@@ -102,7 +102,7 @@ const CheckPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map(database => (
+                {data.map((database,index) => (
                   <tr key={index}>
                     <td>{data.selectedSubjectLab}</td>
                     <td>{data.selectedSubjectNameLab}</td>

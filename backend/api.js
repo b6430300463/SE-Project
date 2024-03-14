@@ -625,3 +625,85 @@ app.get("/api/export_to_excel_eachteacher", async (req, res) => {
       .json({ error: "An error occurred while exporting to Excel" });
   }
 });
+//วิชาที่เป็น lecture
+
+app.get('/api/get_problem_lecsubject', (req, res) => {
+
+  const year1 = `
+      SELECT *
+      FROM lecture_assign
+      WHERE year = 1
+      GROUP BY date, start_time, finish_time`;
+  
+  const year2 = `
+      SELECT *
+      FROM lecture_assign
+      WHERE year = 2
+      GROUP BY date, start_time, finish_time`;
+
+  const year3 = `
+      SELECT *
+      FROM lecture_assign
+      WHERE year = 3
+      GROUP BY date, start_time, finish_time`;
+  
+  const year4 = `
+      SELECT *
+      FROM lecture_assign
+      WHERE year = 4
+      GROUP BY date, start_time, finish_time`;
+
+  const query = `${year1} UNION ALL ${year2} UNION ALL ${year3} UNION ALL ${year4}`;
+
+  db.query(query, (err, results) => {
+      if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+          return;
+      }
+      
+      res.json(results);
+  });
+});
+
+
+
+//วิชาที่เป็นlab
+
+app.get('/api/get_problem_labsubject', (req, res) => {
+  const year1 = `
+      SELECT *
+      FROM lab_assign
+      WHERE year = 1
+      GROUP BY date, start_time, finish_time,room`;
+  
+  const year2 = `
+      SELECT *
+      FROM lab_assign
+      WHERE year = 2
+      GROUP BY date, start_time, finish_time,room`;
+
+  const year3 = `
+      SELECT *
+      FROM lab_assign
+      WHERE year = 3
+      GROUP BY date, start_time, finish_time,room`;
+  
+  const year4 = `
+      SELECT *
+      FROM lab_assign
+      WHERE year = 4
+      GROUP BY date, start_time, finish_time,room`;
+
+  const query = `${year1} UNION ALL ${year2} UNION ALL ${year3} UNION ALL ${year4}`;
+
+  db.query(query, (err, results) => {
+      if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+          return;
+      }
+      
+      res.json(results);
+  });
+});
