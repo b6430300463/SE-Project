@@ -12,6 +12,9 @@ const Input = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [getLab, setGetLab] = useState([]);
   const [getLec, setGetLec] = useState([]);
+  // const [labData,setLabData] = useState([]);
+  const labData = [];
+  const lecData = [];
   //=====================Lecture========================
   const [LectureInput, setlectureInput] = useState([]);
   const [lectureOptions, setLectureOptions] = useState([]);
@@ -41,6 +44,7 @@ const Input = () => {
   const [selectedStopLab, setSelectedStopLab] = useState("");
   const [selectedLab, setSelectedLab] = useState("");
   const [selectedgroupLab, setSelectedGroupLab] = useState("");
+  const [selectedRoomLab, setSelectedRoomLab] = useState("");
   const [selectednumberLab, setSelectedNumberLab] = useState("");
   const [selectedTeacherReqLab, setSelectedTeacherReqLab] = useState("");
   const [getCreditLab, setgetCreditLab] = useState([]);
@@ -131,14 +135,116 @@ const Input = () => {
     });
   };
 
+  const success = () => {
+    Swal.fire({
+      title: "Added successfully!!",
+      icon: "success",
+      confirmButtonText: "Okay",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/check");
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
   // ==========================Lecture=======================
   const addlecture = () => {
     const add = [...LectureInput, []];
     setlectureInput(add);
   };
   const submitAlert = () => {
-    const lecData = [];
+    let checkLec = 0;
+    let checkDupLec = false;
+    for (let i = 0; i < lecData.length; i++) {
+      for (let j = 0; j < lecData.length; j++) {
+        if (j >= 0 && j !== i) {
+          if (
+            selectedDay[i] === selectedDay[j] &&
+            selectedStart[i] === selectedStart[j] &&
+            selectedStop[i] === selectedStop[j]
+          ) {
+            submitAlertMyself(
+              selectedDay[i],
+              selectedStart[i],
+              selectedStop[i],
+              selectedSubjectName[i]
+            );
+            console.log("j>0 done",j);
+          }
+        } else if (checkLec === 0) {
+          for (let k = 0; k < lecData.length; k++) {
+            for (let l = 0; l < getLec.length; l++) {
+              if (
+                selectedYear[k] === String(getLec[l].year) &&
+                selectedDay[k] === String(getLec[l].date) &&
+                selectedStart[k] === getLec[l].start_time &&
+                selectedStop[k] === getLec[l].finish_time
+              ) {
+                checkDupLec = true;
+                console.log("dup");
+                break;
+              } 
+            }
+          }
+          if(checkDupLec === true){
+            submitAlertFriend();
+          }else{
+            success();
+          }
+          checkLec = 1;
+        }
+        console.log("j = 0 done",j);
+      }
+      console.log("new i",i);
+    }
 
+    let checkLab = 0;
+    let checkDup = false;
+    for (let i = 0; i < labData.length; i++) {
+      for (let j = 0; j < labData.length; j++) {
+        if (j >= 0 && j !== i) {
+          if (
+            selectedDayLab[i] === selectedDayLab[j] &&
+            selectedStartLab[i] === selectedStartLab[j] &&
+            selectedStopLab[i] === selectedStopLab[j]
+          ) {
+            submitAlertMyself(
+              selectedDayLab[i],
+              selectedStartLab[i],
+              selectedStopLab[i],
+              selectedSubjectNameLab[i]
+            );
+            console.log("j>0 done",j);
+          }
+        } else if (checkLab === 0) {
+          for (let k = 0; k < labData.length; k++) {
+            for (let l = 0; l < getLab.length; l++) {
+              if (
+                selectedYearLab[k] === String(getLab[l].year) &&
+                selectedDayLab[k] === String(getLab[l].date) &&
+                selectedStartLab[k] === getLab[l].start_time &&
+                selectedStopLab[k] === getLab[l].finish_time
+              ) {
+                checkDup = true;
+                console.log("dup");
+                break;
+              } 
+            }
+          }
+          if(checkDup === true){
+            submitAlertFriend();
+          }else{
+            success();
+          }
+          checkLab = 1;
+        }
+        console.log("j = 0 done",j);
+      }
+      console.log("new i",i);
+    }
+  };
+  useEffect(() => {
     LectureInput.forEach((_, index) => {
       lecData[index] = {
         selectedSubject: selectedSubject[index],
@@ -149,8 +255,8 @@ const Input = () => {
         selectedDay: selectedDay[index],
         selectedStart: selectedStart[index],
         selectedStop: selectedStop[index],
-        // selectedlecture: selectedlecture[index],
-        // selectedgroup: selectedgroup[index],
+        selectedlecture: selectedlecture[index],
+        selectedgroup: selectedgroup[index],
         selectednumber: selectednumber[index],
         selectedteacherreq: selectedteacherreq[index],
         getCredit:
@@ -161,32 +267,8 @@ const Input = () => {
       };
     });
     localStorage.setItem("lecData", JSON.stringify(lecData));
+    console.log(localStorage.getItem("lecData"));
 
-    for (let i = 0; i < lecData.length; i++) {
-      // Change here: labData.length instead of labData[index]
-      for (let j = i + 1; j < lecData.length; j++)
-        if (
-          selectedDay[i] === selectedDay[j] &&
-          selectedStart[i] === selectedStart[j] &&
-          selectedStop[i] === selectedStop[j]
-        ) {
-          submitAlertMyself(
-            selectedDay[i],
-            selectedStart[i],
-            selectedStop[i],
-            selectedSubjectName[i]
-          );
-        } else {
-          Swal.fire({
-            title: "Added successfully!!",
-            icon: "success",
-            confirmButtonText: "Okay",
-          });
-          navigate("/check");
-        }
-    }
-
-    const labData = [];
     LabInput.forEach((_, index) => {
       labData[index] = {
         selectedSubjectLab: selectedSubjectLab[index],
@@ -197,9 +279,9 @@ const Input = () => {
         selectedDayLab: selectedDayLab[index],
         selectedStartLab: selectedStartLab[index],
         selectedStopLab: selectedStopLab[index],
-        // selectedLab: selectedLab[index],
-        // selectedgroupLab: selectedgroupLab[index],
-        room: 2333,
+        selectedLab: selectedLab[index],
+        selectedgroupLab: selectedgroupLab[index],
+        selectedRoomLab: selectedRoomLab[index],
         selectednumberLab: selectednumberLab[index],
         selectedTeacherReqLab: selectedTeacherReqLab[index],
         getCreditLab:
@@ -209,73 +291,8 @@ const Input = () => {
       };
     });
     localStorage.setItem("labData", JSON.stringify(labData));
-
-    console.log(localStorage.getItem("lecData"));
     console.log(localStorage.getItem("labData"));
-    // for (let i = 0; i < labData.length; i++) {
-    //   // Change here: labData.length instead of labData[index]
-    //   for (let j = i + 1; j < labData.length; j++)
-    //     if (
-    //       selectedDayLab[i] === selectedDayLab[j] &&
-    //       selectedStartLab[i] === selectedStartLab[j] &&
-    //       selectedStopLab[i] === selectedStopLab[j]
-    //     ) {
-    //       submitAlertMyself(
-    //         selectedDayLab[i],
-    //         selectedStartLab[i],
-    //         selectedStopLab[i],
-    //         selectedSubjectNameLab[i]
-    //       );
-    //     } else {
-    //       Swal.fire({
-    //         title: "Added successfully!!",
-    //         icon: "success",
-    //         confirmButtonText: "Okay",
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             navigate("/check")
-    //           // กระทำเมื่อคลิกปุ่ม "Submit"
-    //           // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
-    //         }
-    //       });
-    //     }
-    // }
-    // console.log("check1", getLab[0].date);
-
-    for (let i = 0; i < labData.length; i++) {
-      for (let j = 0; j < getLab.length; j++) {
-        if (
-          selectedYearLab[i] === getLab[j].year &&
-          selectedDayLab[i] === getLab[j].date &&
-          selectedStartLab[i] === getLab[j].start_time &&
-          selectedStopLab[i] === getLab[j].finish_time
-        ) {
-            console.log("kkk")
-          submitAlertFriend();
-        }
-        console.log(
-          "yr",
-          selectedYearLab[i],
-          "day",
-          selectedDayLab[i],
-          "str",
-          selectedStartLab[i],
-          "stp",
-          selectedStopLab[i]
-        );
-        console.log(
-          "year",
-          getLab[j].year,
-          "date",
-          getLab[j].date,
-          "start",
-          getLab[j].start_time,
-          "stop",
-          getLab[j].finish_time
-        );
-      }
-    }
-  };
+  });
 
   const HandleDeleteLec = (index) => {
     const deleteIndex = [...LectureInput];
@@ -537,6 +554,14 @@ const Input = () => {
   const handleNumberChangeLab = (e, index) => {
     const { value } = e.target;
     setSelectedNumberLab((prevOptions) => {
+      const updatedOptions = [...prevOptions];
+      updatedOptions[index] = value;
+      return updatedOptions;
+    });
+  };
+  const handleRoomChangeLab = (e, index) => {
+    const { value } = e.target;
+    setSelectedRoomLab((prevOptions) => {
       const updatedOptions = [...prevOptions];
       updatedOptions[index] = value;
       return updatedOptions;
@@ -1104,6 +1129,23 @@ const Input = () => {
                     name="number"
                     value={selectednumberLab[index]}
                     onChange={(e) => handleNumberChangeLab(e, index)}
+                    required
+                  />
+                </div>
+
+                <div className="box" style={{ fontWeight: "bold" }}>
+                  <label
+                    style={{ display: "flex", justifyContent: "center" }}
+                    for="number"
+                  >
+                    ห้อง:
+                  </label>
+                  <input
+                    type="text"
+                    id="number"
+                    name="number"
+                    value={selectedRoomLab[index]}
+                    onChange={(e) => handleRoomChangeLab(e, index)}
                     required
                   />
                 </div>

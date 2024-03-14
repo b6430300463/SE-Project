@@ -26,7 +26,7 @@ function App() {
         <Route path="mainpagetable" element={<MainpageTable/>}/>
         <Route path="login" element={<Login/>}/>
         <Route path="input" element={<Input/>}/>
-        <Route path="request" element={<Requestsubject/>}/>
+        <Route path="request" element={<Request/>}/>
         <Route path="checkpage" element={<CheckPage/>}/>
       </Routes>
     </BrowserRouter>

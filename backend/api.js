@@ -291,7 +291,7 @@ app.post("/api/assign_lab", (req, res) => {
   console.log("Received Data:", receivedData);
 
   const sql =
-    "INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, subject_type,subject_priority, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
   const values = receivedData.map((data) => [
     data.selectedSubjectLab,
@@ -304,8 +304,10 @@ app.post("/api/assign_lab", (req, res) => {
     data.selectedDayLab,
     data.selectedStartLab,
     data.selectedStopLab,
-    data.room,
+    data.selectedRoomLab,
     data.selectedTeacherReqLab,
+    data.selectedLab,
+    data.selectedgroupLab,
     data.teacher_id,
   ]);
 
@@ -333,9 +335,10 @@ app.post("/api/assign_lecture", (req, res) => {
 
   const room = receivedData.room !== undefined ? receivedData.room : "None";
   const sql =
-    "INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, subject_type, subject_priority, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
   const values = receivedData.map((data) => [
+
     data.selectedSubject,
     data.selectedYear,
     data.selectedSubjectName,
@@ -348,6 +351,8 @@ app.post("/api/assign_lecture", (req, res) => {
     data.selectedStop,
     room,
     data.selectedteacherreq,
+    data.selectedlecture,
+    data.selectedgroup,
     data.teacher_id,
   ]);
 
