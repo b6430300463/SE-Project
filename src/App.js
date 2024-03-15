@@ -16,7 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Request/>}/>
+        <Route index element={<Input/>}/>
         <Route path="import" element={<Import/>} />
         <Route path="check" element={<CheckPage/>}/>
         <Route path="checksubject" element={<CheckSubject/>}/>
