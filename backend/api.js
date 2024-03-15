@@ -630,3 +630,48 @@ app.get("/api/export_to_excel_eachteacher", async (req, res) => {
       .json({ error: "An error occurred while exporting to Excel" });
   }
 });
+//leccccccccc
+app.get('/api/get_problem_lecsubject', (req, res) => {
+  const query = 
+    `SELECT *
+    FROM lecture_assign
+    WHERE (year, date, start_time, finish_time) IN (
+        SELECT year, date, start_time, finish_time
+        FROM lecture_assign
+        GROUP BY year, date, start_time, finish_time
+        HAVING COUNT(*) > 1
+    )`;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+      
+    res.json(results);
+  });
+});
+
+//labbbbbbb
+app.get('/api/get_problem_labsubject', (req, res) => {
+  const query = `
+    SELECT *
+    FROM lab_assign
+    WHERE (year, date, start_time, finish_time, room) IN (
+        SELECT year, date, start_time, finish_time, room
+        FROM lab_assign
+        GROUP BY year, date, start_time, finish_time, room
+        HAVING COUNT(*) > 1
+    )`;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+      
+    res.json(results);
+  });
+});

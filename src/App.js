@@ -25,6 +25,7 @@ function App() {
         <Route path="mainpageadmin" element={<MainPageAdmin/>}/>
         <Route path="mainpagetable" element={<MainpageTable/>}/>
         <Route path="login" element={<Login/>}/>
+        <Route path="manageschedule" element={<ManageSchedule/>}/>
         <Route path="input" element={<Input/>}/>
         <Route path="request" element={<Request/>}/>
         <Route path="checkpage" element={<CheckPage/>}/>
