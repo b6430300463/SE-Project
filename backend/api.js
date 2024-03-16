@@ -630,8 +630,12 @@ app.get("/api/export_to_excel_eachteacher", async (req, res) => {
       .json({ error: "An error occurred while exporting to Excel" });
   }
 });
+<<<<<<< HEAD
 
   //ของบรรยายดึงข้อมูลวิชาที่มี การชนกันตามเงื่อนไขการชน ขึ้นมาแสดงในหน้า คำร้องขอเปิดรายวิชา
+=======
+//leccccccccc
+>>>>>>> a3efdd6777af05cd0c724f96e642c44982072234
 app.get('/api/get_problem_lecsubject', (req, res) => {
   const query = 
     `SELECT *
@@ -654,7 +658,11 @@ app.get('/api/get_problem_lecsubject', (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 //ของแล็บ ดึงข้อมูลวิชาที่มี การชนกันตามเงื่อนไขการชน ขึ้นมาแสดงในหน้า คำร้องขอเปิดรายวิชา
+=======
+//labbbbbbb
+>>>>>>> a3efdd6777af05cd0c724f96e642c44982072234
 app.get('/api/get_problem_labsubject', (req, res) => {
   const query = `
     SELECT *

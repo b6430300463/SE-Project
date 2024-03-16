@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState  } from 'react';
 import { useEffect } from 'react';
-
+import axios from 'axios';
+const url = "http://localhost:3307";
 
 // npm  i sweetalert2 react-icon ด้วย
 const CheckPage = () => {
@@ -40,12 +41,38 @@ const CheckPage = () => {
         navigate(-1);
     };
     const submitAlert = () => {
-        Swal.fire({
-            title:"Added successfully!!",
-            icon:"success",
-            confirmButtonText:'Okay'
+      axios
+        .post(`${url}/api/assign_lecture`, lecData)
+        .then((response) => {
+          console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
+          Swal.fire({
+            title: "Added successfully!!",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+          console.log(lecData);
         })
-    }
+        .catch((error) => {
+          console.error("Lec:", error);
+          console.log(lecData);
+        });
+      axios
+        .post(`${url}/api/assign_lab`, labData)
+        .then((response) => {
+          console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
+          Swal.fire({
+            title: "Added successfully!!",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+          console.log(labData);
+        })
+        .catch((error) => {
+          console.error("Lab:", error);
+          console.log(lecData);
+        });
+    };
+  
     
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -104,13 +131,13 @@ const CheckPage = () => {
               <tbody>
                 {data.map((database,index) => (
                   <tr key={index}>
-                    <td>{data.selectedSubjectLab}</td>
-                    <td>{data.selectedSubjectNameLab}</td>
-                    <td>{data.selectedCodeLab}</td>
-                    <td>{data.selectednumberLab}</td>
-                    <td>{data.selectedDayLab}</td>
+                    <td>{database.selectedSubjectLab}</td>
+                    <td>{database.selectedSubjectNameLab}</td>
+                    <td>{database.selectedCodeLab}</td>
+                    <td>{database.selectednumberLab}</td>
+                    <td>{database.selectedDayLab}</td>
                     <td>{database.selectedStartLab}-{database.selectedStopLab}</td>
-                    <td>{data.selectedTeacherReqLab}</td>
+                    <td>{database.selectedTeacherReqLab}</td>
                   </tr>
                 ))}
               </tbody>

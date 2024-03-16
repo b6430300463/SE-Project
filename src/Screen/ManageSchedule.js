@@ -131,7 +131,7 @@ const ManageSchedule = () => {
                             <tr key={rowIndex}>
                                 <td>{day}</td>
                                 {data[rowIndex].map((cell, colIndex) => (
-                                        <td key={colIndex}>{cell}</td>
+                                    <td key={colIndex}>{cell}</td>
                                 ))}
                             </tr>
                         ))}

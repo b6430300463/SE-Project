@@ -134,7 +134,56 @@ const Input = () => {
       }
     });
   };
-
+  const alertSec = (subject, sec) => {
+    Swal.fire({
+      title:
+        "วิชา " +
+        subject +
+        " หมู่ " +
+        sec +
+        "<br> คุณได้ทำการลงทะเบียนในหมู่นี้ไปแล้ว" +
+        " <br> กรุณาเลือกหมู่อื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
+  const alertRoom = (subject, room) => {
+    Swal.fire({
+      title:
+        "วิชา " +
+        subject +
+        " ห้อง " +
+        room +
+        "<br> คุณได้ทำการลงทะเบียนในห้องเรียนนี้ไปแล้ว" +
+        " <br> กรุณาเลือกห้องเรียนอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
   const success = () => {
     Swal.fire({
       title: "Added successfully!!",
@@ -160,17 +209,22 @@ const Input = () => {
       for (let j = 0; j < lecData.length; j++) {
         if (j >= 0 && j !== i) {
           if (
+            selectedSubject[i] === selectedSubject[j] &&
+            selectedSec[i] === selectedSec[j]
+          ) {
+            alertSec(selectedSubjectName[j], selectedSec[j]);
+            console.log("j>0 done", j);
+          } else if (
             selectedDay[i] === selectedDay[j] &&
             selectedStart[i] === selectedStart[j] &&
             selectedStop[i] === selectedStop[j]
           ) {
             submitAlertMyself(
-              selectedDay[i],
-              selectedStart[i],
-              selectedStop[i],
-              selectedSubjectName[i]
+              selectedDay[j],
+              selectedStart[j],
+              selectedStop[j],
+              selectedSubjectName[j]
             );
-            console.log("j>0 done",j);
           }
         } else if (checkLec === 0) {
           for (let k = 0; k < lecData.length; k++) {
@@ -184,19 +238,19 @@ const Input = () => {
                 checkDupLec = true;
                 console.log("dup");
                 break;
-              } 
+              }
             }
           }
-          if(checkDupLec === true){
+          if (checkDupLec === true) {
             submitAlertFriend();
-          }else{
+          } else {
             success();
           }
           checkLec = 1;
         }
-        console.log("j = 0 done",j);
+        console.log("j = 0 done", j);
       }
-      console.log("new i",i);
+      console.log("new i", i);
     }
 
     let checkLab = 0;
@@ -205,6 +259,14 @@ const Input = () => {
       for (let j = 0; j < labData.length; j++) {
         if (j >= 0 && j !== i) {
           if (
+            selectedSubjectLab[i] === selectedSubjectLab[j] &&
+            selectedSecLab[i] === selectedSecLab[j]
+          ) {
+            alertSec(selectedSubjectNameLab[j], selectedSecLab[j]);
+            console.log("j>0 done", j);
+          }else if(selectedRoomLab[i] === selectedRoomLab[j]){
+            alertRoom(selectedSubjectNameLab[j],selectedRoomLab[j])
+          } else if (
             selectedDayLab[i] === selectedDayLab[j] &&
             selectedStartLab[i] === selectedStartLab[j] &&
             selectedStopLab[i] === selectedStopLab[j]
@@ -215,7 +277,6 @@ const Input = () => {
               selectedStopLab[i],
               selectedSubjectNameLab[i]
             );
-            console.log("j>0 done",j);
           }
         } else if (checkLab === 0) {
           for (let k = 0; k < labData.length; k++) {
@@ -229,19 +290,19 @@ const Input = () => {
                 checkDup = true;
                 console.log("dup");
                 break;
-              } 
+              }
             }
           }
-          if(checkDup === true){
+          if (checkDup === true) {
             submitAlertFriend();
-          }else{
+          } else {
             success();
           }
           checkLab = 1;
         }
-        console.log("j = 0 done",j);
+        console.log("j = 0 done", j);
       }
-      console.log("new i",i);
+      console.log("new i", i);
     }
   };
   useEffect(() => {

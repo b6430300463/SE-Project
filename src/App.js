@@ -16,7 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Request/>}/>
+        <Route index element={<Input/>}/>
         <Route path="import" element={<Import/>} />
         <Route path="check" element={<CheckPage/>}/>
         <Route path="checksubject" element={<CheckSubject/>}/>
@@ -25,6 +25,7 @@ function App() {
         <Route path="mainpageadmin" element={<MainPageAdmin/>}/>
         <Route path="mainpagetable" element={<MainpageTable/>}/>
         <Route path="login" element={<Login/>}/>
+        <Route path="manageschedule" element={<ManageSchedule/>}/>
         <Route path="input" element={<Input/>}/>
         <Route path="request" element={<Request/>}/>
         <Route path="checkpage" element={<CheckPage/>}/>
