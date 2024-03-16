@@ -11,7 +11,35 @@ import Data from './DB/database.json'
 const Request = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [users, setUsers] = useState([]);
+  const [data, setData] = useState([]);
+  const urlLec = 'http://localhost:3307/api/get_problem_lecsubject';
+  const urlLab = 'http://localhost:3307/api/get_problem_labsubject';
+  const boxes = document.querySelectorAll('.box');
+  boxes.forEach(box => {
+      box.addEventListener('mouseover', () => {
+          box.style.transform = 'scale(1.1)';
+      });
 
+      box.addEventListener('mouseleave', () => {
+          box.style.transform = 'scale(1)';
+      });
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseLec = await axios.get(urlLec);
+        const responseLab = await axios.get(urlLab);
+        console.log("Response from API (Lecture):", responseLec.data);
+        console.log("Response from API (Lab):", responseLab.data);
+        setData({ lecture: responseLec.data, lab: responseLab.data });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
   const openNav = () => {
     setIsDrawerOpen(true);
   };
@@ -95,16 +123,34 @@ const Request = () => {
           <option value="none">None</option>
         </select>
       </div>
-      <div className="user-req scrollv">
-        {
-        Data.map((data, index) => {
-            <div key={index}>
-                <label>
-                    {data[index]}
-                </label>
+      <div className="data-container">
+        <h2>วิชาที่มีการชนแบบ Lecture:</h2>
+        <ul>
+          {data.lecture && data.lecture.map(item => (
+            <div className="box" key={item.id}>
+              <strong>รหัสวิชา:</strong> {item.subject_id}<br />
+              <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
+              <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
+              <strong>ห้องเรียน:</strong> {item.room}<br />
+              <strong>จำนวนนักศึกษา:</strong> {item.total_students}<br />
             </div>
-      })}
+          ))}
+        </ul>
+
+        <h2>วิชาที่มีการชนแบบ Lab:</h2>
+        <ul>
+          {data.lab && data.lab.map(item => (
+            <div className="box" key={item.id}>
+              <strong>รหัสวิชา:</strong> {item.subject_id}<br />
+              <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
+              <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
+              <strong>ห้องเรียน:</strong> {item.room}<br />
+              <strong>จำนวนนักศึกษา:</strong> {item.total_students}<br />
+            </div>
+          ))}
+        </ul>
       </div>
+      
     </div>
   );
 };

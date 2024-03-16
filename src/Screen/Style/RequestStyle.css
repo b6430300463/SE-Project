@@ -32,6 +32,32 @@
     width: 200px;
     text-align: center;
 }
-.user-req{
+.user-req {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .box {
+    border: 3px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-left: 60px;
+    width: 160vh;
+    transition: transform 0.3s ease; /* เพิ่มโมชั่นให้กล่องขยับ */
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer; 
 }
+  
+  .box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .box-body {
+    font-size: 14px;
+  }
+  
