@@ -44,7 +44,7 @@ const Request = () => {
     // localStorage.setItem("YearLab", JSON.stringify(year));
     // navigate("/manageschedule");
     // // console.log(`${year}`)
-    localStorage.setItem("YearLab", JSON.stringify(year)); // Set year for Lab
+    localStorage.setItem("YearLab", JSON.stringify(year)); 
     localStorage.setItem("YearLec", JSON.stringify(null)); // Set null for Lec
     navigate("/manageschedule");
     // console.log(year);

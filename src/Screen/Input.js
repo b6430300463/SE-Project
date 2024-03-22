@@ -184,6 +184,56 @@ const Input = () => {
       }
     });
   };
+  const alertSecDB = (subject, sec) => {
+    Swal.fire({
+      title:
+        "วิชา " +
+        subject +
+        " หมู่ " +
+        sec +
+        "<br> มีอาจารย์ท่านอื่นได้ทำการลงทะเบียนในหมู่นี้ไปแล้ว" +
+        " <br> กรุณาเลือกหมู่อื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
+  const alertRoomDB = (subject, room) => {
+    Swal.fire({
+      title:
+        "วิชา " +
+        subject +
+        " ห้อง " +
+        room +
+        "<br> มีอาจารย์ท่านอื่นได้ทำการลงทะเบียนในห้องเรียนนี้ไปแล้ว" +
+        " <br> กรุณาเลือกห้องเรียนอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
   const success = () => {
     Swal.fire({
       title: "Added successfully!!",
@@ -197,6 +247,71 @@ const Input = () => {
       }
     });
   };
+
+  const doesTimeOverlap = (
+    newStart,
+    newEnd,
+    existingStarts,
+    existingEnds,
+    existingDays,
+    currentDay
+  ) => {
+    const newStartMin = convertTimeToMinutes(newStart);
+    const newEndMin = convertTimeToMinutes(newEnd);
+
+    for (let i = 0; i < existingDays.length; i++) {
+      if (existingDays[i] === currentDay) {
+        const startMin = convertTimeToMinutes(existingStarts[i]);
+        const endMin = convertTimeToMinutes(existingEnds[i]);
+
+        if (
+          (newStartMin < endMin && newStartMin >= startMin) ||
+          (newEndMin > startMin && newEndMin <= endMin)
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  const convertTimeToMinutes = (timeString) => {
+    if (!timeString) {
+      return 0; // Return a default value such as 0 if the input is undefined or not a string
+    }
+    const [hours, minutes] = timeString.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+  const resetTimeSelection = (isLab, isStart, index) => {
+    if (isLab) {
+      if (isStart) {
+        setSelectedStartLab((prev) => {
+          const updated = [...prev];
+          updated[index] = "None"; // Reset start time for lab
+          return updated;
+        });
+      } else {
+        setSelectedStopLab((prev) => {
+          const updated = [...prev];
+          updated[index] = "None"; // Reset stop time for lab
+          return updated;
+        });
+      }
+    } else {
+      if (isStart) {
+        setSelectedStart((prev) => {
+          const updated = [...prev];
+          updated[index] = "None"; // Reset start time for lecture
+          return updated;
+        });
+      } else {
+        setSelectedStop((prev) => {
+          const updated = [...prev];
+          updated[index] = "None"; // Reset stop time for lecture
+          return updated;
+        });
+      }
+    }
+  };
   // ==========================Lecture=======================
   const addlecture = () => {
     const add = [...LectureInput, []];
@@ -204,7 +319,9 @@ const Input = () => {
   };
   const submitAlert = () => {
     let checkLec = 0;
-    let checkDupLec = false;
+    let checkDupLec = 0;
+    let dupNameLec = "";
+    let dupSecLec = "";
     for (let i = 0; i < lecData.length; i++) {
       for (let j = 0; j < lecData.length; j++) {
         if (j >= 0 && j !== i) {
@@ -229,19 +346,27 @@ const Input = () => {
         } else if (checkLec === 0) {
           for (let k = 0; k < lecData.length; k++) {
             for (let l = 0; l < getLec.length; l++) {
-              if (
+              if (selectedSec[k] === String(getLec[l].section)) {
+                checkDupLec = 1;
+                dupNameLec = selectedSubjectName[k];
+                dupSecLec = selectedSec[k];
+                console.log("dup");
+                break;
+              } else if (
                 selectedYear[k] === String(getLec[l].year) &&
                 selectedDay[k] === String(getLec[l].date) &&
                 selectedStart[k] === getLec[l].start_time &&
                 selectedStop[k] === getLec[l].finish_time
               ) {
-                checkDupLec = true;
-                console.log("dup");
+                checkDupLec = 2;
+                console.log("dupsec");
                 break;
               }
             }
           }
-          if (checkDupLec === true) {
+          if (checkDupLec === 1) {
+            alertSecDB(dupNameLec, dupSecLec);
+          } else if (checkDupLec === 2) {
             submitAlertFriend();
           } else {
             success();
@@ -254,7 +379,10 @@ const Input = () => {
     }
 
     let checkLab = 0;
-    let checkDup = false;
+    let checkDup = 0;
+    let dupNameLab = "";
+    let dupSecLab = "";
+    let dupRoomLab = "";
     for (let i = 0; i < labData.length; i++) {
       for (let j = 0; j < labData.length; j++) {
         if (j >= 0 && j !== i) {
@@ -264,8 +392,8 @@ const Input = () => {
           ) {
             alertSec(selectedSubjectNameLab[j], selectedSecLab[j]);
             console.log("j>0 done", j);
-          }else if(selectedRoomLab[i] === selectedRoomLab[j]){
-            alertRoom(selectedSubjectNameLab[j],selectedRoomLab[j])
+          } else if (selectedRoomLab[i] === selectedRoomLab[j]) {
+            alertRoom(selectedSubjectNameLab[j], selectedRoomLab[j]);
           } else if (
             selectedDayLab[i] === selectedDayLab[j] &&
             selectedStartLab[i] === selectedStartLab[j] &&
@@ -281,19 +409,36 @@ const Input = () => {
         } else if (checkLab === 0) {
           for (let k = 0; k < labData.length; k++) {
             for (let l = 0; l < getLab.length; l++) {
-              if (
+              if (selectedSecLab[k] === String(getLab[l].section)) {
+                checkDup = 1;
+                dupNameLab = selectedSubjectNameLab[k];
+                dupSecLab = selectedSecLab[k];
+
+                console.log("dupsec");
+                break;
+              } else if (selectedRoomLab[k] === String(getLab[l].room)) {
+                checkDup = 2;
+                dupNameLab = selectedSubjectNameLab[k];
+                dupRoomLab = selectedRoomLab[k];
+                console.log("duproom");
+                break;
+              } else if (
                 selectedYearLab[k] === String(getLab[l].year) &&
                 selectedDayLab[k] === String(getLab[l].date) &&
                 selectedStartLab[k] === getLab[l].start_time &&
                 selectedStopLab[k] === getLab[l].finish_time
               ) {
-                checkDup = true;
+                checkDup = 3;
                 console.log("dup");
                 break;
               }
             }
           }
-          if (checkDup === true) {
+          if (checkDup === 1) {
+            alertSecDB(dupNameLab, dupSecLab);
+          } else if (checkDup === 2) {
+            alertRoomDB(dupNameLab, dupRoomLab);
+          } else if (checkDup === 3) {
             submitAlertFriend();
           } else {
             success();
@@ -474,21 +619,116 @@ const Input = () => {
       return updatedOptions;
     });
   };
-  const handleStartChange = (e, index) => {
-    const { value } = e.target;
-    setSelectedStart((prevOptions) => {
-      const updatedOptions = [...prevOptions];
-      updatedOptions[index] = value;
-      return updatedOptions;
-    });
+  const handleStartChange = (e, index, isLab = false) => {
+    const newStartTime = e.target.value;
+    let stopTime;
+
+    if (isLab) {
+      stopTime = selectedStopLab[index] || "23:59";
+    } else {
+      stopTime = selectedStop[index] || "23:59";
+    }
+
+    // ตรวจสอบหลังจากตั้งค่าเริ่มต้น
+    if (convertTimeToMinutes(newStartTime) >= convertTimeToMinutes(stopTime)) {
+      alert("Start time must be before stop time.");
+      resetTimeSelection(isLab, true, index);
+      return;
+    }
+    const existingStartTimes = [
+      ...selectedStart.slice(0, index),
+      ...selectedStartLab,
+    ];
+    const existingStopTimes = [
+      ...selectedStop.slice(0, index),
+      ...selectedStopLab,
+    ];
+    const existingDays = [...selectedDay.slice(0, index), ...selectedDayLab];
+
+    if (
+      doesTimeOverlap(
+        newStartTime,
+        selectedStop[index],
+        existingStartTimes,
+        existingStopTimes,
+        existingDays,
+        selectedDay[index]
+      )
+    ) {
+      alert("Time overlap detected with another lecture or lab.");
+      resetTimeSelection(isLab, true, index);
+      return;
+    }
+
+    // ต่อไปนี้คือการปรับปรุงค่าตามปกติ
+    if (isLab) {
+      setSelectedStartLab((prevOptions) => {
+        const updatedOptions = [...prevOptions];
+        updatedOptions[index] = newStartTime;
+        return updatedOptions;
+      });
+    } else {
+      setSelectedStart((prevOptions) => {
+        const updatedOptions = [...prevOptions];
+        updatedOptions[index] = newStartTime;
+        return updatedOptions;
+      });
+    }
   };
-  const handleStopChange = (e, index) => {
-    const { value } = e.target;
-    setSelectedStop((prevOptions) => {
-      const updatedOptions = [...prevOptions];
-      updatedOptions[index] = value;
-      return updatedOptions;
-    });
+
+  const handleStopChange = (e, index, isLab = false) => {
+    const newStopTime = e.target.value;
+    let startTime;
+
+    if (isLab) {
+      startTime = selectedStartLab[index] || "00:00";
+    } else {
+      startTime = selectedStart[index] || "00:00";
+    }
+
+    if (convertTimeToMinutes(newStopTime) <= convertTimeToMinutes(startTime)) {
+      alert("Stop time must be after start time.");
+      resetTimeSelection(isLab, false, index);
+      return;
+    }
+    const existingStartTimes = [
+      ...selectedStart.slice(0, index),
+      ...selectedStartLab,
+    ];
+    const existingStopTimes = [
+      ...selectedStop.slice(0, index),
+      ...selectedStopLab,
+    ];
+    const existingDays = [...selectedDay.slice(0, index), ...selectedDayLab];
+
+    if (
+      doesTimeOverlap(
+        newStopTime,
+        selectedStop[index],
+        existingStartTimes,
+        existingStopTimes,
+        existingDays,
+        selectedDay[index]
+      )
+    ) {
+      alert("Time overlap detected with another lecture or lab.");
+      resetTimeSelection(isLab, false, index); // Implement this function to handle reset
+      return;
+    }
+
+    if (isLab) {
+      setSelectedStopLab((prevOptions) => {
+        const updatedOptions = [...prevOptions];
+        updatedOptions[index] = newStopTime;
+        return updatedOptions;
+      });
+    } else {
+      setSelectedStop((prevOptions) => {
+        const updatedOptions = [...prevOptions];
+        updatedOptions[index] = newStopTime;
+        return updatedOptions;
+      });
+    }
   };
   const handleLectureChange = (e, index) => {
     const { checked } = e.target;
@@ -581,21 +821,88 @@ const Input = () => {
     });
   };
   const handleStartChangeLab = (e, index) => {
-    const { value } = e.target;
+    const newStartTime = e.target.value;
+    let stopTime = selectedStopLab[index] || "23:59"; // กำหนดค่าเริ่มต้นหากยังไม่ถูกเลือก
+
+    // ตรวจสอบหลังจากตั้งค่าเริ่มต้น
+    if (convertTimeToMinutes(newStartTime) >= convertTimeToMinutes(stopTime)) {
+      alert("Start time for lab must be before its stop time.");
+      resetTimeSelection(true, true, index);
+      return;
+    }
+
+    if (
+      doesTimeOverlap(
+        newStartTime,
+        selectedStopLab[index],
+        [...selectedStart, ...selectedStartLab],
+        [...selectedStop, ...selectedStopLab],
+        [...selectedDay, ...selectedDayLab],
+        selectedDayLab[index]
+      ) ||
+      doesTimeOverlap(
+        newStartTime,
+        selectedStopLab[index],
+        selectedStartLab,
+        selectedStopLab,
+        selectedDayLab,
+        selectedDayLab[index]
+      )
+    ) {
+      alert("Time overlap detected with a lecture or another lab session.");
+      resetTimeSelection(true, true, index);
+      return;
+    }
+
+    // อัพเดท start time ถ้าเวลาถูกต้อง
     setSelectedStartLab((prevOptions) => {
       const updatedOptions = [...prevOptions];
-      updatedOptions[index] = value;
+      updatedOptions[index] = newStartTime;
       return updatedOptions;
     });
   };
+
   const handleStopChangeLab = (e, index) => {
-    const { value } = e.target;
+    const newStopTime = e.target.value;
+    let startTime = selectedStartLab[index] || "00:00"; // กำหนดค่าเริ่มต้นหากยังไม่ถูกเลือก
+
+    // ตรวจสอบหลังจากตั้งค่าเริ่มต้น
+    if (convertTimeToMinutes(newStopTime) <= convertTimeToMinutes(startTime)) {
+      alert("Stop time for lab must be after its start time.");
+      resetTimeSelection(true, false, index);
+      return;
+    }
+    if (
+      doesTimeOverlap(
+        selectedStartLab[index],
+        newStopTime,
+        [...selectedStart, ...selectedStartLab],
+        [...selectedStop, ...selectedStopLab],
+        [...selectedDay, ...selectedDayLab],
+        selectedDayLab[index]
+      ) ||
+      doesTimeOverlap(
+        selectedStartLab[index],
+        newStopTime,
+        selectedStartLab,
+        selectedStopLab,
+        selectedDayLab,
+        selectedDayLab[index]
+      )
+    ) {
+      alert("Time overlap detected with a lecture or another lab session.");
+      resetTimeSelection(true, false, index);
+      return;
+    }
+
+    // อัพเดท stop time ถ้าเวลาถูกต้อง
     setSelectedStopLab((prevOptions) => {
       const updatedOptions = [...prevOptions];
-      updatedOptions[index] = value;
+      updatedOptions[index] = newStopTime;
       return updatedOptions;
     });
   };
+
   const handleLabChange = (e, index) => {
     const { checked } = e.target;
     setSelectedLab((prevOptions) => {
