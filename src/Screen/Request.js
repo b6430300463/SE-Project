@@ -127,7 +127,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lecture:</h2>
         <ul>
           {data.lecture && data.lecture.map(item => (
-            <div className="box" key={item.id}>
+            <div className="box-request" key={item.id}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
@@ -140,7 +140,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lab:</h2>
         <ul>
           {data.lab && data.lab.map(item => (
-            <div className="box" key={item.id}>
+            <div className="box-request" key={item.id}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
