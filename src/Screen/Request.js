@@ -2,9 +2,9 @@ import "./Style/ImportStyle.css";
 import "./Style/DrawerStyle.css";
 import "./Style/RequestStyle.css";
 import Swal from "sweetalert2";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect  } from "react";
 import axios from "axios";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link, useRouteLoaderData ,useNavigate} from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
 import Data from './DB/database.json'
 
@@ -15,6 +15,9 @@ const Request = () => {
   const urlLec = 'http://localhost:3307/api/get_problem_lecsubject';
   const urlLab = 'http://localhost:3307/api/get_problem_labsubject';
   const boxes = document.querySelectorAll('.box');
+  const navigate = useNavigate();
+  // const [year,setYear] = useState([]);
+  
   boxes.forEach(box => {
       box.addEventListener('mouseover', () => {
           box.style.transform = 'scale(1.1)';
@@ -24,6 +27,29 @@ const Request = () => {
           box.style.transform = 'scale(1)';
       });
   });
+  function redirectToPageLec(year) {
+    //edit
+    // localStorage.removeItem("YearLec");
+    // localStorage.setItem("YearLec", JSON.stringify(year));
+    // navigate("/manageschedule");
+    // console.log(year);
+    localStorage.setItem("YearLec", JSON.stringify(year)); // Set year for Lec
+    localStorage.setItem("YearLab", JSON.stringify(null)); // Set null for Lab
+    navigate("/manageschedule");
+    // console.log(year);
+  }
+  function redirectToPageLab(year) {
+    //edit
+    // localStorage.removeItem("YearLab");
+    // localStorage.setItem("YearLab", JSON.stringify(year));
+    // navigate("/manageschedule");
+    // // console.log(`${year}`)
+    localStorage.setItem("YearLab", JSON.stringify(year)); // Set year for Lab
+    localStorage.setItem("YearLec", JSON.stringify(null)); // Set null for Lec
+    navigate("/manageschedule");
+    // console.log(year);
+
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,6 +62,7 @@ const Request = () => {
         console.error("Error fetching data:", error);
       }
     };
+    
 
     fetchData();
   }, []);
@@ -127,7 +154,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lecture:</h2>
         <ul>
           {data.lecture && data.lecture.map(item => (
-            <div className="box" key={item.id}>
+            <div className="box" key={item.id} onClick={() => redirectToPageLec(item.year)}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
@@ -140,7 +167,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lab:</h2>
         <ul>
           {data.lab && data.lab.map(item => (
-            <div className="box" key={item.id}>
+            <div className="box" key={item.id} onClick={() => redirectToPageLab(item.year)}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />

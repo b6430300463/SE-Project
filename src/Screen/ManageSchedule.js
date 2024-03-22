@@ -29,6 +29,11 @@ const ManageSchedule = () => {
     //         console.log(user);
     //     });
     // }, []);
+    useEffect(() => {
+
+        console.log("testlec",localStorage.getItem("YearLec"));
+        console.log("testlab",localStorage.getItem("YearLab"));
+    }, []);
 
     const openNav = () => {
         setIsDrawerOpen(true);
