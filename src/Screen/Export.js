@@ -139,7 +139,7 @@ const Export = () => {
           ))}
         </select>
         {/* year */}
-        <label for="year" id="select-year">
+        <label for="year" id="select-year" style={{paddingLeft:25}}>
           ชั้นปี
         </label>
         <select
@@ -155,31 +155,6 @@ const Export = () => {
           <option value="4">T12(4)</option>
         </select>
 
-        {/* condition */}
-        <label for="condition" id="select-condition">
-          เงื่อนไขการชน
-        </label>
-        <select
-          name="condition"
-          id="select-condition"
-          onChange={(e) => setSelectedCon(e.target.value)}
-        >
-          <option value="none">None</option>
-          <option value="c1">วิชาบังคับ ชน วิชาบังคับ</option>
-        </select>
-        <label>ห้องเรียนชนกัน</label>
-        <label className="checkroom-container">
-          <input
-            type="radio"
-            name="roomCheck"
-            value="close"
-            onChange={(e) => setSelectedRoom(e.target.value)}
-          />
-          <span className="checkroom-checkmark"></span>
-        </label>
-        <button type="search" className="search-btn">
-          <strong>Search</strong>
-        </button>
       </div>
       <div className="box">
         <div className="table-container">

@@ -1103,6 +1103,7 @@ const Input = () => {
           <Link to="/mainpageteacher">หน้าหลัก</Link>
           <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
           <Link to="/check">ตรวจสอบคำร้องขอจัดตาราง</Link>
+          <Link to="/checkschedule">ตรวจสอบตารางสอน</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>

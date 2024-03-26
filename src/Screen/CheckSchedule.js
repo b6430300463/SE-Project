@@ -7,6 +7,7 @@ import "./Style/DrawerStyle.css";
 import "./Style/Userdata.css";
 
 const CheckSchedule = () => {
+  const url = "http://localhost:3307";
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [selectedCon, setSelectedCon] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(false);
@@ -17,9 +18,41 @@ const CheckSchedule = () => {
   const [recentSessions, setRecentSessions] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [teacher, setTeacher] = useState();
+  const [user, setUser] = useState([]);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
 
-  const url = "http://localhost:3307";
+  useEffect(() => {
+    let storedUsername = localStorage.getItem("Username");
+    if (storedUsername) {
+      storedUsername = storedUsername.replace(/^"|"$/g, "");
+      setUsername(storedUsername);
+      console.log(storedUsername);
+    }
+  }, []);
+  useEffect(() => {
+    let emailUser = localStorage.getItem("Email");
+    if (emailUser) {
+      emailUser = emailUser.replace(/^"|"$/g, "");
+      setEmail(emailUser);
+      console.log(emailUser);
+    }
+  }, []);
 
+  useEffect(() => {
+    axios.get(`${url}/api/getuser`).then((response) => {
+      setUser(response.data);
+      console.log("teacher", response.data);
+    });
+  }, []);
+  useEffect(() => {
+    for (let i = 0; i < user.length; i++) {
+      if (user[i].email === email) {
+        setTeacher(user[i].id);
+      }
+    }
+  });
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -46,24 +79,23 @@ const CheckSchedule = () => {
 
     fetchTeachers();
   }, []);
+  console.log("kll",teachers)
 
   useEffect(() => {
     let filtered = [...getLec, ...getLab];
+    
 
     if (selectedYear && selectedYear !== "ALL") {
       filtered = filtered.filter(
-        (session) => String(session.year) === String(selectedYear)
+        (session) => String(session.year) === String(selectedYear) && session.teacher_id === teacher
       );
+    }else{
+        filtered = filtered.filter((session) => session.teacher_id === teacher)
     }
-
-    if (selectedTeacher) {
-      filtered = filtered.filter(
-        (session) => String(session.teacher_id) === String(selectedTeacher)
-      );
-    }
-
     setFilteredSessions(filtered);
-  }, [selectedYear, selectedTeacher, getLec, getLab]);
+  }, [selectedYear, getLec, getLab]);
+
+  
 
   const openNav = () => {
     setIsDrawerOpen(true);
@@ -118,12 +150,11 @@ const CheckSchedule = () => {
         </div>
         <label id="header-font">ตรวจสอบตาราสอน</label>
         <label id="username">
-          <strong>Username</strong>
+          <strong>{username || "Username"}</strong>
         </label>
         <FaRegUserCircle id="user" size={30} />
       </div>
       <div className="room">
-        
         {/* year */}
         <label for="year" id="select-year">
           ชั้นปี
@@ -141,31 +172,6 @@ const CheckSchedule = () => {
           <option value="4">T12(4)</option>
         </select>
 
-        {/* condition */}
-        <label for="condition" id="select-condition">
-          เงื่อนไขการชน
-        </label>
-        <select
-          name="condition"
-          id="select-condition"
-          onChange={(e) => setSelectedCon(e.target.value)}
-        >
-          <option value="none">None</option>
-          <option value="c1">วิชาบังคับ ชน วิชาบังคับ</option>
-        </select>
-        <label>ห้องเรียนชนกัน</label>
-        <label className="checkroom-container">
-          <input
-            type="radio"
-            name="roomCheck"
-            value="close"
-            onChange={(e) => setSelectedRoom(e.target.value)}
-          />
-          <span className="checkroom-checkmark"></span>
-        </label>
-        <button type="search" className="search-btn">
-          <strong>Search</strong>
-        </button>
       </div>
       <div className="box">
         <div className="table-container">
@@ -225,6 +231,8 @@ const CheckSchedule = () => {
                           Room: {sessionToDisplay.room}
                           <br />
                           Teacher Req: {sessionToDisplay.teacher_request}
+                          <br/>
+                          Teacher Id: {sessionToDisplay.teacher_id}
                         </td>
                       );
                     } else if (
