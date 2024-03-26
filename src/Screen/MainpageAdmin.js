@@ -26,7 +26,7 @@ const MainPageAdmin = () => {
                     <span id='span' onClick={openNav}>&#9776;</span>
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
-                    <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/mainpageadmin'>หน้าหลัก</Link>
                     <Link to='/users'>จัดการการเข้าถึง</Link>
                     <Link to='/login'>ออกจากระบบ</Link>

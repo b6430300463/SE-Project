@@ -675,3 +675,101 @@ app.get('/api/get_problem_labsubject', (req, res) => {
     res.json(results);
   });
 });
+app.get("/api/showUserdata", (req, res) => {
+  let request = req.body;
+  const data = 'SELECT firstname,imageURL FROM user WHERE email = "' + request.email + '"';
+
+  db.query(data, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }  else {
+      res.json(results);
+    }
+  });
+});
+// update Lecture assign
+app.post("/api/updateLecAssign", (req, res) => {
+  let request = req.body;
+  const query = 'SELECT * FROM lecture_assign WHERE subject_id = "' + request.subjectid + '"';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      if (results.length > 0) {
+        if(!request.date){
+          request.date = results[0].date;
+        }
+        if(!request.start_time){
+          request.start_time = results[0].start_time;
+        }
+        if(!request.finish_time){
+          request.finish_time = results[0].finish_time;
+        }
+        console.log("Subject : " + request.subjectid + " date " + request.date + " start_time " + request.start_time + " finish_time " + request.finish_time);
+        const updateQuery =
+          'UPDATE lecture_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '" WHERE subject_id = "' + results[0].subject_id + '"';
+        
+        db.query(updateQuery, (err, updateResults) => {
+          if (err) {
+            console.error("Error updating lecture assign in MySQL:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            console.log("Lec Subject : " + request.subjectid + " update Success");
+            res.status(200).json({ success: true });
+          }
+        });
+      } else {
+        console.log("Lec Subject : " + request.subjectid + " not found");
+        res.status(404).json({ error: "Subject not found" });
+      }
+    }
+  });
+});
+
+// update Lab assign
+app.post("/api/updateLabAssign", (req, res) => {
+  let request = req.body;
+  const query = 'SELECT * FROM lab_assign WHERE subject_id = "' + request.subjectid + '"';
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+    else {
+      if (results.length > 0) {
+        if(!request.date){
+          request.date = results[0].date;
+        }
+        if(!request.start_time){
+          request.start_time = results[0].start_time;
+        }
+        if(!request.finish_time){
+          request.finish_time = results[0].finish_time;
+        }
+        if(!request.room){
+          request.room = results[0].room;
+        }
+        console.log("Subject : " + request.subjectid + " date " + request.date + " start_time " + request.start_time + " finish_time " + request.finish_time + " room" + request.room);
+        const updateQuery =
+          'UPDATE lab_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '",room = "' + request.room + '" WHERE subject_id = "' + results[0].subject_id + '"';
+        
+        db.query(updateQuery, (err, updateResults) => {
+          if (err) {
+            console.error("Error updating lecture assign in MySQL:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            console.log("Lab Subject : " + request.subjectid + " update Success");
+            res.status(200).json({ success: true });
+          }
+        });
+      } else {
+        console.log("Lab Subject : " + request.subjectid + " not found");
+        res.status(404).json({ error: "Subject not found" });
+      }
+    }
+  });
+});

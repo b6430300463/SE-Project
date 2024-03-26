@@ -82,7 +82,7 @@ const Request = () => {
           </span>
         </div>
         <div id="mySidenav" className={`sidenav ${isDrawerOpen ? "open" : ""}`}>
-          <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>
+          <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
           <Link to="/mainpagetable">หน้าหลัก</Link>
@@ -154,7 +154,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lecture:</h2>
         <ul>
           {data.lecture && data.lecture.map(item => (
-            <div className="box" key={item.id} onClick={() => redirectToPageLec(item.year)}>
+            <div className="box-request" key={item.id} onClick={() => redirectToPageLec(item.year)}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
@@ -167,7 +167,7 @@ const Request = () => {
         <h2>วิชาที่มีการชนแบบ Lab:</h2>
         <ul>
           {data.lab && data.lab.map(item => (
-            <div className="box" key={item.id} onClick={() => redirectToPageLab(item.year)}>
+            <div className="box-request" key={item.id} onClick={() => redirectToPageLab(item.year)}>
               <strong>รหัสวิชา:</strong> {item.subject_id}<br />
               <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
               <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />

@@ -78,10 +78,10 @@ width: 200px; /*รหัสวิชา */
 width: 400px; /* ชื่อรายวิชา */
 }
 .schedule-table th:nth-child(4),.schedule-table td:nth-child(4) {
-width: 50px; /* บรรยาย */
+width: 80px; /* บรรยาย */
 }
 .schedule-table th:nth-child(5),.schedule-table td:nth-child(5) {
-width: 50px; /* ปฏิบัติ */
+width: 100px; /* ปฏิบัติ */
 }
 .schedule-table th:nth-child(6),.schedule-table td:nth-child(6) {
 width: 80px; /* วัน */
@@ -108,19 +108,16 @@ width: 300px; /* Note & เบอร์ติดต่อ*/
 #select-teacher{
   margin-right: 1%;
   height: 25px;
-  background-color: #f6f6f6;
 }
 
 #select-year{
   margin-right: 1%;
   height: 25px;
-  background-color: #f6f6f6;
 }
 
 #select-condition{
   margin-right: 1%;
   height: 25px;
-  background-color: #f6f6f6;
 }
 
 /* CUSTOM CHECKBOX ZONE */
@@ -227,4 +224,7 @@ width: 300px; /* Note & เบอร์ติดต่อ*/
   align-items: center;
   box-shadow: 10px;
   cursor: pointer;
+}
+.cell{
+  border:1px black solid;
 }

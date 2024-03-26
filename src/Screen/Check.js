@@ -84,28 +84,28 @@ const CheckPage = () => {
     const TableComponent = ({ data }) => {
         return (
             <div className="table-container">
-                <table>
-                    <thead>
+                <table className='check-table'>
+                    <thead >
                         <tr>
-                            <th>รหัสวิชา</th>
-                            <th>วิชา</th>
-                            <th>รหัสสาขา</th>
-                            <th>จำนวน</th>
-                            <th>วัน</th>
-                            <th>เวลา</th>
-                            <th>Teacher Request</th>
+                            <th className='check-head check-compo'>รหัสวิชา</th>
+                            <th className='check-head check-compo'>วิชา</th>
+                            <th className='check-head check-compo'>รหัสสาขา</th>
+                            <th className='check-head check-compo'>จำนวน</th>
+                            <th className='check-head check-compo'>วัน</th>
+                            <th className='check-head check-compo'>เวลา</th>
+                            <th className='check-head check-compo'>Teacher Request</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((database,index) => (
                             <tr key={index}>
-                                <td>{database.selectedSubject}</td>
-                                <td>{database.selectedSubjectName}</td>
-                                <td>{database.selectedCode}</td>
-                                <td>{database.selectednumber}</td>
-                                <td>{database.selectedDay}</td>
-                                <td>{database.selectedStart}-{database.selectedStop}</td>
-                                <td>{database.selectedteacherreq}</td>
+                                <td className='check-body'>{database.selectedSubject}</td>
+                                <td className='check-body'>{database.selectedSubjectName}</td>
+                                <td className='check-body'>{database.selectedCode}</td>
+                                <td className='check-body'>{database.selectednumber}</td>
+                                <td className='check-body'>{database.selectedDay}</td>
+                                <td className='check-body'>{database.selectedStart}-{database.selectedStop}</td>
+                                <td className='check-body'>{database.selectedteacherreq}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -116,16 +116,16 @@ const CheckPage = () => {
     const PracticalTableComponent = ({ data }) => {
         return (
           <div className="table-container">
-            <table>
+            <table className='check-table'>
               <thead>
                 <tr>
-                  <th>รหัสวิชา</th>
-                  <th>วิชา</th>
-                  <th>รหัสสาขา</th>
-                  <th>จำนวน</th>
-                  <th>วัน</th>
-                  <th>เวลา</th>
-                  <th>Teacher Request</th>
+                  <th className='check-head check-compo'>รหัสวิชา</th>
+                  <th className='check-head check-compo'>วิชา</th>
+                  <th className='check-head check-compo'>รหัสสาขา</th>
+                  <th className='check-head check-compo'>จำนวน</th>
+                  <th className='check-head check-compo'>วัน</th>
+                  <th className='check-head check-compo'>เวลา</th>
+                  <th className='check-head check-compo'>Teacher Request</th>
                 </tr>
               </thead>
               <tbody>
@@ -154,7 +154,7 @@ const CheckPage = () => {
                     <span id='span' onClick={openNav}>&#9776;</span>
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
-                    <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/mainpageteacher'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
                     <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>

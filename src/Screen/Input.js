@@ -48,6 +48,26 @@ const Input = () => {
   const [selectednumberLab, setSelectedNumberLab] = useState("");
   const [selectedTeacherReqLab, setSelectedTeacherReqLab] = useState("");
   const [getCreditLab, setgetCreditLab] = useState([]);
+  const [email, setEmail] = useState('');
+
+  const [username, setUsername] = useState('');
+    useEffect(() => {
+        let storedUsername = localStorage.getItem("Username");
+        if (storedUsername) {
+            storedUsername = storedUsername.replace(/^"|"$/g, '');
+            setUsername(storedUsername);
+            console.log(storedUsername);
+        }
+    }, []);
+    useEffect(() => {
+      let emailUser = localStorage.getItem("Email");
+      if (emailUser) {
+        emailUser = emailUser.replace(/^"|"$/g, '');
+          setEmail(emailUser);
+          console.log(emailUser);
+      }
+  }, []);
+
 
   useEffect(() => {
     axios.get(`${url}/api/lecture`).then((response) => {
@@ -233,6 +253,26 @@ const Input = () => {
         // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
       }
     });
+  };const alertSelf = () => {
+    Swal.fire({
+      title:
+        "คุณได้เคยทำการลงทะเบียนในวันและเวลาดังกล่าวไปแล้ว" +
+        " <br> กรุณาเลือกวันและเวลาอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
   };
   const success = () => {
     Swal.fire({
@@ -346,7 +386,7 @@ const Input = () => {
         } else if (checkLec === 0) {
           for (let k = 0; k < lecData.length; k++) {
             for (let l = 0; l < getLec.length; l++) {
-              if (selectedSec[k] === String(getLec[l].section)) {
+              if ( selectedSubject[k] === getLec[l].subject_id && selectedSec[k] === String(getLec[l].section)) {
                 checkDupLec = 1;
                 dupNameLec = selectedSubjectName[k];
                 dupSecLec = selectedSec[k];
@@ -356,9 +396,19 @@ const Input = () => {
                 selectedYear[k] === String(getLec[l].year) &&
                 selectedDay[k] === String(getLec[l].date) &&
                 selectedStart[k] === getLec[l].start_time &&
-                selectedStop[k] === getLec[l].finish_time
+                selectedStop[k] === getLec[l].finish_time 
+                // teacher_id === getLec[l].teacher_id
               ) {
                 checkDupLec = 2;
+                console.log("dupsec");
+                break;
+              } else if (
+                selectedYear[k] === String(getLec[l].year) &&
+                selectedDay[k] === String(getLec[l].date) &&
+                selectedStart[k] === getLec[l].start_time &&
+                selectedStop[k] === getLec[l].finish_time
+              ) {
+                checkDupLec = 3;
                 console.log("dupsec");
                 break;
               }
@@ -367,6 +417,8 @@ const Input = () => {
           if (checkDupLec === 1) {
             alertSecDB(dupNameLec, dupSecLec);
           } else if (checkDupLec === 2) {
+            alertSelf();
+          }else if (checkDupLec === 3) {
             submitAlertFriend();
           } else {
             success();
@@ -409,26 +461,36 @@ const Input = () => {
         } else if (checkLab === 0) {
           for (let k = 0; k < labData.length; k++) {
             for (let l = 0; l < getLab.length; l++) {
-              if (selectedSecLab[k] === String(getLab[l].section)) {
+              if (selectedSubjectLab[k] === getLab[l].subject_id && selectedSecLab[k] === String(getLab[l].section)) {
                 checkDup = 1;
                 dupNameLab = selectedSubjectNameLab[k];
                 dupSecLab = selectedSecLab[k];
 
                 console.log("dupsec");
                 break;
-              } else if (selectedRoomLab[k] === String(getLab[l].room)) {
+              } else if (selectedSubjectLab[k] === getLab[l].subject_id && selectedRoomLab[k] === String(getLab[l].room)) {
                 checkDup = 2;
                 dupNameLab = selectedSubjectNameLab[k];
                 dupRoomLab = selectedRoomLab[k];
                 console.log("duproom");
                 break;
+              }else if (
+                selectedYearLab[k] === String(getLab[l].year) &&
+                selectedDayLab[k] === String(getLab[l].date) &&
+                selectedStartLab[k] === getLab[l].start_time &&
+                selectedStopLab[k] === getLab[l].finish_time 
+                // teacher_id === getLab[l].teacher_id
+              ) {
+                checkDup = 3;
+                console.log("dup");
+                break;
               } else if (
                 selectedYearLab[k] === String(getLab[l].year) &&
                 selectedDayLab[k] === String(getLab[l].date) &&
                 selectedStartLab[k] === getLab[l].start_time &&
-                selectedStopLab[k] === getLab[l].finish_time
+                selectedStopLab[k] === getLab[l].finish_time 
               ) {
-                checkDup = 3;
+                checkDup = 4;
                 console.log("dup");
                 break;
               }
@@ -439,6 +501,8 @@ const Input = () => {
           } else if (checkDup === 2) {
             alertRoomDB(dupNameLab, dupRoomLab);
           } else if (checkDup === 3) {
+            alertSelf();
+          }else if (checkDup === 4) {
             submitAlertFriend();
           } else {
             success();
@@ -1017,7 +1081,7 @@ const Input = () => {
           </span>
         </div>
         <div id="mySidenav" className={`sidenav ${isDrawerOpen ? "open" : ""}`}>
-          <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>
+          <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
           <Link to="/mainpageteacher">หน้าหลัก</Link>
@@ -1026,9 +1090,7 @@ const Input = () => {
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
-        <label id="username">
-          <strong>Username</strong>
-        </label>
+        <label id="username"><strong>{username|| 'Username'}</strong></label>
         <FaRegUserCircle id="user" size={30} />
       </div>
       {/* โค้ดheaderbar */}

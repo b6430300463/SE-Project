@@ -1,73 +1,68 @@
-.check-container{
-    min-height: 100vh;
+.check-container {
+  min-height: 100vh;
 }
-#under1-font{
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 7%;
+#under1-font {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 7%;
 }
-#under2-font{
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 7%;
+#under2-font {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 7%;
 }
-#under3-font{
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 7%;
+#under3-font {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 7%;
 }
-#under4-font{
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 7%;
+#under4-font {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 7%;
 }
-.under1-bar{
-
-    min-height: 10vh;
-    align-items: center;
-    display: flex;
+.under1-bar {
+  min-height: 10vh;
+  align-items: center;
+  display: flex;
 }
-#under2-bar{
-
-    margin-left: 75%;
+#under2-bar {
+  margin-left: 75%;
 }
-.under3-bar{
-
-    min-height: 1vh;
-    align-items: center;
-    display: flex;
+.under3-bar {
+  min-height: 1vh;
+  align-items: center;
+  display: flex;
 }
-.under4-bar{
-
-    min-height: 1vh;
-    align-items: center;
-    display: flex;
+.under4-bar {
+  min-height: 1vh;
+  align-items: center;
+  display: flex;
 }
 
-.header-bar{
-    background-color: #57CC99;
-    min-height: 10vh;
-    align-items: center;
-    display: flex;
+.header-bar {
+  background-color: #57cc99;
+  min-height: 10vh;
+  align-items: center;
+  display: flex;
 }
-#header-font{
-    font-size: 20px;
-    font-weight: bold;
-    margin-left: 7%;
-}
-
-#user{
-    margin-left: 1%;
-}
-#username{
-    margin-left: 75%;
+#header-font {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 7%;
 }
 
-.under-bar{
+#user {
+  margin-left: 1%;
+}
+#username {
+  margin-left: 75%;
+}
 
-    min-height: 10vh;
-    align-items: center;
-    display: flex;
+.under-bar {
+  min-height: 10vh;
+  align-items: center;
+  display: flex;
 }
 
 /* checkStyle.css */
@@ -75,46 +70,54 @@
 /* checkStyle.css */
 
 .table-container {
-    margin-top: 20px;
-  }
+  margin-top: 20px;
+}
+
+.check-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.check-compo {
+  border: 1px solid #ddd;
+  padding-right: 100px; /* Increase padding */
+  text-align: left;
+  font-size: 16px; /* Increase font size */
   
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px; /* Increase padding */
-    text-align: left;
-    font-size: 16px; /* Increase font size */
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  .scrollv {
-    overflow-y: auto;
-    max-height: 500px; /* Increase max height for scrolling */
-  }
-  
-  .button-sb {
-    margin-top: 20px;
-  }
-  
-  .submit-btn {
-    background-color: #57CC99;
-    padding: 12px 24px; /* Increase padding */
-    border: none;
-    border-radius: 5px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-  
-  .submit-btn:hover {
-    background-color: #57CC99;
-  }
-  
-  
+}
+.check-body {
+  border: 1px solid #ddd;
+  /* padding-right: 80px; */
+  text-align: left;
+  font-size: 16px; /* Increase font size */
+}
+
+.check-head {
+  background-color: #f2f2f2;
+}
+
+.scrollv {
+  overflow-y: auto;
+  max-height: 500px; /* Increase max height for scrolling */
+  justify-content: center;
+  align-items: center;
+
+}
+
+.button-sb {
+  margin-top: 20px;
+}
+
+.submit-btn {
+  background-color: #57cc99;
+  padding: 12px 24px; /* Increase padding */
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #57cc99;
+}

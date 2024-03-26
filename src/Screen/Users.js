@@ -188,7 +188,7 @@ const Users = () => {
                     <span id='span' onClick={openNav}>&#9776;</span>
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
-                    <a href="javascript:void(0)" class="closebtn" onClick={closeNav}>&times;</a>
+                    <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
                     <Link to='/mainpage'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
                     <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
@@ -233,7 +233,7 @@ const Users = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getUsersByPriority().map((item, index) => (
+                                {getUsersByPriority()?.map((item, index) => (
                                     <tr key={index} >
                                         <td data-row-number={index + 1}></td>
                                         <td>{item.email}</td>

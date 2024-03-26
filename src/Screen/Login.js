@@ -30,18 +30,25 @@ const Login = () =>{
         axios.post('http://localhost:3307/api/login', payload);
     
         console.log('success', payload);
-        console.log('user', user);
+        console.log('Name', payload.name);
+        console.log('Email', payload.email);
     
         user.forEach((item) => {
             if (payload.email === item.email) {
                 console.log('check');
                 if (item.priority === 1) {
+                    localStorage.setItem("Username", JSON.stringify(payload.name));
+                    localStorage.setItem("Email", JSON.stringify(payload.email));
                     navigate('/mainpageadmin');
                 }
                 if (item.priority === 2) {
+                    localStorage.setItem("Username", JSON.stringify(payload.name));
+                    localStorage.setItem("Email", JSON.stringify(payload.email));
                     navigate('/mainpagetable');
                 }
                 if (item.priority === 3) {
+                    localStorage.setItem("Username", JSON.stringify(payload.name));
+                    localStorage.setItem("Email", JSON.stringify(payload.email));
                     navigate('/mainpageteacher');
                 }
             }
