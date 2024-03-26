@@ -45,32 +45,42 @@ const CheckPage = () => {
         .post(`${url}/api/assign_lecture`, lecData)
         .then((response) => {
           console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
-          Swal.fire({
-            title: "Added successfully!!",
-            icon: "success",
-            confirmButtonText: "Okay",
-          });
+          
           console.log(lecData);
         })
         .catch((error) => {
           console.error("Lec:", error);
           console.log(lecData);
         });
+        Swal.fire({
+          title: "Added successfully!!",
+          icon: "success",
+          confirmButtonText: "Okay",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/input")
+          }
+        })
       axios
         .post(`${url}/api/assign_lab`, labData)
         .then((response) => {
           console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
-          Swal.fire({
-            title: "Added successfully!!",
-            icon: "success",
-            confirmButtonText: "Okay",
-          });
+         
           console.log(labData);
         })
         .catch((error) => {
           console.error("Lab:", error);
           console.log(lecData);
         });
+        Swal.fire({
+          title: "Added successfully!!",
+          icon: "success",
+          confirmButtonText: "Okay",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/input")
+          }
+        })
     };
   
     

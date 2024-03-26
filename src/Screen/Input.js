@@ -48,6 +48,8 @@ const Input = () => {
   const [selectednumberLab, setSelectedNumberLab] = useState("");
   const [selectedTeacherReqLab, setSelectedTeacherReqLab] = useState("");
   const [getCreditLab, setgetCreditLab] = useState([]);
+  const [user,setUser] = useState([]);
+  const [teacher,setTeacher] = useState('');
   const [email, setEmail] = useState('');
 
   const [username, setUsername] = useState('');
@@ -90,8 +92,19 @@ const Input = () => {
       setGetLec(response.data);
       console.log(getLec);
     });
+    axios.get(`${url}/api/getuser`).then((response) => {
+      setUser(response.data);
+      console.log("teacher",response.data);
+    });
   }, []);
-
+  useEffect(() => {
+    for(let i = 0; i < user.length; i++){
+      if(user[i].email === email){
+        setTeacher(user[i].id);
+      }
+    }
+  })
+  console.log("teacherID",teacher);
   const openNav = () => {
     setIsDrawerOpen(true);
   };
@@ -130,6 +143,7 @@ const Input = () => {
       }
     });
   };
+  
   const submitAlertFriend = () => {
     Swal.fire({
       title:
@@ -393,14 +407,15 @@ const Input = () => {
                 console.log("dup");
                 break;
               } else if (
+                selectedSubject[k] === getLec[l].subject_id  &&
                 selectedYear[k] === String(getLec[l].year) &&
                 selectedDay[k] === String(getLec[l].date) &&
                 selectedStart[k] === getLec[l].start_time &&
-                selectedStop[k] === getLec[l].finish_time 
-                // teacher_id === getLec[l].teacher_id
+                selectedStop[k] === getLec[l].finish_time &&
+                teacher === getLec[l].teacher_id
               ) {
                 checkDupLec = 2;
-                console.log("dupsec");
+                console.log("dupself");
                 break;
               } else if (
                 selectedYear[k] === String(getLec[l].year) &&
@@ -472,14 +487,15 @@ const Input = () => {
                 checkDup = 2;
                 dupNameLab = selectedSubjectNameLab[k];
                 dupRoomLab = selectedRoomLab[k];
-                console.log("duproom");
+                console.log("duproom",selectedSubjectLab[k] === getLab[l].subject_id );
                 break;
               }else if (
+                selectedSubjectLab[k] === getLab[l].subject_id  &&
                 selectedYearLab[k] === String(getLab[l].year) &&
                 selectedDayLab[k] === String(getLab[l].date) &&
                 selectedStartLab[k] === getLab[l].start_time &&
-                selectedStopLab[k] === getLab[l].finish_time 
-                // teacher_id === getLab[l].teacher_id
+                selectedStopLab[k] === getLab[l].finish_time &&
+                teacher === getLab[l].teacher_id
               ) {
                 checkDup = 3;
                 console.log("dup");
@@ -533,7 +549,7 @@ const Input = () => {
           lectureOptions.find(
             (lecture) => lecture.subject_id === selectedSubject[index]
           )?.credit || 0,
-        teacher_id: 8,
+        teacher_id: teacher,
       };
     });
     localStorage.setItem("lecData", JSON.stringify(lecData));
@@ -557,7 +573,7 @@ const Input = () => {
         getCreditLab:
           labOptions.find((lab) => lab.subject_id === selectedSubjectLab[index])
             ?.credit || 0,
-        teacher_id: 8,
+        teacher_id: teacher,
       };
     });
     localStorage.setItem("labData", JSON.stringify(labData));

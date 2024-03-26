@@ -217,7 +217,7 @@ app.post("/api/updatePriority", (req, res) => {
 });
 
 app.get("/api/getuser", (req, res) => {
-  const query = "SELECT email,priority FROM user";
+  const query = "SELECT id,email,priority FROM user";
 
   db.query(query, (err, results) => {
     if (err) {
