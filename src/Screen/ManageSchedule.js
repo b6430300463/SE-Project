@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
-import { AiOutlineMessage } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "./Style/Schedule.css";
 import "./Style/DrawerStyle.css";
@@ -21,6 +20,15 @@ const ManageSchedule = () => {
   const [teachers, setTeachers] = useState([]);
   const url = "http://localhost:3307";
 
+  const [selectedStarttime, setSelectedStarttime] = useState("none");
+  const [selectedFinishttime, setSelectedFinishtime] = useState("none");
+
+  const [starttime, setStartTime] = useState({});
+  const [finishtime, setFinishTime] = useState({});
+  const [daychange, setDayChange] = useState({});
+
+  const [selectedDay, setSelectedDay] = useState({});
+
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -31,6 +39,7 @@ const ManageSchedule = () => {
 
         setGetLab(labResponse.data);
         setGetLec(lectureResponse.data);
+
         setRecentSessions([...labResponse.data, ...lectureResponse.data]);
 
         const allTeachers = [...labResponse.data, ...lectureResponse.data]
@@ -86,6 +95,103 @@ const ManageSchedule = () => {
     return Math.ceil(durationInMinutes / 30) + 1;
   };
 
+  const changeStarttime = async (event, subject_id) => {
+    const startTimeValue = event.target.value;
+    setStartTime((prevState) => ({
+      ...prevState,
+      [subject_id]: startTimeValue,
+    }));
+
+    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง starttime
+    await updateAssign(
+      subject_id,
+      "บรรยาย",
+      selectedDay[subject_id],
+      startTimeValue,
+      finishtime[subject_id],
+      selectedRoom
+    );
+  };
+  const changeStoptime = async (event, subject_id) => {
+    const finishTimeValue = event.target.value;
+    setFinishTime((prevState) => ({
+      ...prevState,
+      [subject_id]: finishTimeValue,
+    }));
+
+    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง finishtime
+    await updateAssign(
+      subject_id,
+      "บรรยาย",
+      selectedDay[subject_id],
+      starttime[subject_id],
+      finishTimeValue,
+      selectedRoom
+    );
+  };
+
+  const changeDay = async (event, subject_id) => {
+    const dayValue = event.target.value;
+    setDayChange((prevState) => ({
+      ...prevState,
+      [subject_id]: dayValue,
+    }));
+
+    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง daychange
+    await updateAssign(
+      subject_id,
+      "บรรยาย",
+      dayValue,
+      starttime[subject_id],
+      finishtime[subject_id],
+      selectedRoom
+    );
+  };
+  const handleSubmit = async () => {
+    Swal.fire({
+      title: "Added successfully!!",
+      icon: "success",
+      confirmButtonText: "Okay",
+    });
+    // เรียกใช้งาน updateAssign เมื่อคลิกปุ่ม Submit
+    const updateData = await updateAssign();
+    setFilteredSessions(updateData);
+  };
+  const updateAssign = async (
+    subjectId,
+    subjectType,
+    date,
+    startTime,
+    finishTime,
+    room
+  ) => {
+    try {
+      let endpoint = "";
+
+      if (subjectType === "บรรยาย") {
+        endpoint = "/api/updateLecAssign";
+      } else if (subjectType === "ปฏิบัติ") {
+        endpoint = "/api/updateLabAssign";
+      } else {
+        console.error("Invalid subject type");
+        return;
+      }
+
+      const response = await axios.post(`${url}${endpoint}`, {
+        subjectid: subjectId,
+        date: date,
+        start_time: startTime,
+        finish_time: finishTime,
+        room: room,
+      });
+
+      console.log(response.data); // ตรวจสอบ response จาก API server
+      // ต้องการอัพเดท state หรือ render ข้อมูลใหม่หลังจากอัพเดท API สามารถทำต่อได้ตามต้องการ
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+    }
+  };
+
   const timeslots = [];
   for (let hour = 8; hour <= 22; hour++) {
     for (let minute = 0; minute < 60; minute += 30) {
@@ -100,13 +206,6 @@ const ManageSchedule = () => {
   };
   const DayperWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-  function Message(teacher_request) {
-    Swal.fire({
-      title: "Teacher Request",
-      text: teacher_request,
-      confirmButtonText: "OK!",
-    });
-  }
   return (
     <div className="input-container">
       <div className="header-bar">
@@ -142,14 +241,18 @@ const ManageSchedule = () => {
           onChange={(e) => setSelectedTeacher(e.target.value)}
         >
           <option value="">เลือกอาจารย์</option>
-          {teachers.map((teacher) => (
-            <option key={teacher} value={teacher}>
-              {teacher}
-            </option>
-          ))}
+          {teachers && teachers.length > 0 ? (
+            teachers.map((teacher) => (
+              <option key={teacher} value={teacher}>
+                {teacher}
+              </option>
+            ))
+          ) : (
+            <option disabled>No teachers available</option>
+          )}
         </select>
         {/* year */}
-        <label for="year" id="select-year" style={{paddingLeft:25}}>
+        <label for="year" id="select-year">
           ชั้นปี
         </label>
         <select
@@ -211,20 +314,22 @@ const ManageSchedule = () => {
                     let sessionToDisplay = null;
                     let spanCount = 0;
 
-                    filteredSessions.forEach((session) => {
-                      // Use filteredSessions to match timeslots
-                      if (
-                        session.date === rowIndex + 1 &&
-                        timeslotStart >= timeToMinutes(session.start_time) &&
-                        timeslotStart < timeToMinutes(session.finish_time)
-                      ) {
-                        sessionToDisplay = session;
-                        spanCount = calculateDurationInSlots(
-                          session.start_time,
-                          session.finish_time
-                        );
-                      }
-                    });
+                    if (filteredSessions && filteredSessions.length > 0) {
+                      filteredSessions.forEach((session) => {
+                        // Use filteredSessions to match timeslots
+                        if (
+                          session.date === rowIndex + 1 &&
+                          timeslotStart >= timeToMinutes(session.start_time) &&
+                          timeslotStart < timeToMinutes(session.finish_time)
+                        ) {
+                          sessionToDisplay = session;
+                          spanCount = calculateDurationInSlots(
+                            session.start_time,
+                            session.finish_time
+                          );
+                        }
+                      });
+                    }
 
                     if (
                       sessionToDisplay &&
@@ -279,8 +384,8 @@ const ManageSchedule = () => {
               <th>#</th>
               <th>รหัสวิชา</th>
               <th>ชื่อรายวิชา</th>
-              <th>บรรยาย</th>
-              <th>ปฏิบัติ</th>
+              <th>หมู่เรียน</th>
+              <th>บังคับ/เสรี</th>
               <th>วัน</th>
               <th>เวลา</th>
               <th>ห้อง</th>
@@ -289,36 +394,145 @@ const ManageSchedule = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredSessions.map((session, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{session.subject_id}</td>
-                <td>{session.subject_name}</td>
-                <td>{session.lecture}</td>
-                <td>{session.lab}</td>
-                <td>{session.date}</td>
-                <td>
-                  {session.start_time}-{session.finish_time}
-                </td>
-                <td>{session.room}</td>
-                <td>{session.teacher_id}</td>
-                <td className="flex-space-between">
-                  <AiOutlineMessage
-                    size={20}
-                    onClick={() => Message(session.teacher_request)}
-                    style={{ cursor: "pointer" }}
-                  />{" "}
-                </td>
+            {filteredSessions && filteredSessions.length > 0 ? (
+              filteredSessions.map((session, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{session.subject_id}</td>
+                  <td>{session.subject_name}</td>
+                  <td>{session.section}</td>
+                  <td>{session.subject_priority}</td>
+                  <td>
+                    <div className="schedule-contain">
+                      <div className="day-contain">
+                        {session.date === 1 && "MON"}
+                        {session.date === 2 && "TUE"}
+                        {session.date === 3 && "WED"}
+                        {session.date === 4 && "THU"}
+                        {session.date === 5 && "FRI"}
+                        {session.date === 6 && "SAT"}
+                        {session.date === 7 && "SUN"}
+                      </div>
+                      <div className="select-contain">
+                        <select
+                          className="select-box-schedule"
+                          value={daychange[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
+                          onChange={(e) => changeDay(e, session.subject_id)} // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                        >
+                          <option value="0">None</option>
+                          <option value="1">MON</option>
+                          <option value="2">TUE</option>
+                          <option value="3">WED</option>
+                          <option value="4">THU</option>
+                          <option value="5">FRI</option>
+                          <option value="6">SAT</option>
+                          <option value="7">SUN</option>
+                        </select>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="schedule-contain">
+                      <div className="time-contain">
+                        {session.start_time}-{session.finish_time}
+                      </div>
+                      <div className="select-contain">
+                        <select
+                          className="select-box-schedule"
+                          style={{ marginLeft: 20 }}
+                          value={starttime[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
+                          onChange={(e) =>
+                            changeStarttime(e, session.subject_id)
+                          } // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                        >
+                          <option value="None">None</option>
+                          <option value="8:00">8:00</option>
+                          <option value="8:30">8:30</option>
+                          <option value="9:00">9:00</option>
+                          <option value="9:30">9:30</option>
+                          <option value="10:00">10:00</option>
+                          <option value="10:30">10:30</option>
+                          <option value="11:00">11:00</option>
+                          <option value="11:30">11:30</option>
+                          <option value="12:00">12:00</option>
+                          <option value="12:30">12:30</option>
+                          <option value="13:00">13:00</option>
+                          <option value="13:30">13:30</option>
+                          <option value="14:00">14:00</option>
+                          <option value="14:30">14:30</option>
+                          <option value="15:00">15:00</option>
+                          <option value="15:30">15:30</option>
+                          <option value="16:00">16:00</option>
+                          <option value="16:30">16:30</option>
+                          <option value="17:00">17:00</option>
+                          <option value="17:30">17:30</option>
+                          <option value="18:00">18:00</option>
+                          <option value="18:30">18:30</option>
+                          <option value="19:00">19:00</option>
+                          <option value="19:30">19:30</option>
+                          <option value="20:00">20:00</option>
+                          <option value="20:30">20:30</option>
+                          <option value="21:00">21:00</option>
+                          <option value="21:30">21:30</option>
+                        </select>
+                        <label style={{ marginLeft: "5%" }}> - </label>
+                        <select
+                          className="select-box-schedule"
+                          value={finishtime[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
+                          onChange={(e) =>
+                            changeStoptime(e, session.subject_id)
+                          } // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                        >
+                          <option value="None">None</option>
+                          <option value="8:00">8:00</option>
+                          <option value="8:30">8:30</option>
+                          <option value="9:00">9:00</option>
+                          <option value="9:30">9:30</option>
+                          <option value="10:00">10:00</option>
+                          <option value="10:30">10:30</option>
+                          <option value="11:00">11:00</option>
+                          <option value="11:30">11:30</option>
+                          <option value="12:00">12:00</option>
+                          <option value="12:30">12:30</option>
+                          <option value="13:00">13:00</option>
+                          <option value="13:30">13:30</option>
+                          <option value="14:00">14:00</option>
+                          <option value="14:30">14:30</option>
+                          <option value="15:00">15:00</option>
+                          <option value="15:30">15:30</option>
+                          <option value="16:00">16:00</option>
+                          <option value="16:30">16:30</option>
+                          <option value="17:00">17:00</option>
+                          <option value="17:30">17:30</option>
+                          <option value="18:00">18:00</option>
+                          <option value="18:30">18:30</option>
+                          <option value="19:00">19:00</option>
+                          <option value="19:30">19:30</option>
+                          <option value="20:00">20:00</option>
+                          <option value="20:30">20:30</option>
+                          <option value="21:00">21:00</option>
+                          <option value="21:30">21:30</option>
+                        </select>
+                      </div>
+                    </div>
+                    {/* <button type='submit' onClick={updatePriority}><strong>Confirm</strong></button> */}
+                  </td>
+
+                  <td>{session.room}</td>
+                  <td>{session.teacher_id}</td>
+                  <td>{session.teacher_request}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="10">No sessions to display</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
       <div className="submit2">
-        <button
-          type="submit2"
-          className="submit2-btn" /*onClick={handleSubmit}*/
-        >
+        <button type="submit2" className="submit2-btn" onClick={handleSubmit}>
           <strong>Submit</strong>
         </button>
       </div>

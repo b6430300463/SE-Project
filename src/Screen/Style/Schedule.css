@@ -81,13 +81,15 @@ width: 400px; /* ชื่อรายวิชา */
 width: 80px; /* บรรยาย */
 }
 .schedule-table th:nth-child(5),.schedule-table td:nth-child(5) {
-width: 100px; /* ปฏิบัติ */
+width: 80px; /* ปฏิบัติ */
 }
 .schedule-table th:nth-child(6),.schedule-table td:nth-child(6) {
-width: 80px; /* วัน */
+width: 180px; /* วัน */
+text-align: center;
 }
 .schedule-table th:nth-child(7),.schedule-table td:nth-child(7) {
-width: 400px; /* เวลา*/
+width: 300px; /* เวลา*/
+text-align: center;
 }
 .schedule-table th:nth-child(8),.schedule-table td:nth-child(8) {
 width: 100px; /* ห้อง */
@@ -227,4 +229,29 @@ width: 300px; /* Note & เบอร์ติดต่อ*/
 }
 .cell{
   border:1px black solid;
+}
+.select-box-schedule{
+  margin-left: 5%;
+  height: 25px;
+  width: 70px;
+  background-color: #ffffff;
+}
+.schedule-contain{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  /* border: 1px black solid; */
+}
+.select-contain{
+  /* margin-left: 5%; */
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 2%;
+  /* border: 1px red solid; */
+}
+.time-contain{
+  margin-right: 8%;
+}
+.day-contain{
+  margin-right: 20%;
 }
