@@ -13,6 +13,7 @@ import ManageSchedule from './Screen/ManageSchedule';
 import Request from './Screen/Request';
 import CheckSchedule from './Screen/CheckSchedule';
 import Export from './Screen/Export';
+import Schedule from './Screen/Schedule'
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
         <Route path="input" element={<Input/>}/>
         <Route path="request" element={<Request/>}/>
         <Route path="checkpage" element={<CheckPage/>}/>
+        <Route path="schedule" element={<Schedule/>}/>
       </Routes>
     </BrowserRouter>
   );

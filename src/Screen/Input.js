@@ -81,6 +81,14 @@ const Input = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    let emailUser = localStorage.getItem("Email");
+    if (emailUser) {
+      emailUser = emailUser.replace(/^"|"$/g, "");
+      setEmail(emailUser);
+      console.log(emailUser);
+    }
+  }, []);
 
   useEffect(() => {
     axios.get(`${url}/api/lecture`).then((response) => {
@@ -1127,7 +1135,7 @@ const Input = () => {
           <Link to="/mainpageteacher">หน้าหลัก</Link>
           <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
           <Link to="/check">ตรวจสอบคำร้องขอจัดตาราง</Link>
-          <Link to='/checkshedule'>ตรวจสอบตารางสอน</Link>
+          <Link to='/checkschedule'>ตรวจสอบตารางสอน</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>

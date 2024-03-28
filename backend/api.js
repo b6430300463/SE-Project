@@ -289,11 +289,14 @@ app.get("/api/getclosecourse/:year", (req, res) => {
 app.post("/api/assign_lab", (req, res) => {
   const receivedData = req.body;
   console.log("Received Data:", receivedData);
+  if (!receivedData.selectedTeacherReqLab) {
+    receivedData.selectedTeacherReqLab = "-";
+  }
 
   const sql =
     "INSERT INTO lab_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, subject_type,subject_priority, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-  const values = receivedData.map((data) => [
+  const values = receivedData.map(data => [
     data.selectedSubjectLab,
     data.selectedYearLab,
     data.selectedSubjectNameLab,
@@ -323,7 +326,8 @@ app.post("/api/assign_lab", (req, res) => {
       console.log(`Inserted into database at index ${index}:`, results);
       // ตรวจสอบว่าเป็นการแทรกข้อมูลลงในฐานข้อมูลสำเร็จหรือไม่ หากทั้งหมดเสร็จสมบูรณ์ก็ส่งข้อความกลับไปยัง client
       if (index === values.length - 1) {
-        res.status(200).json({ message: "Data inserted successfully" });
+        // Once all data inserted, initiate the process update
+        updateProcess(values.map(data => ({ subject_id: data[0] })), res);
       }
     });
   });
@@ -332,13 +336,15 @@ app.post("/api/assign_lab", (req, res) => {
 app.post("/api/assign_lecture", (req, res) => {
   const receivedData = req.body;
   console.log("Received Data:", receivedData);
+  if (!receivedData.selectedteacherreq) {
+    receivedData.selectedteacherreq = "-";
+  }
 
   const room = receivedData.room !== undefined ? receivedData.room : "None";
   const sql =
     "INSERT INTO lecture_assign (subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, teacher_request, subject_type, subject_priority, teacher_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-  const values = receivedData.map((data) => [
-
+  const values = receivedData.map(data => [
     data.selectedSubject,
     data.selectedYear,
     data.selectedSubjectName,
@@ -369,11 +375,42 @@ app.post("/api/assign_lecture", (req, res) => {
       console.log(`Inserted into database at index ${index}:`, results);
       // ตรวจสอบว่าเป็นการแทรกข้อมูลลงในฐานข้อมูลสำเร็จหรือไม่ หากทั้งหมดเสร็จสมบูรณ์ก็ส่งข้อความกลับไปยัง client
       if (index === values.length - 1) {
-        res.status(200).json({ message: "Data inserted successfully" });
+        // Once all data inserted, initiate the process update
+        updateProcess(values.map(data => ({ subject_id: data[0] })), res);
       }
     });
   });
 });
+
+function updateProcess(dataArray, res) {
+  dataArray.forEach(data => {
+    const courseData = 'SELECT * FROM course WHERE subject_id = "' + data.subject_id + '"';
+
+    db.query(courseData, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal server error' });
+      } else {
+        if (results.length > 0 && results[0].process !== 1) {
+          const update = 'UPDATE course SET process = 1 WHERE subject_id = "' + data.subject_id + '"';
+
+          db.query(update, (err, updateResults) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ error: 'Internal server error' });
+            } else {
+              console.log("Update results", updateResults);
+            }
+          });
+        } else {
+          console.log("No data found or process already set to 1 for subject_id:", data.subject_id);
+        }
+      }
+    });
+  });
+
+  res.status(200).json({ message: "process update initiated" });
+}
 
 app.get("/api/teacherassignmentlab", (req, res) => {
   const lab_assign = "SELECT * FROM lab_assign";
@@ -690,6 +727,20 @@ app.get("/api/showUserdata", (req, res) => {
     }
   });
 });
+
+app.get("/api/getusername", (req, res) => {
+  const query = "SELECT id,firstname,lastname FROM user";
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 // update Lecture assign
 app.post("/api/updateLecAssign", (req, res) => {
   let request = req.body;
@@ -772,6 +823,76 @@ app.post("/api/updateLabAssign", (req, res) => {
         console.log("Lab Subject : " + request.subjectid + " not found");
         res.status(404).json({ error: "Subject not found" });
       }
+    }
+  });
+});
+app.post("/api/update_process", (req, res) => {
+  const dataArray = req.body;
+  console.log("Received Data:", dataArray);
+
+  dataArray.forEach(data => {
+    const courseData = 'SELECT * FROM course WHERE subject_id = "' + data.subject_id + '"';
+
+    db.query(courseData, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Internal server error' });
+      } else {
+        if (results.length > 0 && results[0].process !== 1) {
+          const update = 'UPDATE course SET process = 1 WHERE subject_id = "' + data.subject_id + '"';
+
+          db.query(update, (err, updateResults) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ error: 'Internal server error' });
+            } else {
+              console.log("Update results", updateResults);
+            }
+          });
+        } else {
+          console.log("No data found or process already set to 1 for subject_id:", data.subject_id);
+        }
+      }
+    });
+  });
+
+  res.status(200).json({ message: "process update initiated" });
+});
+////////
+app.get("/api/getlecture_assign", (req, res) => {
+  const year = req.params.year;
+  let query = "";
+  if (year != "all") {
+    query = 'SELECT * FROM lecture_assign WHERE year = "' + year + '"';
+  } else {
+    query = "SELECT * FROM lecture_assign";
+  }
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/api/getlab_assign", (req, res) => {
+  const year = req.params.year;
+  let query = "";
+  if (year != "all") {
+    query = 'SELECT * FROM lab_assign WHERE year = "' + year + '"';
+  } else {
+    query = "SELECT * FROM lab_assign";
+  }
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error querying MySQL:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      res.json(results);
     }
   });
 });

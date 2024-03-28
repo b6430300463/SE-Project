@@ -14,6 +14,10 @@ const url = "http://localhost:3307";
 const CheckPage = () => {
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [lecData, setLecData] = useState([]);
+  const [labData, setLabData] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const lecDataFromLocalStorage = localStorage.getItem("lecData");
@@ -36,6 +40,31 @@ const CheckPage = () => {
       console.log("ไม่พบข้อมูลใน Local Storage");
     }
   }, []);
+
+  function updateProcess(subjectId) {
+    axios
+      .post("http://localhost:3307/api/update_process", {
+        subject_id: subjectId,
+      })
+      .then((response) => {
+        console.log("Process update response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating process:", error);
+      });
+  }
+
+  // if (Array.isArray(lecData)) {
+  //   lecData.forEach((item) => {
+  //     updateProcess(item.selectedSubject);
+  //   });
+  // }
+
+  // if (Array.isArray(labData)) {
+  //   labData.forEach((item) => {
+  //     updateProcess(item.selectedSubjectLab);
+  //   });
+  // }
 
   useEffect(() => {
     let storedUsername = localStorage.getItem("Username");
@@ -64,10 +93,7 @@ const CheckPage = () => {
     };
     fetchData();
   }, []);
-  const [lecData, setLecData] = useState([]);
-  const [labData, setLabData] = useState([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const navigate = useNavigate();
+
   const goBack = () => {
     navigate(-1);
   };
@@ -77,7 +103,7 @@ const CheckPage = () => {
       .then((response) => {
         console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
 
-        console.log(lecData);
+        
       })
       .catch((error) => {
         console.error("Lec:", error);
@@ -96,7 +122,7 @@ const CheckPage = () => {
       .post(`${url}/api/assign_lab`, labData)
       .then((response) => {
         console.log(response.data); // เช่น ตัวอย่างการแสดงข้อมูลที่ได้จาก API
-
+        
         console.log(labData);
       })
       .catch((error) => {
@@ -202,10 +228,11 @@ const CheckPage = () => {
           <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
-          <Link to='/mainpageteacher'>หน้าหลัก</Link>
-          <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
-          <Link to='/checkshedule'>ตรวจสอบตารางสอน</Link>
-          <Link to='/login'>ออกจากระบบ</Link>
+          <Link to="/mainpageteacher">หน้าหลัก</Link>
+          <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
+          <Link to="/check">ตรวจสอบคำร้องขอจัดตาราง</Link>
+          <Link to="/checkschedule">ตรวจสอบตารางสอน</Link>
+          <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">ตรวจสอบคำร้องขอจัดตาราง</label>
         <label id="username">

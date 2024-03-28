@@ -6,10 +6,11 @@ import Swal from "sweetalert2";
 import "./Style/Schedule.css";
 import "./Style/DrawerStyle.css";
 import "./Style/Userdata.css";
+import { AiOutlineMessage } from "react-icons/ai";
 
 const ManageSchedule = () => {
   const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [selectedCon, setSelectedCon] = useState("");
+  const [selectedCon, setSelectedCon] = useState("none");
   const [selectedRoom, setSelectedRoom] = useState(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -22,14 +23,53 @@ const ManageSchedule = () => {
   const [finishTimeOptions, setFinishTimeOptions] = useState({});
   const url = "http://localhost:3307";
 
-  const [selectedStarttime, setSelectedStarttime] = useState("none");
-  const [selectedFinishttime, setSelectedFinishtime] = useState("none");
-
   const [starttime, setStartTime] = useState({});
   const [finishtime, setFinishTime] = useState({});
   const [daychange, setDayChange] = useState({});
 
   const [selectedDay, setSelectedDay] = useState({});
+  const [teacherList, setTeacherList] = useState({});
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [yearLec,setYearLec] = useState("");
+  const [yearLab,setYearLab] = useState("");
+
+  useEffect(() => {
+    let storedUsername = localStorage.getItem("Username");
+    if (storedUsername) {
+      storedUsername = storedUsername.replace(/^"|"$/g, "");
+      setUsername(storedUsername);
+    }
+    let mail = localStorage.getItem("Email");
+    console.log("Email", mail);
+
+    const fetchData = async () => {
+      try {
+        const responseuser = await axios.get(
+          "http://localhost:3307/api/showUserdata",
+          { params: { email: mail } }
+        );
+        console.log("Response from API (user):", responseuser.data[0].imageURL);
+
+        if (responseuser.data[0].imageURL) {
+          let ImageURL = responseuser.data[0].imageURL;
+          setProfileImage(ImageURL);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchTeacherName = async () => {
+      const TeacherNameList = await axios.get(`
+                ${url}/api/getusername`);
+      setTeacherList(TeacherNameList.data);
+    };
+
+    fetchTeacherName();
+  }, []);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -60,7 +100,15 @@ const ManageSchedule = () => {
   }, []);
 
   useEffect(() => {
+    setYearLec(localStorage.getItem("YearLec"));
+    console.log(yearLec)
+    setYearLab(localStorage.getItem("YearLab"));
+    console.log(yearLab)
     let filtered = [...getLec, ...getLab];
+    let filteredC1 = [];
+    let filteredC2 = [];
+    let filteredC3 = [];
+
 
     if (selectedYear && selectedYear !== "ALL") {
       filtered = filtered.filter(
@@ -74,8 +122,74 @@ const ManageSchedule = () => {
       );
     }
 
-    setFilteredSessions(filtered);
-  }, [selectedYear, selectedTeacher, getLec, getLab]);
+    if (selectedCon === "none") {
+      setFilteredSessions(filtered);
+      return;
+    }
+
+    // Loop เช็คสำหรับวิชาทั้งหมด
+    filtered.forEach((session, index) => {
+      // หาวิชาที่มีวันและเวลาเดียวกันและเป็น "บังคับ" หรือ "บังคับ" และ "เสรี"
+      const sameTimeAndPriority = filtered.some(
+        (otherSession, otherIndex) =>
+          otherSession.date === session.date &&
+          otherSession.start_time === session.start_time &&
+          otherSession.finish_time === session.finish_time &&
+          otherSession.subject_id !== session.subject_id &&
+          (otherSession.subject_priority === "บังคับ" ||
+            otherSession.subject_priority === "เสรี")
+      );
+      const sameTimeAndPriorityB = filtered.some(
+        (otherSession, otherIndex) =>
+          otherSession.date === session.date &&
+          otherSession.start_time === session.start_time &&
+          otherSession.finish_time === session.finish_time &&
+          otherSession.subject_id !== session.subject_id &&
+          otherSession.subject_priority === "บังคับ"
+      );
+      const sameTimeAndPriorityS = filtered.some(
+        (otherSession, otherIndex) =>
+          otherSession.date === session.date &&
+          otherSession.start_time === session.start_time &&
+          otherSession.finish_time === session.finish_time &&
+          otherSession.subject_id !== session.subject_id &&
+          otherSession.subject_priority === "เสรี"
+      );
+
+      // ถ้าเป็นเงื่อนไขของ c1 ให้เพิ่มเข้า filteredC1
+      if (
+        selectedCon === "c1" &&
+        sameTimeAndPriorityB &&
+        session.subject_priority === "บังคับ"
+      ) {
+        filteredC1.push(session);
+      }
+
+      // ถ้าเป็นเงื่อนไขของ c2 ให้เพิ่มเข้า filteredC2
+      if (selectedCon === "c2" && sameTimeAndPriority) {
+        filteredC2.push(session);
+      }
+
+      // ถ้าเป็นเงื่อนไข "เสรี ชน เสรี" ให้เพิ่มเข้า filteredC3
+      if (
+        selectedCon === "c3" &&
+        sameTimeAndPriorityS &&
+        session.subject_priority === "เสรี"
+      ) {
+        filteredC3.push(session);
+      } else {
+      }
+    });
+
+    // ตั้งค่า filteredSessions ตามเงื่อนไขของ c1 หรือ c2 หรือ c3
+    setFilteredSessions(
+      selectedCon === "c1"
+        ? filteredC1
+        : selectedCon === "c2"
+        ? filteredC2
+        : filteredC3
+    );
+  }, [selectedYear, selectedTeacher, selectedCon, getLec, getLab]);
 
   const openNav = () => {
     setIsDrawerOpen(true);
@@ -115,10 +229,11 @@ const ManageSchedule = () => {
       }
     };
 
+
     initializeOptions();
   }, [filteredSessions]);
 
-  const changeStarttime = async (event, subject_id, section, subjectType) => {
+  const changeStarttime = async (event, subject_id,section, subjectType) => {
     const startTimeValue = event.target.value;
     setStartTime((prevState) => ({
       ...prevState,
@@ -134,7 +249,7 @@ const ManageSchedule = () => {
       selectedRoom
     );
   };
-  const changeStoptime = async (event, subject_id, section, subjectType) => {
+  const changeStoptime = async (event, subject_id,section, subjectType) => {
     const finishTimeValue = event.target.value;
     setFinishTime((prevState) => ({
       ...prevState,
@@ -151,7 +266,7 @@ const ManageSchedule = () => {
     );
   };
 
-  const changeDay = async (event, subject_id, section, subjectType) => {
+  const changeDay = async (event, subject_id,section, subjectType) => {
     const dayValue = event.target.value;
     setSelectedDay((prevState) => ({
       ...prevState,
@@ -172,14 +287,11 @@ const ManageSchedule = () => {
       title: "Added successfully!!",
       icon: "success",
       confirmButtonText: "Okay",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.reload();
-      }
     });
     // เรียกใช้งาน updateAssign เมื่อคลิกปุ่ม Submit
     const updateData = await updateAssign();
     setFilteredSessions(updateData);
+    window.location.reload();
   };
   const updateAssign = async (
     subjectId,
@@ -231,6 +343,13 @@ const ManageSchedule = () => {
     setRecentSessions((prevSessions) => [...prevSessions, newSession]);
   };
   const DayperWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  function Message(teacher_request) {
+    Swal.fire({
+      title: "Teacher Request",
+      text: teacher_request,
+      confirmButtonText: "OK!",
+    });
+  }
 
   return (
     <div className="input-container">
@@ -244,19 +363,30 @@ const ManageSchedule = () => {
           <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
-          <Link to="/mainpagetable">หน้าหลัก</Link>
+          <Link to="/mainpage">หน้าหลัก</Link>
           <Link to="/import">เพิ่มรายวิชา</Link>
           <Link to="/request">คำร้องขอเปิดรายวิชา</Link>
-          <Link to="/manageschedule">จัดการตารางรายวิชา</Link>
+          <Link to="/manageSchedule">จัดการตารางรายวิชา</Link>
           <Link to="/checksubject">ตรวจสอบรายวิชา</Link>
           <Link to="/export">ส่งออกตาราง</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">จัดการตารางรายวิชา</label>
         <label id="username">
-          <strong>Username</strong>
+          <strong>{username || "Username"}</strong>
         </label>
-        <FaRegUserCircle id="user" size={30} />
+        {profileImage && (
+          <img
+            src={profileImage}
+            alt="Profile"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginLeft: "10px",
+            }}
+          />
+        )}
       </div>
       <div className="room">
         <label htmlFor="teacherName" id="select-teacher">
@@ -271,7 +401,11 @@ const ManageSchedule = () => {
           {teachers && teachers.length > 0 ? (
             teachers.map((teacher) => (
               <option key={teacher} value={teacher}>
-                {teacher}
+                {teacherList.map((data) => {
+                  if (data.id === teacher) {
+                    return data.firstname + " " + data.lastname;
+                  }
+                })}
               </option>
             ))
           ) : (
@@ -306,6 +440,8 @@ const ManageSchedule = () => {
         >
           <option value="none">None</option>
           <option value="c1">วิชาบังคับ ชน วิชาบังคับ</option>
+          <option value="c2">วิชาบังคับ ชน เสรี</option>
+          <option value="c3">วิชาเสรี ชน เสรี</option>
         </select>
         <label>ห้องเรียนชนกัน</label>
         <label className="checkroom-container">
@@ -326,7 +462,7 @@ const ManageSchedule = () => {
           <table>
             <thead>
               <tr>
-                <th></th> {/* Empty cell for spacing */}
+                <th>Day/Time</th> {/* Empty cell for spacing */}
                 {timeslots.map((timeSlot, index) => (
                   <th key={index}>{timeSlot}</th>
                 ))}
@@ -417,7 +553,7 @@ const ManageSchedule = () => {
               <th>เวลา</th>
               <th>ห้อง</th>
               <th>ผู้สอน</th>
-              <th>Note & เบอร์ติดต่อ</th>
+              <th>Note</th>
             </tr>
           </thead>
           <tbody>
@@ -452,12 +588,7 @@ const ManageSchedule = () => {
                               : session.date.toString())
                           }
                           onChange={(e) =>
-                            changeDay(
-                              e,
-                              session.subject_id,
-                              session.section,
-                              session.subject_type
-                            )
+                            changeDay(e, session.subject_id, session.section,session.subject_type)
                           }
                         >
                           <option value="0">None</option>
@@ -578,7 +709,13 @@ const ManageSchedule = () => {
 
                   <td>{session.room}</td>
                   <td>{session.teacher_id}</td>
-                  <td>{session.teacher_request}</td>
+                  <td className="flex-space-between">
+                    <AiOutlineMessage
+                      size={20}
+                      onClick={() => Message(session.teacher_request)}
+                      style={{ cursor: "pointer" }}
+                    />{" "}
+                  </td>
                 </tr>
               ))
             ) : (
