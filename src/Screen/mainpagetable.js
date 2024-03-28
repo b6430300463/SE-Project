@@ -7,9 +7,37 @@ import { Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
 
 import exampleImage from './images/promote.png';
-
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const MainpageTable = () => {
+    const [username, setUsername] = useState('');
+    const [profileImage, setProfileImage] = useState('');
+    useEffect(() => {
+        let storedUsername = localStorage.getItem("Username");
+        if (storedUsername) {
+            storedUsername = storedUsername.replace(/^"|"$/g, '');
+            setUsername(storedUsername);
+        }
+        let mail=  localStorage.getItem("Email");
+        console.log("Email",mail)
+
+        const fetchData = async () => {
+              try {
+                const responseuser = await axios.get('http://localhost:3307/api/showUserdata', { params: { "email" : mail } });
+                console.log('Response from API (user):', responseuser.data[0].imageURL);
+
+                if ( responseuser.data[0].imageURL) {
+                    let ImageURL =  responseuser.data[0].imageURL;
+                  setProfileImage( ImageURL );
+                }
+              } catch (error) {
+                console.error('Error fetching data:', error);
+              }
+            };
+        fetchData();
+
+    }, []);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const openNav = () => {
         setIsDrawerOpen(true);
@@ -26,16 +54,17 @@ const MainpageTable = () => {
                 </div>
                 <div id="mySidenav" className={`sidenav ${isDrawerOpen ? 'open' : ''}`}>
                     <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>&times;</a>
-                    <Link to='/mainpage'>หน้าหลัก</Link>
+                    <Link to='/mainpagetable'>หน้าหลัก</Link>
                     <Link to='/import'>เพิ่มรายวิชา</Link>
-                    <Link to='/input'>กรอกคำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/request'>คำร้องขอเปิดรายวิชา</Link>
+                    <Link to='/manageschedule'>จัดการตารางรายวิชา</Link>
                     <Link to='/checksubject'>ตรวจสอบรายวิชา</Link>
-                    <Link to='/login'>เข้าสู่ระบบ</Link>
-                    <Link to='/users'>จัดการการเข้าถึง</Link>
+                    <Link to='/export'>ส่งออกตาราง</Link>
+                    <Link to='/login'>ออกจากระบบ</Link>
                 </div>
                 <label id="header-font">หน้าหลัก</label>
-                <label id="username"><strong>Username</strong></label>
-                <FaRegUserCircle id="user" size={30}/>
+                <label id="username"><strong>{username|| 'Username'}</strong></label>
+                {profileImage && <img src={profileImage} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%', marginLeft: '10px' }} />}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <img

@@ -18,6 +18,8 @@ const ManageSchedule = () => {
   const [recentSessions, setRecentSessions] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [startTimeOptions, setStartTimeOptions] = useState({});
+  const [finishTimeOptions, setFinishTimeOptions] = useState({});
   const url = "http://localhost:3307";
 
   const [selectedStarttime, setSelectedStarttime] = useState("none");
@@ -94,56 +96,74 @@ const ManageSchedule = () => {
 
     return Math.ceil(durationInMinutes / 30) + 1;
   };
+  useEffect(() => {
+    // Initialize start time and finish time options based on subject ID
+    const initializeOptions = () => {
+      const startTimes = {};
+      const finishTimes = {};
 
-  const changeStarttime = async (event, subject_id) => {
+      if (filteredSessions && filteredSessions.length > 0) {
+        filteredSessions.forEach((session) => {
+          startTimes[session.subject_id] = session.start_time;
+          finishTimes[session.subject_id] = session.finish_time;
+        });
+
+        setStartTimeOptions(startTimes);
+        setFinishTimeOptions(finishTimes);
+      } else {
+        console.log("no session");
+      }
+    };
+
+    initializeOptions();
+  }, [filteredSessions]);
+
+  const changeStarttime = async (event, subject_id, section, subjectType) => {
     const startTimeValue = event.target.value;
     setStartTime((prevState) => ({
       ...prevState,
-      [subject_id]: startTimeValue,
+      [`${subject_id}-${section}`]: startTimeValue,
     }));
-
-    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง starttime
     await updateAssign(
       subject_id,
-      "บรรยาย",
-      selectedDay[subject_id],
+      section,
+      subjectType,
+      selectedDay[`${subject_id}-${section}`],
       startTimeValue,
-      finishtime[subject_id],
+      finishtime[`${subject_id}-${section}`],
       selectedRoom
     );
   };
-  const changeStoptime = async (event, subject_id) => {
+  const changeStoptime = async (event, subject_id, section, subjectType) => {
     const finishTimeValue = event.target.value;
     setFinishTime((prevState) => ({
       ...prevState,
-      [subject_id]: finishTimeValue,
+      [`${subject_id}-${section}`]: finishTimeValue,
     }));
-
-    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง finishtime
     await updateAssign(
       subject_id,
-      "บรรยาย",
-      selectedDay[subject_id],
-      starttime[subject_id],
+      section,
+      subjectType,
+      selectedDay[`${subject_id}-${section}`],
+      starttime[`${subject_id}-${section}`],
       finishTimeValue,
       selectedRoom
     );
   };
 
-  const changeDay = async (event, subject_id) => {
+  const changeDay = async (event, subject_id, section, subjectType) => {
     const dayValue = event.target.value;
-    setDayChange((prevState) => ({
+    setSelectedDay((prevState) => ({
       ...prevState,
-      [subject_id]: dayValue,
+      [`${subject_id}-${section}`]: dayValue,
     }));
-
-    // เรียกใช้งาน updateAssign เมื่อมีการเปลี่ยนแปลง daychange
     await updateAssign(
       subject_id,
-      "บรรยาย",
+      section,
+      subjectType,
       dayValue,
-      starttime[subject_id],
-      finishtime[subject_id],
+      starttime[`${subject_id}-${section}`],
+      finishtime[`${subject_id}-${section}`],
       selectedRoom
     );
   };
@@ -152,6 +172,10 @@ const ManageSchedule = () => {
       title: "Added successfully!!",
       icon: "success",
       confirmButtonText: "Okay",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
     });
     // เรียกใช้งาน updateAssign เมื่อคลิกปุ่ม Submit
     const updateData = await updateAssign();
@@ -159,6 +183,7 @@ const ManageSchedule = () => {
   };
   const updateAssign = async (
     subjectId,
+    section,
     subjectType,
     date,
     startTime,
@@ -179,6 +204,7 @@ const ManageSchedule = () => {
 
       const response = await axios.post(`${url}${endpoint}`, {
         subjectid: subjectId,
+        section: section,
         date: date,
         start_time: startTime,
         finish_time: finishTime,
@@ -218,11 +244,12 @@ const ManageSchedule = () => {
           <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
-          <Link to="/mainpage">หน้าหลัก</Link>
+          <Link to="/mainpagetable">หน้าหลัก</Link>
           <Link to="/import">เพิ่มรายวิชา</Link>
           <Link to="/request">คำร้องขอเปิดรายวิชา</Link>
-          <Link to="/manageSchedule">จัดการตารางรายวิชา</Link>
+          <Link to="/manageschedule">จัดการตารางรายวิชา</Link>
           <Link to="/checksubject">ตรวจสอบรายวิชา</Link>
+          <Link to="/export">ส่งออกตาราง</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">จัดการตารางรายวิชา</label>
@@ -416,8 +443,22 @@ const ManageSchedule = () => {
                       <div className="select-contain">
                         <select
                           className="select-box-schedule"
-                          value={daychange[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
-                          onChange={(e) => changeDay(e, session.subject_id)} // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                          value={
+                            selectedDay[
+                              `${session.subject_id}-${session.section}`
+                            ] ||
+                            (daychange[session.subject_id]
+                              ? daychange[session.subject_id]
+                              : session.date.toString())
+                          }
+                          onChange={(e) =>
+                            changeDay(
+                              e,
+                              session.subject_id,
+                              session.section,
+                              session.subject_type
+                            )
+                          }
                         >
                           <option value="0">None</option>
                           <option value="1">MON</option>
@@ -439,11 +480,19 @@ const ManageSchedule = () => {
                       <div className="select-contain">
                         <select
                           className="select-box-schedule"
-                          style={{ marginLeft: 20 }}
-                          value={starttime[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
+                          value={
+                            starttime[
+                              `${session.subject_id}-${session.section}`
+                            ] || session.start_time
+                          }
                           onChange={(e) =>
-                            changeStarttime(e, session.subject_id)
-                          } // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                            changeStarttime(
+                              e,
+                              session.subject_id,
+                              session.section,
+                              session.subject_type
+                            )
+                          }
                         >
                           <option value="None">None</option>
                           <option value="8:00">8:00</option>
@@ -478,10 +527,19 @@ const ManageSchedule = () => {
                         <label style={{ marginLeft: "5%" }}> - </label>
                         <select
                           className="select-box-schedule"
-                          value={finishtime[session.subject_id] || "None"} // ใช้ค่า priority จาก state ใหม่
+                          value={
+                            finishtime[
+                              `${session.subject_id}-${session.section}`
+                            ] || session.finish_time
+                          }
                           onChange={(e) =>
-                            changeStoptime(e, session.subject_id)
-                          } // ส่งอีเมลไปด้วยเพื่อระบุว่าเป็นการเลือกของอีเมลนั้น
+                            changeStoptime(
+                              e,
+                              session.subject_id,
+                              session.section,
+                              session.subject_type
+                            )
+                          }
                         >
                           <option value="None">None</option>
                           <option value="8:00">8:00</option>

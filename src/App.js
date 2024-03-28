@@ -11,8 +11,6 @@ import MainPageAdmin from './Screen/MainpageAdmin';
 import MainpageTable from './Screen/mainpagetable';
 import ManageSchedule from './Screen/ManageSchedule';
 import Request from './Screen/Request';
-import Schedule from './Screen/Schedule';
-import TG from './Screen/TG';
 import CheckSchedule from './Screen/CheckSchedule';
 import Export from './Screen/Export';
 function App() {

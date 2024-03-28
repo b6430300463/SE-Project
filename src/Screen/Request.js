@@ -2,30 +2,59 @@ import "./Style/ImportStyle.css";
 import "./Style/DrawerStyle.css";
 import "./Style/RequestStyle.css";
 import Swal from "sweetalert2";
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useRouteLoaderData ,useNavigate} from "react-router-dom";
+import { Link, useRouteLoaderData, useNavigate } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
-import Data from './DB/database.json'
+import Data from "./DB/database.json";
 
 const Request = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [data, setData] = useState([]);
-  const urlLec = 'http://localhost:3307/api/get_problem_lecsubject';
-  const urlLab = 'http://localhost:3307/api/get_problem_labsubject';
-  const boxes = document.querySelectorAll('.box');
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const urlLec = "http://localhost:3307/api/get_problem_lecsubject";
+  const urlLab = "http://localhost:3307/api/get_problem_labsubject";
+  const boxes = document.querySelectorAll(".box");
   const navigate = useNavigate();
   // const [year,setYear] = useState([]);
-  
-  boxes.forEach(box => {
-      box.addEventListener('mouseover', () => {
-          box.style.transform = 'scale(1.1)';
-      });
+  useEffect(() => {
+    let storedUsername = localStorage.getItem("Username");
+    if (storedUsername) {
+      storedUsername = storedUsername.replace(/^"|"$/g, "");
+      setUsername(storedUsername);
+    }
+    let mail = localStorage.getItem("Email");
+    console.log("Email", mail);
 
-      box.addEventListener('mouseleave', () => {
-          box.style.transform = 'scale(1)';
-      });
+    const fetchData = async () => {
+      try {
+        const responseuser = await axios.get(
+          "http://localhost:3307/api/showUserdata",
+          { params: { email: mail } }
+        );
+        console.log("Response from API (user):", responseuser.data[0].imageURL);
+
+        if (responseuser.data[0].imageURL) {
+          let ImageURL = responseuser.data[0].imageURL;
+          setProfileImage(ImageURL);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  boxes.forEach((box) => {
+    box.addEventListener("mouseover", () => {
+      box.style.transform = "scale(1.1)";
+    });
+
+    box.addEventListener("mouseleave", () => {
+      box.style.transform = "scale(1)";
+    });
   });
   function redirectToPageLec(year) {
     //edit
@@ -44,11 +73,10 @@ const Request = () => {
     // localStorage.setItem("YearLab", JSON.stringify(year));
     // navigate("/manageschedule");
     // // console.log(`${year}`)
-    localStorage.setItem("YearLab", JSON.stringify(year)); 
+    localStorage.setItem("YearLab", JSON.stringify(year));
     localStorage.setItem("YearLec", JSON.stringify(null)); // Set null for Lec
     navigate("/manageschedule");
     // console.log(year);
-
   }
   useEffect(() => {
     const fetchData = async () => {
@@ -62,11 +90,10 @@ const Request = () => {
         console.error("Error fetching data:", error);
       }
     };
-    
 
     fetchData();
   }, []);
-  
+
   const openNav = () => {
     setIsDrawerOpen(true);
   };
@@ -87,16 +114,28 @@ const Request = () => {
           </a>
           <Link to="/mainpagetable">หน้าหลัก</Link>
           <Link to="/import">เพิ่มรายวิชา</Link>
-          <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
+          <Link to="/request">คำร้องขอเปิดรายวิชา</Link>
+          <Link to="/manageschedule">จัดการตารางรายวิชา</Link>
           <Link to="/checksubject">ตรวจสอบรายวิชา</Link>
-          <Link to="/login">เข้าสู่ระบบ</Link>
-          <Link to="/users">จัดการการเข้าถึง</Link>
+          <Link to="/checksubject">ส่งออกตาราง</Link>
+          <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">คำร้องขอเปิดรายวิชา</label>
         <label id="username">
-          <strong>Username</strong>
+          <strong>{username || "Username"}</strong>
         </label>
-        <FaRegUserCircle id="user" size={30} />
+        {profileImage && (
+          <img
+            src={profileImage}
+            alt="Profile"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginLeft: "10px",
+            }}
+          />
+        )}
       </div>
 
       <div className="filter">
@@ -153,31 +192,52 @@ const Request = () => {
       <div className="data-container">
         <h2>วิชาที่มีการชนแบบ Lecture:</h2>
         <ul>
-          {data.lecture && data.lecture.map(item => (
-            <div className="box-request" key={item.id} onClick={() => redirectToPageLec(item.year)}>
-              <strong>รหัสวิชา:</strong> {item.subject_id}<br />
-              <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
-              <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
-              <strong>ห้องเรียน:</strong> {item.room}<br />
-              <strong>จำนวนนักศึกษา:</strong> {item.total_students}<br />
-            </div>
-          ))}
+          {data.lecture &&
+            data.lecture.map((item) => (
+              <div
+                className="box-request"
+                key={item.id}
+                onClick={() => redirectToPageLec(item.year)}
+              >
+                <strong>รหัสวิชา:</strong> {item.subject_id}
+                <br />
+                <strong>ชื่อวิชา:</strong> {item.subject_name}
+                <br />
+                <strong>เวลาเรียน:</strong> {item.start_time} -{" "}
+                {item.finish_time}
+                <br />
+                <strong>ห้องเรียน:</strong> {item.room}
+                <br />
+                <strong>จำนวนนักศึกษา:</strong> {item.total_students}
+                <br />
+              </div>
+            ))}
         </ul>
 
         <h2>วิชาที่มีการชนแบบ Lab:</h2>
         <ul>
-          {data.lab && data.lab.map(item => (
-            <div className="box-request" key={item.id} onClick={() => redirectToPageLab(item.year)}>
-              <strong>รหัสวิชา:</strong> {item.subject_id}<br />
-              <strong>ชื่อวิชา:</strong> {item.subject_name}<br />
-              <strong>เวลาเรียน:</strong> {item.start_time} - {item.finish_time}<br />
-              <strong>ห้องเรียน:</strong> {item.room}<br />
-              <strong>จำนวนนักศึกษา:</strong> {item.total_students}<br />
-            </div>
-          ))}
+          {data.lab &&
+            data.lab.map((item) => (
+              <div
+                className="box-request"
+                key={item.id}
+                onClick={() => redirectToPageLab(item.year)}
+              >
+                <strong>รหัสวิชา:</strong> {item.subject_id}
+                <br />
+                <strong>ชื่อวิชา:</strong> {item.subject_name}
+                <br />
+                <strong>เวลาเรียน:</strong> {item.start_time} -{" "}
+                {item.finish_time}
+                <br />
+                <strong>ห้องเรียน:</strong> {item.room}
+                <br />
+                <strong>จำนวนนักศึกษา:</strong> {item.total_students}
+                <br />
+              </div>
+            ))}
         </ul>
       </div>
-      
     </div>
   );
 };

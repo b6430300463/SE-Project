@@ -22,22 +22,34 @@ const CheckSchedule = () => {
   const [user, setUser] = useState([]);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
     let storedUsername = localStorage.getItem("Username");
     if (storedUsername) {
       storedUsername = storedUsername.replace(/^"|"$/g, "");
       setUsername(storedUsername);
-      console.log(storedUsername);
     }
-  }, []);
-  useEffect(() => {
-    let emailUser = localStorage.getItem("Email");
-    if (emailUser) {
-      emailUser = emailUser.replace(/^"|"$/g, "");
-      setEmail(emailUser);
-      console.log(emailUser);
-    }
+    let mail = localStorage.getItem("Email");
+    console.log("Email", mail);
+
+    const fetchData = async () => {
+      try {
+        const responseuser = await axios.get(
+          "http://localhost:3307/api/showUserdata",
+          { params: { email: mail } }
+        );
+        console.log("Response from API (user):", responseuser.data[0].imageURL);
+
+        if (responseuser.data[0].imageURL) {
+          let ImageURL = responseuser.data[0].imageURL;
+          setProfileImage(ImageURL);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -79,23 +91,22 @@ const CheckSchedule = () => {
 
     fetchTeachers();
   }, []);
-  console.log("kll",teachers)
+  console.log("kll", teachers);
 
   useEffect(() => {
     let filtered = [...getLec, ...getLab];
-    
 
     if (selectedYear && selectedYear !== "ALL") {
       filtered = filtered.filter(
-        (session) => String(session.year) === String(selectedYear) && session.teacher_id === teacher
+        (session) =>
+          String(session.year) === String(selectedYear) &&
+          session.teacher_id === teacher
       );
-    }else{
-        filtered = filtered.filter((session) => session.teacher_id === teacher)
+    } else {
+      filtered = filtered.filter((session) => session.teacher_id === teacher);
     }
     setFilteredSessions(filtered);
   }, [selectedYear, getLec, getLab]);
-
-  
 
   const openNav = () => {
     setIsDrawerOpen(true);
@@ -146,13 +157,25 @@ const CheckSchedule = () => {
           <Link to="/mainpageteacher">หน้าหลัก</Link>
           <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
           <Link to="/check">ตรวจสอบคำร้องขอจัดตาราง</Link>
+          <Link to='/checkshedule'>ตรวจสอบตารางสอน</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">ตรวจสอบตาราสอน</label>
         <label id="username">
           <strong>{username || "Username"}</strong>
         </label>
-        <FaRegUserCircle id="user" size={30} />
+        {profileImage && (
+          <img
+            src={profileImage}
+            alt="Profile"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginLeft: "10px",
+            }}
+          />
+        )}
       </div>
       <div className="room">
         {/* year */}
@@ -171,14 +194,13 @@ const CheckSchedule = () => {
           <option value="3">T12(3)</option>
           <option value="4">T12(4)</option>
         </select>
-
       </div>
       <div className="box">
         <div className="table-container">
           <table>
             <thead>
               <tr>
-                <th>Day/time</th> {/* Empty cell for spacing */}
+                <th>Day/Time</th> {/* Empty cell for spacing */}
                 {timeslots.map((timeSlot, index) => (
                   <th key={index}>{timeSlot}</th>
                 ))}
@@ -231,7 +253,7 @@ const CheckSchedule = () => {
                           Room: {sessionToDisplay.room}
                           <br />
                           Teacher Req: {sessionToDisplay.teacher_request}
-                          <br/>
+                          <br />
                           Teacher Id: {sessionToDisplay.teacher_id}
                         </td>
                       );

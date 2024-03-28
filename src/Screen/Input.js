@@ -48,28 +48,39 @@ const Input = () => {
   const [selectednumberLab, setSelectedNumberLab] = useState("");
   const [selectedTeacherReqLab, setSelectedTeacherReqLab] = useState("");
   const [getCreditLab, setgetCreditLab] = useState([]);
-  const [user,setUser] = useState([]);
-  const [teacher,setTeacher] = useState('');
-  const [email, setEmail] = useState('');
+  const [user, setUser] = useState([]);
+  const [teacher, setTeacher] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
-  const [username, setUsername] = useState('');
-    useEffect(() => {
-        let storedUsername = localStorage.getItem("Username");
-        if (storedUsername) {
-            storedUsername = storedUsername.replace(/^"|"$/g, '');
-            setUsername(storedUsername);
-            console.log(storedUsername);
+  useEffect(() => {
+    let storedUsername = localStorage.getItem("Username");
+    if (storedUsername) {
+      storedUsername = storedUsername.replace(/^"|"$/g, "");
+      setUsername(storedUsername);
+    }
+    let mail = localStorage.getItem("Email");
+    console.log("Email", mail);
+
+    const fetchData = async () => {
+      try {
+        const responseuser = await axios.get(
+          "http://localhost:3307/api/showUserdata",
+          { params: { email: mail } }
+        );
+        console.log("Response from API (user):", responseuser.data[0].imageURL);
+
+        if (responseuser.data[0].imageURL) {
+          let ImageURL = responseuser.data[0].imageURL;
+          setProfileImage(ImageURL);
         }
-    }, []);
-    useEffect(() => {
-      let emailUser = localStorage.getItem("Email");
-      if (emailUser) {
-        emailUser = emailUser.replace(/^"|"$/g, '');
-          setEmail(emailUser);
-          console.log(emailUser);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
+    };
+    fetchData();
   }, []);
-
 
   useEffect(() => {
     axios.get(`${url}/api/lecture`).then((response) => {
@@ -94,17 +105,17 @@ const Input = () => {
     });
     axios.get(`${url}/api/getuser`).then((response) => {
       setUser(response.data);
-      console.log("teacher",response.data);
+      console.log("teacher", response.data);
     });
   }, []);
   useEffect(() => {
-    for(let i = 0; i < user.length; i++){
-      if(user[i].email === email){
+    for (let i = 0; i < user.length; i++) {
+      if (user[i].email === email) {
         setTeacher(user[i].id);
       }
     }
-  })
-  console.log("teacherID",teacher);
+  });
+  console.log("teacherID", teacher);
   const openNav = () => {
     setIsDrawerOpen(true);
   };
@@ -143,7 +154,7 @@ const Input = () => {
       }
     });
   };
-  
+
   const submitAlertFriend = () => {
     Swal.fire({
       title:
@@ -267,7 +278,8 @@ const Input = () => {
         // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
       }
     });
-  };const alertSelf = () => {
+  };
+  const alertSelf = () => {
     Swal.fire({
       title:
         "คุณได้เคยทำการลงทะเบียนในวันและเวลาดังกล่าวไปแล้ว" +
@@ -400,14 +412,17 @@ const Input = () => {
         } else if (checkLec === 0) {
           for (let k = 0; k < lecData.length; k++) {
             for (let l = 0; l < getLec.length; l++) {
-              if ( selectedSubject[k] === getLec[l].subject_id && selectedSec[k] === String(getLec[l].section)) {
+              if (
+                selectedSubject[k] === getLec[l].subject_id &&
+                selectedSec[k] === String(getLec[l].section)
+              ) {
                 checkDupLec = 1;
                 dupNameLec = selectedSubjectName[k];
                 dupSecLec = selectedSec[k];
                 console.log("dup");
                 break;
               } else if (
-                selectedSubject[k] === getLec[l].subject_id  &&
+                selectedSubject[k] === getLec[l].subject_id &&
                 selectedYear[k] === String(getLec[l].year) &&
                 selectedDay[k] === String(getLec[l].date) &&
                 selectedStart[k] === getLec[l].start_time &&
@@ -433,7 +448,7 @@ const Input = () => {
             alertSecDB(dupNameLec, dupSecLec);
           } else if (checkDupLec === 2) {
             alertSelf();
-          }else if (checkDupLec === 3) {
+          } else if (checkDupLec === 3) {
             submitAlertFriend();
           } else {
             success();
@@ -476,21 +491,30 @@ const Input = () => {
         } else if (checkLab === 0) {
           for (let k = 0; k < labData.length; k++) {
             for (let l = 0; l < getLab.length; l++) {
-              if (selectedSubjectLab[k] === getLab[l].subject_id && selectedSecLab[k] === String(getLab[l].section)) {
+              if (
+                selectedSubjectLab[k] === getLab[l].subject_id &&
+                selectedSecLab[k] === String(getLab[l].section)
+              ) {
                 checkDup = 1;
                 dupNameLab = selectedSubjectNameLab[k];
                 dupSecLab = selectedSecLab[k];
 
                 console.log("dupsec");
                 break;
-              } else if (selectedSubjectLab[k] === getLab[l].subject_id && selectedRoomLab[k] === String(getLab[l].room)) {
+              } else if (
+                selectedSubjectLab[k] === getLab[l].subject_id &&
+                selectedRoomLab[k] === String(getLab[l].room)
+              ) {
                 checkDup = 2;
                 dupNameLab = selectedSubjectNameLab[k];
                 dupRoomLab = selectedRoomLab[k];
-                console.log("duproom",selectedSubjectLab[k] === getLab[l].subject_id );
+                console.log(
+                  "duproom",
+                  selectedSubjectLab[k] === getLab[l].subject_id
+                );
                 break;
-              }else if (
-                selectedSubjectLab[k] === getLab[l].subject_id  &&
+              } else if (
+                selectedSubjectLab[k] === getLab[l].subject_id &&
                 selectedYearLab[k] === String(getLab[l].year) &&
                 selectedDayLab[k] === String(getLab[l].date) &&
                 selectedStartLab[k] === getLab[l].start_time &&
@@ -504,7 +528,7 @@ const Input = () => {
                 selectedYearLab[k] === String(getLab[l].year) &&
                 selectedDayLab[k] === String(getLab[l].date) &&
                 selectedStartLab[k] === getLab[l].start_time &&
-                selectedStopLab[k] === getLab[l].finish_time 
+                selectedStopLab[k] === getLab[l].finish_time
               ) {
                 checkDup = 4;
                 console.log("dup");
@@ -518,7 +542,7 @@ const Input = () => {
             alertRoomDB(dupNameLab, dupRoomLab);
           } else if (checkDup === 3) {
             alertSelf();
-          }else if (checkDup === 4) {
+          } else if (checkDup === 4) {
             submitAlertFriend();
           } else {
             success();
@@ -1103,12 +1127,25 @@ const Input = () => {
           <Link to="/mainpageteacher">หน้าหลัก</Link>
           <Link to="/input">กรอกคำร้องขอเปิดรายวิชา</Link>
           <Link to="/check">ตรวจสอบคำร้องขอจัดตาราง</Link>
-          <Link to="/checkschedule">ตรวจสอบตารางสอน</Link>
+          <Link to='/checkshedule'>ตรวจสอบตารางสอน</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">กรอกคำร้องขอเปิดรายวิชา</label>
-        <label id="username"><strong>{username|| 'Username'}</strong></label>
-        <FaRegUserCircle id="user" size={30} />
+        <label id="username">
+          <strong>{username || "Username"}</strong>
+        </label>
+        {profileImage && (
+          <img
+            src={profileImage}
+            alt="Profile"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginLeft: "10px",
+            }}
+          />
+        )}
       </div>
       {/* โค้ดheaderbar */}
 

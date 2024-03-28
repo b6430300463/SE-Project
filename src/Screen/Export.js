@@ -17,8 +17,36 @@ const Export = () => {
   const [recentSessions, setRecentSessions] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const url = "http://localhost:3307";
+  useEffect(() => {
+    let storedUsername = localStorage.getItem("Username");
+    if (storedUsername) {
+      storedUsername = storedUsername.replace(/^"|"$/g, "");
+      setUsername(storedUsername);
+    }
+    let mail = localStorage.getItem("Email");
+    console.log("Email", mail);
 
+    const fetchData = async () => {
+      try {
+        const responseuser = await axios.get(
+          "http://localhost:3307/api/showUserdata",
+          { params: { email: mail } }
+        );
+        console.log("Response from API (user):", responseuser.data[0].imageURL);
+
+        if (responseuser.data[0].imageURL) {
+          let ImageURL = responseuser.data[0].imageURL;
+          setProfileImage(ImageURL);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -110,17 +138,30 @@ const Export = () => {
           <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
-          <Link to="/mainpage">หน้าหลัก</Link>
+          <Link to="/mainpagetable">หน้าหลัก</Link>
           <Link to="/import">เพิ่มรายวิชา</Link>
           <Link to="/request">คำร้องขอเปิดรายวิชา</Link>
-          <Link to="/manageSchedule">จัดการตารางรายวิชา</Link>
+          <Link to="/manageschedule">จัดการตารางรายวิชา</Link>
+          <Link to="/checksubject">ตรวจสอบรายวิชา</Link>
+          <Link to="/export">ส่งออกตาราง</Link>
           <Link to="/login">ออกจากระบบ</Link>
         </div>
         <label id="header-font">ส่งออกตาราง</label>
         <label id="username">
-          <strong>Username</strong>
+          <strong>{username || "Username"}</strong>
         </label>
-        <FaRegUserCircle id="user" size={30} />
+        {profileImage && (
+          <img
+            src={profileImage}
+            alt="Profile"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginLeft: "10px",
+            }}
+          />
+        )}
       </div>
       <div className="room">
         <label htmlFor="teacherName" id="select-teacher">
@@ -139,7 +180,7 @@ const Export = () => {
           ))}
         </select>
         {/* year */}
-        <label for="year" id="select-year" style={{paddingLeft:25}}>
+        <label for="year" id="select-year" style={{ paddingLeft: 25 }}>
           ชั้นปี
         </label>
         <select
@@ -154,14 +195,13 @@ const Export = () => {
           <option value="3">T12(3)</option>
           <option value="4">T12(4)</option>
         </select>
-
       </div>
       <div className="box">
         <div className="table-container">
           <table>
             <thead>
               <tr>
-                <th></th> {/* Empty cell for spacing */}
+                <th>Day/time</th> {/* Empty cell for spacing */}
                 {timeslots.map((timeSlot, index) => (
                   <th key={index}>{timeSlot}</th>
                 ))}

@@ -676,8 +676,9 @@ app.get('/api/get_problem_labsubject', (req, res) => {
   });
 });
 app.get("/api/showUserdata", (req, res) => {
-  let request = req.body;
-  const data = 'SELECT firstname,imageURL FROM user WHERE email = "' + request.email + '"';
+  let request = req.query
+  console.log("payload",request)
+  const data = 'SELECT firstname,imageURL FROM user WHERE email = ' + request.email + '';
 
   db.query(data, (err, results) => {
     if (err) {
@@ -685,14 +686,15 @@ app.get("/api/showUserdata", (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }  else {
       res.json(results);
+      console.log("userdata",results)
     }
   });
 });
 // update Lecture assign
 app.post("/api/updateLecAssign", (req, res) => {
   let request = req.body;
-  const query = 'SELECT * FROM lecture_assign WHERE subject_id = "' + request.subjectid + '"';
-
+  const query = 'SELECT * FROM lecture_assign WHERE subject_id = "' + request.subjectid + '"AND section = "'+ request.section + '"';
+  console.log(query);
   db.query(query, (err, results) => {
     if (err) {
       console.error("Error querying MySQL:", err);
@@ -710,14 +712,14 @@ app.post("/api/updateLecAssign", (req, res) => {
         }
         console.log("Subject : " + request.subjectid + " date " + request.date + " start_time " + request.start_time + " finish_time " + request.finish_time);
         const updateQuery =
-          'UPDATE lecture_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '" WHERE subject_id = "' + results[0].subject_id + '"';
+          'UPDATE lecture_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '" WHERE subject_id = "' + results[0].subject_id + '"AND section = "'+results[0].section +'"';
         
         db.query(updateQuery, (err, updateResults) => {
           if (err) {
             console.error("Error updating lecture assign in MySQL:", err);
             res.status(500).json({ error: "Internal Server Error" });
           } else {
-            console.log("Lec Subject : " + request.subjectid + " update Success");
+            console.log("Lec Subject : " + request.subjectid + "section" + request.section + " update Success");
             res.status(200).json({ success: true });
           }
         });
@@ -732,7 +734,7 @@ app.post("/api/updateLecAssign", (req, res) => {
 // update Lab assign
 app.post("/api/updateLabAssign", (req, res) => {
   let request = req.body;
-  const query = 'SELECT * FROM lab_assign WHERE subject_id = "' + request.subjectid + '"';
+  const query = 'SELECT * FROM lab_assign WHERE subject_id = "' + request.subjectid + '"AND section = "' + request.section + '"';
 
   db.query(query, (err, results) => {
     if (err) {
@@ -755,14 +757,14 @@ app.post("/api/updateLabAssign", (req, res) => {
         }
         console.log("Subject : " + request.subjectid + " date " + request.date + " start_time " + request.start_time + " finish_time " + request.finish_time + " room" + request.room);
         const updateQuery =
-          'UPDATE lab_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '",room = "' + request.room + '" WHERE subject_id = "' + results[0].subject_id + '"';
+          'UPDATE lab_assign SET date = "' + request.date + '", start_time = "' + request.start_time + '", finish_time = "' + request.finish_time + '",room = "' + request.room + '" WHERE subject_id = "' + results[0].subject_id + '" AND section = "' + results[0].section + '"';
         
         db.query(updateQuery, (err, updateResults) => {
           if (err) {
             console.error("Error updating lecture assign in MySQL:", err);
             res.status(500).json({ error: "Internal Server Error" });
           } else {
-            console.log("Lab Subject : " + request.subjectid + " update Success");
+            console.log("Lab Subject : " + request.subjectid + "section" + request.section + " update Success");
             res.status(200).json({ success: true });
           }
         });
