@@ -550,6 +550,7 @@ const ManageSchedule = () => {
               <th>หมู่เรียน</th>
               <th>บังคับ/เสรี</th>
               <th>บรรยาย/ปฏิบัติ</th>
+              <th>ชั้นปี</th>
               <th>วัน</th>
               <th>เวลา</th>
               <th>ห้อง</th>
@@ -567,6 +568,7 @@ const ManageSchedule = () => {
                   <td>{session.section}</td>
                   <td>{session.subject_priority}</td>
                   <td>{session.subject_type}</td>
+                  <td>{session.year}</td>
                   <td>
                     <div className="schedule-contain">
                       <div className="day-contain">

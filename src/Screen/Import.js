@@ -67,10 +67,19 @@ const Import = () => {
     });
   };
 
+  const errorAlert = () => {
+    Swal.fire({
+      title: "No new data to submit",
+      icon: "warning",
+      confirmButtonText: "Okay",
+    });
+    console.log("checkError", users);
+  };
+
   useEffect(() => {
     axios.get(`${url}/api/course`).then((response) => {
       setPost(response.data);
-      console.log(response.data);
+      console.log("post", response.data);
     });
   }, []);
 
@@ -95,16 +104,31 @@ const Import = () => {
 
       console.log("postData:", postData); // Log postData for debugging
 
-      // ทำ HTTP POST request ไปยัง API endpoint
-      const response = await axios.post(`${url}/api/imtoDB`, {
-        data: postData,
+      // Filter out postData that already exists in Post
+      const newData = postData.filter((data) => {
+        // Check if the subject_id exists in Post
+        return !Post.some(
+          (postItem) => postItem.subject_id === data.subject_id
+        );
       });
 
-      // หลังจากที่ request สำเร็จ
-      console.log(response.data); // แสดงข้อมูลที่ได้จาก response
-      submitAlert(); // เรียกฟังก์ชันแจ้งเตือนความสำเร็จ
+      console.log("newData:", newData); // Log newData for debugging
+
+      if (newData.length > 0) {
+        // ทำ HTTP POST request ไปยัง API endpoint โดยใช้ newData
+        const response = await axios.post(`${url}/api/imtoDB`, {
+          data: newData,
+        });
+
+        // หลังจากที่ request สำเร็จ
+        console.log(response.data); // แสดงข้อมูลที่ได้จาก response
+        submitAlert(); // เรียกฟังก์ชันแจ้งเตือนความสำเร็จ
+      } else {
+        errorAlert(); // แสดงการแจ้งเตือนหากไม่มีข้อมูลใหม่ที่จะส่ง
+      }
     } catch (error) {
       // จัดการข้อผิดพลาดที่เกิดขึ้นในกรณีที่ไม่สำเร็จ
+      errorAlert();
       console.error(error);
     }
   };

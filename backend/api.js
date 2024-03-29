@@ -78,37 +78,7 @@ app.get("/api/lab", (req, res) => {
   });
 });
 
-app.post("/api/imtoDB", (req, res) => {
-  const receivedData = req.body.data; // Assuming data is sent as an array
 
-  console.log("Received Data:", receivedData);
-
-  // Now, you can use receivedData to insert into the database
-
-  // Sample insertion code (you might need to adjust it based on your database schema)
-  const sql =
-    "INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?";
-  const values = receivedData.map((user) => [
-    user.subject_id,
-    user.year,
-    user.subject,
-    user.credit,
-    user.department,
-    user.subject_priority,
-    user.subject_type,
-    user.process,
-  ]);
-
-  db.query(sql, [values], (error, results) => {
-    if (error) {
-      console.error("Error inserting into database:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    console.log("Inserted into database:", results);
-    res.status(200).json({ message: "Data inserted successfully" });
-  });
-});
 
 // หลังจากเข้าสู่ระบบ ให้เช็คว่าเจอเมลในฐานข้อมูลไหม ถ้าไม่เจอให้สร้างใหม่ ถ้าเจอให้อัพเดท
 app.post("/api/login", (req, res) => {
@@ -539,35 +509,43 @@ app.post("/api/imtoDB", (req, res) => {
 
   console.log("Received Data:", receivedData);
 
-  // Now, you can use receivedData to insert into the database
-
-  // Sample insertion code (you might need to adjust it based on your database schema)
-  const sql =
-    "INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?";
-  const values = receivedData.map((user) => [
-    user.subject_id,
-    user.year,
-    user.subject,
-    user.credit,
-    user.department,
-    user.subject_priority,
-    user.subject_type,
-    user.process,
-  ]);
-
-  db.query(sql, [values], (error, results) => {
-    if (error) {
-      console.error("Error inserting into database:", error);
+  // Delete old data first
+  const deleteSql = "DELETE FROM course"; // Modify this according to your table name
+  db.query(deleteSql, (deleteError, deleteResults) => {
+    if (deleteError) {
+      console.error("Error deleting old data:", deleteError);
       return res.status(500).json({ error: "Internal Server Error" });
     }
 
-    console.log("Inserted into database:", results);
-    res.status(200).json({ message: "Data inserted successfully" });
+    console.log("Old data deleted successfully.");
+
+    // Now, you can proceed with inserting new data
+    const insertSql =
+      "INSERT INTO course (subject_id, year, subject, credit, department, subject_priority, subject_type, process) VALUES ?";
+    const values = receivedData.map((user) => [
+      user.subject_id,
+      user.year,
+      user.subject,
+      user.credit,
+      user.department,
+      user.subject_priority,
+      user.subject_type,
+      user.process,
+    ]);
+
+    db.query(insertSql, [values], (insertError, insertResults) => {
+      if (insertError) {
+        console.error("Error inserting into database:", insertError);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      console.log("Inserted into database:", insertResults);
+      res.status(200).json({ message: "Data inserted successfully" });
+    });
   });
 });
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
+
 
 //all_data ของตารางสอนทั้งหมด
 app.get("/api/exportall_to_excel", async (req, res) => {
@@ -988,4 +966,8 @@ app.get("/api/exportAllCourses", async (req, res) => {
     console.error("Error exporting to Excel:", error);
     res.status(500).json({ error: "An error occurred while exporting to Excel. Please check server logs for more details." });
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
