@@ -78,26 +78,28 @@ width: 200px; /*รหัสวิชา */
 width: 400px; /* ชื่อรายวิชา */
 }
 .schedule-table th:nth-child(4),.schedule-table td:nth-child(4) {
-width: 80px; /* บรรยาย */
+width: 80px; /* หมู่เรียน */
 }
 .schedule-table th:nth-child(5),.schedule-table td:nth-child(5) {
-width: 80px; /* ปฏิบัติ */
-}
-.schedule-table th:nth-child(6),.schedule-table td:nth-child(6) {
+width: 80px; /* บังคับ/เสรี */
+}.schedule-table th:nth-child(6),.schedule-table td:nth-child(6) {
+  width: 100px; /* บรรยาย/ปฏิบัติ */
+  }
+.schedule-table th:nth-child(7),.schedule-table td:nth-child(7) {
 width: 180px; /* วัน */
 text-align: center;
 }
-.schedule-table th:nth-child(7),.schedule-table td:nth-child(7) {
+.schedule-table th:nth-child(8),.schedule-table td:nth-child(8) {
 width: 300px; /* เวลา*/
 text-align: center;
 }
-.schedule-table th:nth-child(8),.schedule-table td:nth-child(8) {
+.schedule-table th:nth-child(9),.schedule-table td:nth-child(9) {
 width: 100px; /* ห้อง */
 }
-.schedule-table th:nth-child(9),.schedule-table td:nth-child(9) {
+.schedule-table th:nth-child(10),.schedule-table td:nth-child(10) {
 width: 450px; /* ผู้สอน */
 }
-.schedule-table th:nth-child(10),.schedule-table td:nth-child(10) {
+.schedule-table th:nth-child(11),.schedule-table td:nth-child(11) {
 width: 300px; /* Note & เบอร์ติดต่อ*/
 }
 

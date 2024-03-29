@@ -414,7 +414,7 @@ const ManageSchedule = () => {
           )}
         </select>
         {/* year */}
-        <label for="year" id="select-year">
+        <label for="year" id="select-year" style={{marginLeft:'1%'}}>
           ชั้นปี
         </label>
         <select
@@ -549,6 +549,7 @@ const ManageSchedule = () => {
               <th>ชื่อรายวิชา</th>
               <th>หมู่เรียน</th>
               <th>บังคับ/เสรี</th>
+              <th>บรรยาย/ปฏิบัติ</th>
               <th>วัน</th>
               <th>เวลา</th>
               <th>ห้อง</th>
@@ -565,6 +566,7 @@ const ManageSchedule = () => {
                   <td>{session.subject_name}</td>
                   <td>{session.section}</td>
                   <td>{session.subject_priority}</td>
+                  <td>{session.subject_type}</td>
                   <td>
                     <div className="schedule-contain">
                       <div className="day-contain">
@@ -753,7 +755,7 @@ const ManageSchedule = () => {
           </tbody>
         </table>
       </div>
-      <div className="submit2">
+      <div className="submit2" style={{marginBottom:'2%'}}>
         <button type="submit2" className="submit2-btn" onClick={handleSubmit}>
           <strong>Submit</strong>
         </button>
