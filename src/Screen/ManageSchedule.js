@@ -516,7 +516,7 @@ const ManageSchedule = () => {
                           <br />
                           Room: {sessionToDisplay.room}
                           <br />
-                          Teacher Req: {sessionToDisplay.teacher_request}
+                          
                         </td>
                       );
                     } else if (

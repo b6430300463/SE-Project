@@ -148,6 +148,12 @@ const Export = () => {
     window.open(allURL)
     
   };
+
+  const exportallByteacher = async () => {
+    const allURL = `${url}/api/exportAllCourses`
+    window.open(allURL)
+    
+  };
   
   useEffect(() => {
     const fetchTeacherName = async () => {

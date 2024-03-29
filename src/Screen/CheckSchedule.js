@@ -5,6 +5,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import "./Style/Schedule.css";
 import "./Style/DrawerStyle.css";
 import "./Style/Userdata.css";
+import * as XLSX from 'xlsx';
 
 const CheckSchedule = () => {
   const url = "http://localhost:3307";
@@ -116,6 +117,30 @@ const CheckSchedule = () => {
     setFilteredSessions(filtered);
   }, [selectedYear, getLec, getLab]);
 
+  const exportallByteacher = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3307/api/exportAllCoursesbyTeacher",
+        {
+          params: { "teacher": teacher },
+          responseType: 'arraybuffer'
+        }
+      );
+      const buffer = response.data;
+      const workbook = XLSX.read(buffer, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const excelData = XLSX.utils.sheet_to_json(worksheet);
+      const filename = 'export_by_teacher.xlsx';
+      const wbout = XLSX.utils.book_new();
+      const wsout = XLSX.utils.json_to_sheet(excelData);
+      XLSX.utils.book_append_sheet(wbout, wsout, "Sheet1");
+      XLSX.writeFile(wbout, filename);
+      console.log("Excel file created successfully:", filename);
+    } catch (error) {
+      console.error('Error fetching or processing data:', error);
+    }
+  };
   const openNav = () => {
     setIsDrawerOpen(true);
   };
@@ -266,9 +291,7 @@ const CheckSchedule = () => {
                           <br />
                           Room: {sessionToDisplay.room}
                           <br />
-                          Teacher Req: {sessionToDisplay.teacher_request}
-                          <br />
-                          Teacher Id: {sessionToDisplay.teacher_id}
+                          
                         </td>
                       );
                     } else if (
@@ -292,7 +315,7 @@ const CheckSchedule = () => {
         </div>
       </div>
       <div className="submit">
-        <button type="submit" className="submit-btn" onClick={exportallCourse}>
+        <button type="submit" className="submit-btn" onClick={exportallByteacher}>
           <strong>Export</strong>
         </button>
       </div>

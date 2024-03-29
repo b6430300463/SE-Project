@@ -968,6 +968,37 @@ app.get("/api/exportAllCourses", async (req, res) => {
   }
 });
 
+app.get("/api/exportAllCoursesbyTeacher", async (req, res) => {
+  const request = req.query;
+  console.log("export", request.teacher);
+  try {
+    const [labRows, labFields] = await db.promise().query('SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lab_assign WHERE teacher_id = "' + request.teacher + '"');
+    const [lectureRows, lectureFields] = await db.promise().query('SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lecture_assign WHERE teacher_id = "' + request.teacher + '"');
+    const heading = ['subject_id', 'year', 'subject_name', 'credit', 'department', 'section', 'total_students', 'date', 'start_time', 'finish_time', 'room', 'subject_type', 'subject_priority'];
+    const labData = labRows.map(row => {
+      const modifiedRow = [...Object.values(row)];
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(row.date);
+      return modifiedRow;
+    });
+    const lectureData = lectureRows.map(row => {
+      const modifiedRow = [...Object.values(row)];
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(row.date);
+      return modifiedRow;
+    });
+    const combinedData = [heading, ...labData, ...lectureData];
+    const worksheet = XLSX.utils.json_to_sheet(combinedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Combined_Courses");
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+    res.attachment('Combined_Courses.xlsx');
+    console.log("return", buffer);
+    return res.send(buffer);
+  } catch (error) {
+    console.error("Error exporting to Excel:", error);
+    res.status(500).json({ error: "An error occurred while exporting to Excel. Please check server logs for more details." });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
