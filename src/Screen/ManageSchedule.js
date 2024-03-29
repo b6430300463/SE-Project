@@ -31,8 +31,9 @@ const ManageSchedule = () => {
   const [teacherList, setTeacherList] = useState({});
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState("");
-  const [yearLec,setYearLec] = useState("");
-  const [yearLab,setYearLab] = useState("");
+  const [yearLec, setYearLec] = useState("");
+  const [yearLab, setYearLab] = useState("");
+  const [overlappingSessions, setOverlappingSessions] = useState([]);
 
   useEffect(() => {
     let storedUsername = localStorage.getItem("Username");
@@ -101,14 +102,13 @@ const ManageSchedule = () => {
 
   useEffect(() => {
     setYearLec(localStorage.getItem("YearLec"));
-    console.log(yearLec)
+    console.log(yearLec);
     setYearLab(localStorage.getItem("YearLab"));
-    console.log(yearLab)
+    console.log(yearLab);
     let filtered = [...getLec, ...getLab];
     let filteredC1 = [];
     let filteredC2 = [];
     let filteredC3 = [];
-
 
     if (selectedYear && selectedYear !== "ALL") {
       filtered = filtered.filter(
@@ -177,7 +177,6 @@ const ManageSchedule = () => {
         session.subject_priority === "เสรี"
       ) {
         filteredC3.push(session);
-      } else {
       }
     });
 
@@ -229,11 +228,10 @@ const ManageSchedule = () => {
       }
     };
 
-
     initializeOptions();
   }, [filteredSessions]);
 
-  const changeStarttime = async (event, subject_id,section, subjectType) => {
+  const changeStarttime = async (event, subject_id, section, subjectType) => {
     const startTimeValue = event.target.value;
     setStartTime((prevState) => ({
       ...prevState,
@@ -249,7 +247,7 @@ const ManageSchedule = () => {
       selectedRoom
     );
   };
-  const changeStoptime = async (event, subject_id,section, subjectType) => {
+  const changeStoptime = async (event, subject_id, section, subjectType) => {
     const finishTimeValue = event.target.value;
     setFinishTime((prevState) => ({
       ...prevState,
@@ -266,7 +264,7 @@ const ManageSchedule = () => {
     );
   };
 
-  const changeDay = async (event, subject_id,section, subjectType) => {
+  const changeDay = async (event, subject_id, section, subjectType) => {
     const dayValue = event.target.value;
     setSelectedDay((prevState) => ({
       ...prevState,
@@ -287,11 +285,14 @@ const ManageSchedule = () => {
       title: "Added successfully!!",
       icon: "success",
       confirmButtonText: "Okay",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // เรียกใช้งาน updateAssign เมื่อคลิกปุ่ม Submit
+        window.location.reload();
+      }
     });
-    // เรียกใช้งาน updateAssign เมื่อคลิกปุ่ม Submit
     const updateData = await updateAssign();
     setFilteredSessions(updateData);
-    window.location.reload();
   };
   const updateAssign = async (
     subjectId,
@@ -443,19 +444,6 @@ const ManageSchedule = () => {
           <option value="c2">วิชาบังคับ ชน เสรี</option>
           <option value="c3">วิชาเสรี ชน เสรี</option>
         </select>
-        <label>ห้องเรียนชนกัน</label>
-        <label className="checkroom-container">
-          <input
-            type="radio"
-            name="roomCheck"
-            value="close"
-            onChange={(e) => setSelectedRoom(e.target.value)}
-          />
-          <span className="checkroom-checkmark"></span>
-        </label>
-        <button type="search" className="search-btn">
-          <strong>Search</strong>
-        </button>
       </div>
       <div className="box">
         <div className="table-container">
@@ -476,6 +464,17 @@ const ManageSchedule = () => {
                     const timeslotStart = timeToMinutes(timeslot);
                     let sessionToDisplay = null;
                     let spanCount = 0;
+                    const isOverlap = overlappingSessions.some((session) => {
+                      const startTime = timeToMinutes(session.start_time);
+                      const endTime = timeToMinutes(session.finish_time);
+                      const currentSlotTime = timeToMinutes(timeslot);
+
+                      return (
+                        session.date === rowIndex + 1 &&
+                        currentSlotTime >= startTime &&
+                        currentSlotTime < endTime
+                      );
+                    });
 
                     if (filteredSessions && filteredSessions.length > 0) {
                       filteredSessions.forEach((session) => {
@@ -504,10 +503,11 @@ const ManageSchedule = () => {
                         <td
                           key={timeslotIndex}
                           colSpan={spanCount}
+                          // style={{
+                          //   backgroundColor: isOverlap ? "#ffff00" : "#add8e6",
+                          // }}
                           style={{ backgroundColor: "#add8e6" }}
                         >
-                          {" "}
-                          {/* Example: Highlight with color */}
                           {sessionToDisplay.subject_id} -{" "}
                           {sessionToDisplay.subject_name}
                           <br />
@@ -568,13 +568,31 @@ const ManageSchedule = () => {
                   <td>
                     <div className="schedule-contain">
                       <div className="day-contain">
-                        {session.date === 1 && "MON"}
-                        {session.date === 2 && "TUE"}
-                        {session.date === 3 && "WED"}
-                        {session.date === 4 && "THU"}
-                        {session.date === 5 && "FRI"}
-                        {session.date === 6 && "SAT"}
-                        {session.date === 7 && "SUN"}
+                        <td
+                          className={
+                            session.date === 1
+                              ? "Monday"
+                              : session.date === 2
+                              ? "Tuesday"
+                              : session.date === 3
+                              ? "Wednesday"
+                              : session.date === 4
+                              ? "Thursday"
+                              : session.date === 5
+                              ? "Friday"
+                              : session.date === 6
+                              ? "Saturday"
+                              : "Sunday"
+                          }
+                        >
+                          {session.date === 1 && "MON"}
+                          {session.date === 2 && "TUE"}
+                          {session.date === 3 && "WED"}
+                          {session.date === 4 && "THU"}
+                          {session.date === 5 && "FRI"}
+                          {session.date === 6 && "SAT"}
+                          {session.date === 7 && "SUN"}
+                        </td>
                       </div>
                       <div className="select-contain">
                         <select
@@ -588,7 +606,12 @@ const ManageSchedule = () => {
                               : session.date.toString())
                           }
                           onChange={(e) =>
-                            changeDay(e, session.subject_id, session.section,session.subject_type)
+                            changeDay(
+                              e,
+                              session.subject_id,
+                              session.section,
+                              session.subject_type
+                            )
                           }
                         >
                           <option value="0">None</option>
@@ -708,7 +731,11 @@ const ManageSchedule = () => {
                   </td>
 
                   <td>{session.room}</td>
-                  <td>{session.teacher_id}</td>
+                  <td>{teacherList.map((data) => {
+                  if (data.id === session.teacher_id) {
+                    return data.firstname + " " + data.lastname;
+                  }
+                })}</td>
                   <td className="flex-space-between">
                     <AiOutlineMessage
                       size={20}

@@ -199,15 +199,15 @@ const CheckPage = () => {
           <tbody>
             {data.map((database, index) => (
               <tr key={index}>
-                <td>{database.selectedSubjectLab}</td>
-                <td>{database.selectedSubjectNameLab}</td>
-                <td>{database.selectedCodeLab}</td>
-                <td>{database.selectednumberLab}</td>
-                <td>{database.selectedDayLab}</td>
-                <td>
+                <td className="check-body">{database.selectedSubjectLab}</td>
+                <td className="check-body">{database.selectedSubjectNameLab}</td>
+                <td className="check-body">{database.selectedCodeLab}</td>
+                <td className="check-body">{database.selectednumberLab}</td>
+                <td className="check-body">{database.selectedDayLab}</td>
+                <td className="check-body">
                   {database.selectedStartLab}-{database.selectedStopLab}
                 </td>
-                <td>{database.selectedTeacherReqLab}</td>
+                <td className="check-body">{database.selectedTeacherReqLab}</td>
               </tr>
             ))}
           </tbody>

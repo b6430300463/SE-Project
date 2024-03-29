@@ -287,6 +287,73 @@ const Input = () => {
       }
     });
   };
+  const alerttime = () => {
+    Swal.fire({
+      title:
+        
+        "<br> เวลาเริ่มไม่ควรมากกว่าเวลาจบ" +
+        " <br> กรุณาเลือกเวลาอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
+
+  const alerttimeoverlap = () => {
+    Swal.fire({
+      title:
+        
+        "<br> เวลาที่ท่านเลือกมีการทับซ้อนกันใน Lab หรือ Lecture" +
+        " <br> กรุณาเลือกเวลาอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
+  const alerttimestop = () => {
+    Swal.fire({
+      title:
+        
+        "<br> เวลาจบไม่ควรน้อยกว่าเวลาเริ่ม" +
+        " <br> กรุณาเลือกเวลาอื่น",
+      icon: "error",
+      confirmButtonText: "Okay",
+      showCancelButton: false,
+      // cancelButtonText: 'Cancel',
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: "btn-red",
+        // cancelButton: 'btn-blue'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // กระทำเมื่อคลิกปุ่ม "Submit"
+        // ตรวจสอบว่าผู้ใช้ได้คลิกปุ่ม "Submit" หรือไม่
+      }
+    });
+  };
   const alertSelf = () => {
     Swal.fire({
       title:
@@ -429,6 +496,15 @@ const Input = () => {
                 dupSecLec = selectedSec[k];
                 console.log("dup");
                 break;
+              }else if (
+                selectedDay[k] === String(getLec[l].date) &&
+                selectedStart[k] === getLec[l].start_time &&
+                selectedStop[k] === getLec[l].finish_time &&
+                teacher === getLec[l].teacher_id
+              ) {
+                checkDupLec = 4;
+                console.log("dupself");
+                break;
               } else if (
                 selectedSubject[k] === getLec[l].subject_id &&
                 selectedYear[k] === String(getLec[l].year) &&
@@ -458,6 +534,8 @@ const Input = () => {
             alertSelf();
           } else if (checkDupLec === 3) {
             submitAlertFriend();
+          }else if (checkDupLec === 4) {
+            alertSelf();
           } else {
             success();
           }
@@ -521,6 +599,15 @@ const Input = () => {
                   selectedSubjectLab[k] === getLab[l].subject_id
                 );
                 break;
+              }else if (
+                selectedDayLab[k] === String(getLab[l].date) &&
+                selectedStartLab[k] === getLab[l].start_time &&
+                selectedStopLab[k] === getLab[l].finish_time &&
+                teacher === getLab[l].teacher_id
+              ) {
+                checkDup = 5;
+                console.log("dup");
+                break;
               } else if (
                 selectedSubjectLab[k] === getLab[l].subject_id &&
                 selectedYearLab[k] === String(getLab[l].year) &&
@@ -552,6 +639,8 @@ const Input = () => {
             alertSelf();
           } else if (checkDup === 4) {
             submitAlertFriend();
+          } else if (checkDup === 5) {
+            alertSelf();
           } else {
             success();
           }
@@ -743,7 +832,7 @@ const Input = () => {
 
     // ตรวจสอบหลังจากตั้งค่าเริ่มต้น
     if (convertTimeToMinutes(newStartTime) >= convertTimeToMinutes(stopTime)) {
-      alert("Start time must be before stop time.");
+      alerttime();
       resetTimeSelection(isLab, true, index);
       return;
     }
@@ -767,7 +856,7 @@ const Input = () => {
         selectedDay[index]
       )
     ) {
-      alert("Time overlap detected with another lecture or lab.");
+      alerttimeoverlap();
       resetTimeSelection(isLab, true, index);
       return;
     }
@@ -799,7 +888,7 @@ const Input = () => {
     }
 
     if (convertTimeToMinutes(newStopTime) <= convertTimeToMinutes(startTime)) {
-      alert("Stop time must be after start time.");
+      alerttimestop();
       resetTimeSelection(isLab, false, index);
       return;
     }
@@ -1051,7 +1140,7 @@ const Input = () => {
     const { value } = e.target;
     setSelectedTeacherReqLab((prevOptions) => {
       const updatedOptions = [...prevOptions];
-      updatedOptions[index] = value.trim() !== "" ? value : "none";
+      updatedOptions[index] = value;
       return updatedOptions;
     });
   };

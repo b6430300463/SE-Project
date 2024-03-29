@@ -255,3 +255,30 @@ width: 300px; /* Note & เบอร์ติดต่อ*/
 .day-contain{
   margin-right: 20%;
 }
+.Monday {
+  background-color: yellow;
+}
+
+.Tuesday {
+  background-color: pink;
+}
+
+.Wednesday {
+  background-color: green;
+}
+
+.Thursday {
+  background-color: orange;
+}
+
+.Friday {
+  background-color: aqua;
+}
+
+.Saturday {
+  background-color: purple;
+}
+
+.Sunday {
+  background-color: red;
+} 

@@ -150,6 +150,12 @@ const CheckSchedule = () => {
   };
   const DayperWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
+  const exportallCourse = async () => {
+    const allURL = `${url}/api/exportAllCourses`
+    window.open(allURL)
+    
+  };
+
   return (
     <div className="input-container">
       <div className="header-bar">
@@ -284,6 +290,11 @@ const CheckSchedule = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="submit">
+        <button type="submit" className="submit-btn" onClick={exportallCourse}>
+          <strong>Export</strong>
+        </button>
       </div>
     </div>
   );

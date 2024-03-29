@@ -896,3 +896,96 @@ app.get("/api/getlab_assign", (req, res) => {
     }
   });
 });
+
+
+app.get("/api/ExportallLab", async (req, res) => {
+  try {
+    const [rows, fields] = await db.promise().query("SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lab_assign");
+    
+    const heading = ['subject_id', 'year', 'subject_name', 'credit', 'department', 'section', 'total_students', 'date', 'start_time', 'finish_time', 'room', 'subject_type', 'subject_priority'];
+    const data = [heading, ...rows.map(row => {
+      const modifiedRow = Object.values(row);
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(modifiedRow[heading.indexOf('date')]);
+      return modifiedRow;
+    })];
+    
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Lab_course");
+
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    res.attachment('Lab_Course.xlsx');
+    return res.send(buffer);
+  } catch (error) {
+    console.error("Error exporting to Excel:", error);
+    res.status(500).json({ error: "An error occurred while exporting to Excel. Please check server logs for more details." });
+  }
+});
+const XLSX = require('xlsx');
+
+app.get("/api/ExportallLec", async (req, res) => {
+  try {
+    const [rows, fields] = await db.promise().query("SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lecture_assign");
+    
+    const heading = ['subject_id', 'year', 'subject_name', 'credit', 'department', 'section', 'total_students', 'date', 'start_time', 'finish_time', 'room', 'subject_type', 'subject_priority'];
+    const data = [heading, ...rows.map(row => {
+      const modifiedRow = Object.values(row);
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(modifiedRow[heading.indexOf('date')]);
+      return modifiedRow;
+    })];
+    
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Lec_course");
+
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    res.attachment('Lec_Course.xlsx');
+    return res.send(buffer);
+  } catch (error) {
+    console.error("Error exporting to Excel:", error);
+    res.status(500).json({ error: "An error occurred while exporting to Excel. Please check server logs for more details." });
+  }
+});
+
+const getWeekdayName = (dayNumber) => {
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return weekdays[dayNumber];
+};
+
+app.get("/api/exportAllCourses", async (req, res) => {
+  try {
+    const [labRows, labFields] = await db.promise().query("SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lab_assign");
+    const [lectureRows, lectureFields] = await db.promise().query("SELECT subject_id, year, subject_name, credit, department, section, total_students, date, start_time, finish_time, room, subject_type, subject_priority FROM lecture_assign");
+    
+    const heading = ['subject_id', 'year', 'subject_name', 'credit', 'department', 'section', 'total_students', 'date', 'start_time', 'finish_time', 'room', 'subject_type', 'subject_priority'];
+    const labData = labRows.map(row => {
+      const modifiedRow = [...Object.values(row)]; // Create a copy of the row
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(row.date); // Modify the 'date' value
+      return modifiedRow;
+    });
+    const lectureData = lectureRows.map(row => {
+      const modifiedRow = [...Object.values(row)]; // Create a copy of the row
+      modifiedRow[heading.indexOf('date')] = getWeekdayName(row.date); // Modify the 'date' value
+      return modifiedRow;
+    });
+    
+    const combinedData = [heading, ...labData, ...lectureData];
+    
+    const worksheet = XLSX.utils.aoa_to_sheet(combinedData);
+    const workbook = XLSX.utils.book_new();
+    
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Combined_Courses");
+
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    res.attachment('Combined_Courses.xlsx');
+    return res.send(buffer);
+  } catch (error) {
+    console.error("Error exporting to Excel:", error);
+    res.status(500).json({ error: "An error occurred while exporting to Excel. Please check server logs for more details." });
+  }
+});

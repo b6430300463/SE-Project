@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { read, utils, writeFile } from "xlsx";
+import * as XLSX from 'xlsx';
+
 import { Link } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
 import "./Style/Schedule.css";
@@ -19,6 +22,8 @@ const Export = () => {
   const [teachers, setTeachers] = useState([]);
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [teacherList, setTeacherList] = useState({});
+  const [alldata, setallData] = useState([]);
   const url = "http://localhost:3307";
   useEffect(() => {
     let storedUsername = localStorage.getItem("Username");
@@ -126,6 +131,36 @@ const Export = () => {
   };
   const DayperWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
+  const exportallLec = async () => {
+    const lecURL = `${url}/api/ExportallLec`
+    window.open(lecURL)
+    
+  };
+
+  const exportallLab = async () => {
+    const labURL = `${url}/api/ExportallLab`
+    window.open(labURL)
+    
+  };
+
+  const exportallCourse = async () => {
+    const allURL = `${url}/api/exportAllCourses`
+    window.open(allURL)
+    
+  };
+  
+  useEffect(() => {
+    const fetchTeacherName = async () => {
+        const TeacherNameList = await axios.get(
+          `${url}/api/getusername`
+        )
+        setTeacherList(TeacherNameList.data)
+    }
+
+    fetchTeacherName();
+  }, []);
+ 
+
   return (
     <div className="input-container">
       <div className="header-bar">
@@ -173,12 +208,24 @@ const Export = () => {
           onChange={(e) => setSelectedTeacher(e.target.value)}
         >
           <option value="">เลือกอาจารย์</option>
-          {teachers.map((teacher) => (
-            <option key={teacher} value={teacher}>
-              {teacher}
-            </option>
-          ))}
+          {teachers && teachers.length > 0 ? (
+                        teachers.map((teacher) => (
+                            <option key={teacher} value={teacher}>
+                                {
+                                    teacherList.map((data) => {
+                                        if(data.id === teacher) {
+                                            return data.firstname + " " + data.lastname
+                                        }
+                                    })
+                                }
+                            </option>
+                        ))
+                    ) : (
+                        <option disabled>No teachers available</option>
+                    )}
+          
         </select>
+        
         {/* year */}
         <label for="year" id="select-year" style={{ paddingLeft: 25 }}>
           ชั้นปี
@@ -275,6 +322,21 @@ const Export = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="submit">
+        <button type="submit" className="submit-btn" onClick={exportallLec}>
+          <strong>Export ALL(Lecture)</strong>
+        </button>
+      </div>
+      <div className="submit">
+        <button type="submit" className="submit-btn" onClick={exportallLab}>
+          <strong>Export ALL(LAB)</strong>
+        </button>
+      </div>
+      <div className="submit">
+        <button type="submit" className="submit-btn" onClick={exportallCourse}>
+          <strong>Export ALL Course</strong>
+        </button>
       </div>
     </div>
   );
